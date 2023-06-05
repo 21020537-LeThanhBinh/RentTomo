@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+} */
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+
+dialog[open] {
+  animation: fadeAndUp 0.2s ease-out forwards;
+}
+
+@keyframes fadeAndUp {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
+.menu-login-enter {
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+.menu-login-enter-active {
+  transform: translateX(0%);
+  transition: all 0.2s ease-out;
+}
+
+.menu-login-exit {
+  position: absolute;
+}
+
+.menu-login-exit-active {
+  transform: translateX(-100%);
+  transition: all 0.2s ease-out;
+}
+
+.menu-signup-enter {
+  /* position: absolute; */
+  transform: translateX(100%);
+}
+
+.menu-signup-enter-active {
+  transform: translateX(0%);
+  transition: all 0.2s ease-out;
+}
+
+.menu-signup-exit {
+  /* position: absolute; */
+}
+
+.menu-signup-exit-active {
+  transform: translateX(100%);
+  transition: all 0.2s ease-out;
+}

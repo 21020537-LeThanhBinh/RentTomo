@@ -1,22 +1,25 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import LoginPage from '../auth/LoginPage'
-import { useRouter, useSearchParams } from 'next/navigation';
-import SignupPage from '../auth/SignupPage';
-import Link from 'next/link';
 import { supabase } from '@/supabase/supabase-app';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import LoginPage from '../auth/LoginPage';
+import SignupPage from '../auth/SignupPage';
+// import '../../app/globals.css'
 
 export default function ProfilePicture() {
   const modalRef = useRef<HTMLDialogElement>(null)
+  const [modalActive, setModalActive] = useState(false)
   const searchParams = useSearchParams()!;
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState(''); // login, signup
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN") setIsLoggedIn(true)
+      if (session) setIsLoggedIn(true)
       else setIsLoggedIn(false)
       console.log(event, session)
     })
@@ -47,22 +50,46 @@ export default function ProfilePicture() {
     setActiveTab(searchParams.get('popup')!);
   }, [searchParams])
 
+  useEffect(() => {
+    if (modalRef.current?.open) {
+      setTimeout(() => {
+        setModalActive(true)
+      }, 200)
+    } else {
+      setModalActive(false)
+    }
+  }, [modalRef.current?.open])
+
   return (
     <div className='flex-shrink-0'>
       {isLoggedIn ? (
         <Link href="/" onClick={() => supabase.auth.signOut()}>Đăng xuất</Link>
       ) : (
-        <Link href="/?popup=login">Tài khoản</Link>
+        <Link href="/?popup=login" onClick={() => modalRef.current?.showModal()}>Tài khoản</Link>
       )}
 
-      <dialog className='sm:w-[540px] w-full rounded-2xl' ref={modalRef}>
-        {activeTab === 'login' ? (
-          <LoginPage />
-        ) : activeTab === 'signup' ? (
-          <SignupPage />
-        ) : (
-          <></>
-        )}
+      <dialog ref={modalRef} className='sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
+        <CSSTransition
+          in={activeTab === 'login'}
+          unmountOnExit
+          timeout={500}
+          classNames={modalActive ? "menu-login" : ""}
+        >
+          <div className='w-full absolute left-0'>
+            <LoginPage />
+          </div>
+        </CSSTransition>
+
+        <CSSTransition
+          in={activeTab === 'signup'}
+          unmountOnExit
+          timeout={500}
+          classNames={modalActive ? "menu-signup" : ""}
+        >
+          <div className='w-full absolute left-0'>
+            <SignupPage />
+          </div>
+        </CSSTransition>
       </dialog>
     </div>
   );

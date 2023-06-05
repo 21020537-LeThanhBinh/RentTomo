@@ -18,6 +18,7 @@ export default function Login() {
   const [loginFail, setLoginFail] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [message, setMessage] = useState("")
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value })
@@ -31,27 +32,31 @@ export default function Login() {
   //Handle Login API Integration here
   const authenticateUser = async () => {
     setLoading(true);
-    const res = await supabase.auth.signInWithPassword({
-      email: loginState.email_username,
-      password: loginState.password,
-    })
 
-    console.log(res)
+    // Add phone login
+    const res = (loginState.email_phone.includes('@')) ? (
+      await supabase.auth.signInWithPassword({
+        email: loginState.email_phone,
+        password: loginState.password,
+      })
+    ) : (
+      await supabase.auth.signInWithPassword({
+        phone: loginState.email_phone,
+        password: loginState.password,
+      })
+    )
 
     if (!res.error) {
       setLoading(false)
       setLoginFail(false)
 
-      router.refresh()
       router.push("/")
     }
     else {
       setLoading(false)
       setLoginFail(true)
 
-      setTimeout(() => {
-        setLoginFail(false)
-      }, 500)
+      setMessage(res.error.message)
     }
   }
 
@@ -78,6 +83,9 @@ export default function Login() {
         }
       </div>
 
+      {loginFail && (
+        <p className="text-red-500 text-sm">{message}</p>
+      )}
       <FormExtra />
 
       {loading ? (
@@ -91,7 +99,7 @@ export default function Login() {
           </FormAction >
         </div>
       ) : (
-        <div className={`${loginFail && "animate-shake"}`}>
+        <div>
           <FormAction handleSubmit={handleSubmit}>
             Login
           </FormAction >

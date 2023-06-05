@@ -3,7 +3,7 @@ import Signup from "./Signup"
 
 export default function SignupPage() {
   return (
-    <div className="flex justify-center w-full z-40">
+    <div className="flex justify-center z-40">
       <div className="w-full bg-white p-10 rounded-2xl">
         <Header
           heading="Signup to create an account"
