@@ -1,85 +1,106 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
-import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import * as Yup from 'yup';
-import FormAction from './FormAction';
-import Input from './Input';
-import SignInWithGoogle from './SignInWithGoogle';
+import FormAction from '../FormAction';
+import Input from '../Input';
+import SignInWithGoogle from '../SignInWithGoogle';
+import { signupFields } from '../formFields';
 
-export default function Verify() {
+const fields = signupFields;
+let fieldsState: any = {};
+
+fields.forEach(field => fieldsState[field.id] = '');
+
+export default function SetPassword() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()!;
-  const [phoneNumber, setPhoneNumber] = useState("")
-
-  useEffect(() => {
-    setPhoneNumber(searchParams.get("phone")!)
-  }, [searchParams])
+  const [message, setMessage] = useState("")
 
   const handleSubmit = async (values: FormikValues) => {
-    await verifyAccount(values)
-    router.push("/")
+    setLoading(true);
+    const res = await supabase.auth.updateUser({
+      password: values.password,
+    })
+
+    setLoading(false)
+    if (!res.error) {
+      console.log(res)
+      router.push(`/`)
+    } else {
+      setMessage(res.error.message)
+    }
   }
 
   const formik = useFormik({
     initialValues: {
-      code: "",
+      password: "",
+      confirm_password: ""
     },
     validationSchema: Yup.object({
-      code: Yup.string()
-        .min(6, "Mã xác nhận gồm 6 ký tự")
-        .max(6, "Mã xác nhận gồm 6 ký tự")
+      password: Yup.string()
+        .min(8, "Minimum 8 characters")
         .required("Required!"),
+      confirm_password: Yup.string()
+        .oneOf([Yup.ref("password")], "Password's not match")
+        .required("Required!")
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
-    code: string;
+    password: string;
+    confirm_password: string;
   }>
   );
-
-  const verifyAccount = async (values: FormikValues) => {
-    try {
-      setLoading(true);
-      const res = await supabase.auth.verifyOtp({
-        phone: formatPhoneNumber(phoneNumber),
-        token: values.code,
-        type: 'sms',
-      })
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
       <div className="">
-        <div className=''>Nhập mã xác nhận được gửi đến {phoneNumber}:</div>
-
         <div className='my-5'>
           <Input
-            key={"code"}
+            key={fields[2].id}
             handleChange={formik.handleChange}
-            value={formik.values.code}
-            labelText={"Code"}
-            labelFor={"code"}
-            id={"code"}
-            name={"code"}
-            type={"text"}
-            isRequired={true}
-            placeholder={"Mã xác nhận"}
+            value={formik.values.password}
+            labelText={fields[2].labelText}
+            labelFor={fields[2].labelFor}
+            id={fields[2].id}
+            name={fields[2].name}
+            type={fields[2].type}
+            isRequired={fields[2].isRequired}
+            placeholder={fields[2].placeholder}
             onBlur={formik.handleBlur}
           />
 
-          {formik.errors.code && formik.touched.code && (
-            <p className="text-red-500 text-sm">{formik.errors.code}</p>
+          {formik.errors.password && formik.touched.password && (
+            <p className="text-red-500 text-sm">{formik.errors.password}</p>
           )}
         </div>
+
+        <div className='my-5'>
+          <Input
+            key={fields[3].id}
+            handleChange={formik.handleChange}
+            value={formik.values.confirm_password}
+            labelText={fields[3].labelText}
+            labelFor={fields[3].labelFor}
+            id={fields[3].id}
+            name={fields[3].name}
+            type={fields[3].type}
+            isRequired={fields[3].isRequired}
+            placeholder={fields[3].placeholder}
+            onBlur={formik.handleBlur}
+          />
+
+          {formik.errors.confirm_password && formik.touched.confirm_password && (
+            <p className="text-red-500 text-sm">{formik.errors.confirm_password}</p>
+          )}
+        </div>
+
+        {message && (
+          <p className="text-red-500 text-sm">{message}</p>
+        )}
 
         {loading ? (
           <FormAction>
@@ -91,7 +112,7 @@ export default function Verify() {
           </FormAction>
         ) : (
           <FormAction handleSubmit={formik.handleSubmit} >
-            Tiếp tục
+            Đăng ký
           </FormAction>
         )}
 

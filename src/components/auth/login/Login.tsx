@@ -1,13 +1,14 @@
 'use client'
 
+import { supabase } from '@/supabase/supabase-app';
+import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { loginFields } from "./formFields";
-import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
-import Input from "./Input";
-import SignInWithGoogle from './SignInWithGoogle';
-import { supabase } from '@/supabase/supabase-app';
+import FormAction from "../FormAction";
+import FormExtra from "../FormExtra";
+import Input from "../Input";
+import SignInWithGoogle from '../SignInWithGoogle';
+import { loginFields } from "../formFields";
 
 const fields = loginFields;
 let fieldsState: any = {};
@@ -33,7 +34,6 @@ export default function Login() {
   const authenticateUser = async () => {
     setLoading(true);
 
-    // Add phone login
     const res = (loginState.email_phone.includes('@')) ? (
       await supabase.auth.signInWithPassword({
         email: loginState.email_phone,
@@ -41,21 +41,47 @@ export default function Login() {
       })
     ) : (
       await supabase.auth.signInWithPassword({
-        phone: loginState.email_phone,
+        phone: formatPhoneNumber(loginState.email_phone),
         password: loginState.password,
       })
     )
 
+    setLoading(false)
     if (!res.error) {
-      setLoading(false)
       setLoginFail(false)
-
       router.push("/")
     }
     else {
-      setLoading(false)
       setLoginFail(true)
+      setMessage(res.error.message)
+    }
+  }
 
+  const handleForgotPassword = async () => {
+    if (!loginState.email_phone) {
+      setLoginFail(true)
+      setMessage("Vui lòng nhập số điện thoại hoặc email")
+      return
+    }
+
+    // Add phone login
+    const res = (loginState.email_phone.includes('@')) ? (
+      await supabase.auth.signInWithOtp({
+        email: loginState.email_phone,
+        options: {
+          emailRedirectTo: 'http://localhost:3000/'
+        }
+      })
+    ) : (
+      await supabase.auth.signInWithOtp({
+        phone: formatPhoneNumber(loginState.email_phone),
+      })
+    )
+    
+    if (!res.error) {
+      router.push(`/?popup=verify&phone=${loginState.email_phone}`)
+    } else {
+      setLoginFail(true)
       setMessage(res.error.message)
     }
   }
@@ -86,7 +112,7 @@ export default function Login() {
       {loginFail && (
         <p className="text-red-500 text-sm">{message}</p>
       )}
-      <FormExtra />
+      <FormExtra handleForgotPassword={handleForgotPassword} />
 
       {loading ? (
         <div>

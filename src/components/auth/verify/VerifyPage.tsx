@@ -1,17 +1,17 @@
-import Header from "./Header"
-import Signup from "./Signup"
+import Header from "../Header"
+import Verify from "./Verify"
 
-export default function SignupPage() {
+export default function VerifyPage() {
   return (
     <div className="flex justify-center z-40">
       <div className="w-full bg-white p-10 rounded-2xl">
         <Header
-          heading="Đăng ký tài khoản mới"
+          heading="Xác thực số điện thoại"
           paragraph="Đã có tài khoản? "
           linkName="Đăng nhập"
           linkUrl="/?popup=login"
         />
-        <Signup />
+        <Verify />
       </div>
     </div>
   )

@@ -1,15 +1,15 @@
 'use client'
 
-import { FormikValues, FormikErrors, useFormik, FormikConfig } from 'formik';
-import { signupFields } from './formFields';
-import * as Yup from 'yup';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Input from './Input';
-import FormAction from './FormAction';
-import SignInWithGoogle from './SignInWithGoogle';
 import { supabase } from '@/supabase/supabase-app';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
+import { FormikConfig, FormikValues, useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import * as Yup from 'yup';
+import FormAction from '../FormAction';
+import Input from '../Input';
+import SignInWithGoogle from '../SignInWithGoogle';
+import { signupFields } from '../formFields';
 
 const fields = signupFields;
 let fieldsState: any = {};
@@ -19,66 +19,38 @@ fields.forEach(field => fieldsState[field.id] = '');
 export default function Signup() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-
-  const validate = async (values: FormikValues) => {
-    const errors: FormikErrors<FormikValues> = {};
-
-    // const usersRef = collection(db, "users")
-
-    // const emailQuery = query(usersRef, where("email", "==", values.email));
-    // const querySnapshot1 = await getDocs(emailQuery);
-    // if (querySnapshot1.docs.length) {
-    //   errors.email = 'Account exists, try different email!';
-    // }
-
-    return errors;
-  };
+  const [message, setMessage] = useState("")
 
   const handleSubmit = async (values: FormikValues) => {
-    await createAccount(values)
-    router.push(`/?popup=verify&phone=${values.phone}`)
+    setLoading(true);
+    const res = await supabase.auth.signInWithOtp({
+      phone: formatPhoneNumber(values.phone),
+    })
+
+    setLoading(false)
+    if (!res.error) {
+      console.log(res)
+      router.push(`/?popup=verify&phone=${values.phone}`)
+    } else {
+      setMessage(res.error.message)
+    }
   }
 
   const formik = useFormik({
     initialValues: {
       phone: "",
-      email: "",
-      password: "",
     },
     validationSchema: Yup.object({
       phone: Yup.string()
         // .matches(/^[0-9]*$/, 'Phone number must not contain special characters')
         .min(10, "Mininum 10 characters")
         .required("Required!"),
-      email: Yup.string()
-        .email("Invalid email format"),
-      password: Yup.string()
-        .min(8, "Minimum 8 characters")
-        .required("Required!"),
     }),
-    onSubmit: handleSubmit, validate
+    onSubmit: handleSubmit,
   } as FormikConfig<{
     phone: string;
-    email: string;
-    password: string;
   }>
   );
-
-  const createAccount = async (values: FormikValues) => {
-    try {
-      setLoading(true);
-      const res = await supabase.auth.signUp({
-        phone: formatPhoneNumber(values.phone),
-        password: values.password,
-      })
-
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
@@ -103,45 +75,10 @@ export default function Signup() {
           )}
         </div>
 
-        <div className='my-5'>
-          <Input
-            key={fields[1].id}
-            handleChange={formik.handleChange}
-            value={formik.values.email}
-            labelText={fields[1].labelText}
-            labelFor={fields[1].labelFor}
-            id={fields[1].id}
-            name={fields[1].name}
-            type={fields[1].type}
-            isRequired={fields[1].isRequired}
-            placeholder={fields[1].placeholder}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.email && formik.touched.email && (
-            <p className="text-red-500 text-sm">{formik.errors.email}</p>
-          )}
-        </div>
-
-        <div className='my-5'>
-          <Input
-            key={fields[2].id}
-            handleChange={formik.handleChange}
-            value={formik.values.password}
-            labelText={fields[2].labelText}
-            labelFor={fields[2].labelFor}
-            id={fields[2].id}
-            name={fields[2].name}
-            type={fields[2].type}
-            isRequired={fields[2].isRequired}
-            placeholder={fields[2].placeholder}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.password && formik.touched.password && (
-            <p className="text-red-500 text-sm">{formik.errors.password}</p>
-          )}
-        </div>
+        
+        {message && (
+          <p className="text-red-500 text-sm">{message}</p>
+        )}
 
         {loading ? (
           <FormAction>

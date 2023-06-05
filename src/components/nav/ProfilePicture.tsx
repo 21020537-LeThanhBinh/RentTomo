@@ -5,14 +5,16 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import LoginPage from '../auth/LoginPage';
-import SignupPage from '../auth/SignupPage';
-import VerifyPage from '../auth/VerifyPage';
-// import '../../app/globals.css'
+import LoginPage from '../auth/login/LoginPage';
+import SignupPage from '../auth/signup/SignupPage';
+import VerifyPage from '../auth/verify/VerifyPage';
+import SetPasswordPage from '../auth/setPassword/SetPasswordPage';
 
 export default function ProfilePicture() {
   const modalRef = useRef<HTMLDialogElement>(null)
-  const [modalActive, setModalActive] = useState(false)
+  const modalRef2 = useRef<HTMLDialogElement>(null)
+
+  const [modalActive, setModalActive] = useState(0)
   const searchParams = useSearchParams()!;
   const [activeTab, setActiveTab] = useState(''); // login, signup
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +36,7 @@ export default function ProfilePicture() {
         e.clientY > dialogDimensions!.bottom
       ) {
         modalRef.current?.close()
+        modalRef2.current?.close()
         router.push('/')
       }
     };
@@ -45,21 +48,39 @@ export default function ProfilePicture() {
   }, []);
 
   useEffect(() => {
-    if (!searchParams.has('popup')) modalRef.current?.close();
-    else if (!modalRef.current?.open) modalRef.current?.showModal();
+    if (!searchParams.has('popup')) {
+      modalRef.current?.close();
+      modalRef2.current?.close();
+      setActiveTab("");
+      return;
+    }
+
+    if (!modalRef.current?.open) {
+      modalRef.current?.showModal();
+    }
+
+    if (['verify', 'set-password'].includes(searchParams.get('popup')!)) {
+      !modalRef2.current?.open && modalRef2.current?.showModal();
+    } else {
+       modalRef2.current?.close();
+    }
 
     setActiveTab(searchParams.get('popup')!);
   }, [searchParams])
 
   useEffect(() => {
-    if (modalRef.current?.open) {
+    if (modalRef2.current?.open) {
       setTimeout(() => {
-        setModalActive(true)
+        setModalActive(2)
+      }, 200)
+    } else if (modalRef.current?.open) {
+      setTimeout(() => {
+        setModalActive(1)
       }, 200)
     } else {
-      setModalActive(false)
+      setModalActive(0)
     }
-  }, [modalRef.current?.open])
+  }, [modalRef.current?.open, modalRef2.current?.open])
 
   return (
     <div className='flex-shrink-0'>
@@ -91,15 +112,28 @@ export default function ProfilePicture() {
             <SignupPage />
           </div>
         </CSSTransition>
+      </dialog>
 
+      <dialog ref={modalRef2} className='sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%] z-10 modalRef2'>
         <CSSTransition
           in={activeTab === 'verify'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive ? "menu-signup" : ""}
+          classNames={modalActive == 2 ? "menu-login" : ""}
         >
           <div className='w-full absolute left-0'>
             <VerifyPage />
+          </div>
+        </CSSTransition>
+
+        <CSSTransition
+          in={activeTab === 'set-password'}
+          unmountOnExit
+          timeout={500}
+          classNames={modalActive == 2 ? "menu-signup" : ""}
+        >
+          <div className='w-full absolute left-0'>
+            <SetPasswordPage />
           </div>
         </CSSTransition>
       </dialog>

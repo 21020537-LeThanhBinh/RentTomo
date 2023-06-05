@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 
 export default function Header({
   heading,
@@ -11,8 +12,12 @@ export default function Header({
   linkName: string,
   linkUrl: string
 }) {
+  const router = useRouter();
+
   return (
     <div className="mb-10">
+      <button onClick={() => router.back()} className="absolute top-4 text-2xl">🡠</button>
+
       <div className="flex justify-center">
         <img
           alt=""

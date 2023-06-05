@@ -1,4 +1,4 @@
-import Header from "./Header";
+import Header from "../Header";
 import Login from "./Login";
 
 export default function LoginPage() {

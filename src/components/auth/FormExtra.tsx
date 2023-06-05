@@ -1,4 +1,4 @@
-export default function FormExtra() {
+export default function FormExtra({ handleForgotPassword }: { handleForgotPassword: () => void }) {
   return (
     <div className="flex items-center justify-between ">
       <div className="flex items-center">
@@ -14,9 +14,9 @@ export default function FormExtra() {
       </div>
 
       <div className="text-sm">
-        <a href="#" className="font-medium text-red-600 hover:text-red-500">
+        <button type="button" onClick={() => handleForgotPassword()} className="font-medium text-red-600 hover:text-red-500">
           Quên mật khẩu?
-        </a>
+        </button>
       </div>
     </div>
 

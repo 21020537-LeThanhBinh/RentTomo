@@ -60,7 +60,7 @@ const signupFields = [
     type: "password",
     autoComplete: "confirm-password",
     isRequired: true,
-    placeholder: "Confirm Password"
+    placeholder: "Nhập lại mật khẩu"
   }
 ]
 

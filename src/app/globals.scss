@@ -79,3 +79,7 @@ dialog[open] {
   transform: translateX(100%);
   transition: all 0.2s ease-out;
 }
+
+.modalRef2::backdrop {
+  background: transparent;
+}
