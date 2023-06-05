@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import LoginPage from '../auth/LoginPage';
 import SignupPage from '../auth/SignupPage';
+import VerifyPage from '../auth/VerifyPage';
 // import '../../app/globals.css'
 
 export default function ProfilePicture() {
@@ -88,6 +89,17 @@ export default function ProfilePicture() {
         >
           <div className='w-full absolute left-0'>
             <SignupPage />
+          </div>
+        </CSSTransition>
+
+        <CSSTransition
+          in={activeTab === 'verify'}
+          unmountOnExit
+          timeout={500}
+          classNames={modalActive ? "menu-signup" : ""}
+        >
+          <div className='w-full absolute left-0'>
+            <VerifyPage />
           </div>
         </CSSTransition>
       </dialog>

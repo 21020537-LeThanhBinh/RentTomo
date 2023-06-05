@@ -6,9 +6,9 @@ export default function LoginPage() {
     <div className="flex justify-center z-40">
       <div className="w-full bg-white p-10 rounded-2xl">
         <Header
-          heading="Login to your account"
-          paragraph="Don't have an account yet? "
-          linkName="Signup"
+          heading="Đăng nhập tài khoản"
+          paragraph="Chưa có tài khoản? "
+          linkName="Đăng ký"
           linkUrl="/?popup=signup"
         />
         <Login />

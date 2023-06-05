@@ -7,7 +7,7 @@ const loginFields = [
     type: "text",
     autoComplete: "",
     isRequired: true,
-    placeholder: "Email address/ Phone number"
+    placeholder: "Email/ Số điện thoại"
   },
   {
     labelText: "Password",
@@ -17,7 +17,7 @@ const loginFields = [
     type: "password",
     autoComplete: "current-password",
     isRequired: true,
-    placeholder: "Password"
+    placeholder: "Mật khẩu"
   }
 ]
 
@@ -30,7 +30,7 @@ const signupFields = [
     type: "text",
     autoComplete: "phone",
     isRequired: true,
-    placeholder: "Phone number"
+    placeholder: "Số điện thoại"
   },
   {
     labelText: "Email address",
@@ -39,8 +39,8 @@ const signupFields = [
     name: "email",
     type: "email",
     autoComplete: "email",
-    isRequired: true,
-    placeholder: "Email address"
+    isRequired: false,
+    placeholder: "Email"
   },
   {
     labelText: "Password",
@@ -50,7 +50,7 @@ const signupFields = [
     type: "password",
     autoComplete: "current-password",
     isRequired: true,
-    placeholder: "Password"
+    placeholder: "Mật khẩu"
   },
   {
     labelText: "Confirm Password",
