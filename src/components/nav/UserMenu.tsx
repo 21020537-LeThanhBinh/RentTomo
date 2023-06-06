@@ -1,7 +1,7 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from "react-icons/ai";
 import { CSSTransition } from 'react-transition-group';
@@ -11,6 +11,7 @@ import SetPasswordPage from '../auth/setPassword/SetPasswordPage';
 import SignupPage from '../auth/signup/SignupPage';
 import VerifyPage from '../auth/verify/VerifyPage';
 import MenuItem from './MenuItem';
+import handleCloseDialog from '@/utils/handleCloseDialog';
 
 export default function UserMenu() {
   const menuRef = useRef<HTMLDialogElement>(null);
@@ -22,6 +23,7 @@ export default function UserMenu() {
   const searchParams = useSearchParams()!;
   const [activeTab, setActiveTab] = useState(''); // login, signup
   const router = useRouter();
+  const pathname = usePathname()
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -29,29 +31,19 @@ export default function UserMenu() {
       else setIsLoggedIn(false)
       console.log(event, session)
     })
+  }, []);
 
-    const handleCloseDialog = (e: MouseEvent, dialogRef: HTMLDialogElement, action: () => void) => {
-      const dialogDimensions = dialogRef.getBoundingClientRect()
-      if (
-        e.clientX < dialogDimensions!.left ||
-        e.clientX > dialogDimensions!.right ||
-        e.clientY < dialogDimensions!.top ||
-        e.clientY > dialogDimensions!.bottom
-      ) {
-        action()
-      }
-    }
-
+  useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
-      handleCloseDialog(e, modalRef.current!, () => router.push('/'))
+      handleCloseDialog(e, modalRef.current!, () => router.replace(pathname))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (!searchParams.has('popup')) {
@@ -90,11 +82,11 @@ export default function UserMenu() {
 
   const onRent = useCallback(() => {
     if (!isLoggedIn) {
-      return router.push('/?popup=login')      
+      return router.push(`${pathname}?popup=login`)
     }
 
     console.log("rentModal.onOpen()")
-  }, [isLoggedIn]);
+  }, [isLoggedIn, pathname]);
 
   return (
     <div className='flex-shrink-0 relative'>
@@ -123,11 +115,11 @@ export default function UserMenu() {
             <>
               <MenuItem
                 label="Đăng ký"
-                onClick={() => router.push('/?popup=signup')}
+                onClick={() => router.push(`${pathname}?popup=signup`)}
               />
               <MenuItem
                 label="Đăng nhập"
-                onClick={() => router.push('/?popup=login')}
+                onClick={() => router.push(`${pathname}?popup=login`)}
               />
             </>
           )}

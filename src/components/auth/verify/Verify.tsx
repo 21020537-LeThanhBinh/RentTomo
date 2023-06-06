@@ -3,7 +3,7 @@
 import { supabase } from '@/supabase/supabase-app';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
@@ -16,6 +16,7 @@ export default function Verify() {
   const searchParams = useSearchParams()!;
   const [account, setAccount] = useState("")
   const [message, setMessage] = useState("")
+  const pathname = usePathname()
 
   useEffect(() => {
     if (!searchParams.has("account")) return
@@ -45,7 +46,7 @@ export default function Verify() {
 
     setLoading(false);
     if (!res.error) {
-      router.push("/?popup=set-password")
+      router.push(`${pathname}?popup=set-password`)
     } else {
       setMessage(res.error.message)
     }

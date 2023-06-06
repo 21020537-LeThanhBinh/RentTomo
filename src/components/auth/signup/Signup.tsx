@@ -3,7 +3,7 @@
 import { supabase } from '@/supabase/supabase-app';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
@@ -19,6 +19,7 @@ fields.forEach(field => fieldsState[field.id] = '');
 export default function Signup() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const [message, setMessage] = useState("")
 
   const handleSubmit = async (values: FormikValues) => {
@@ -30,7 +31,7 @@ export default function Signup() {
     setLoading(false)
     if (!res.error) {
       console.log(res)
-      router.push(`/?popup=verify&account=${values.phone}`)
+      router.push(`/${pathname}?popup=verify&account=${values.phone}`)
     } else {
       setMessage(res.error.message)
     }

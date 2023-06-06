@@ -2,7 +2,7 @@
 
 import { supabase } from '@/supabase/supabase-app';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import FormAction from "../FormAction";
 import FormExtra from "../FormExtra";
@@ -20,6 +20,7 @@ export default function Login() {
   const [loginFail, setLoginFail] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const [message, setMessage] = useState("")
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +77,7 @@ export default function Login() {
     )
     
     if (!res.error) {
-      router.push(`/?popup=verify&account=${loginState.email_phone}`)
+      router.push(`${pathname}?popup=verify&account=${loginState.email_phone}`)
     } else {
       setLoginFail(true)
       setMessage(res.error.message)
