@@ -8,28 +8,40 @@ import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import SignInWithGoogle from '../SignInWithGoogle';
+import SignInWithGoogle from '../providers/SignInWithGoogle';
 
 export default function Verify() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()!;
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const [account, setAccount] = useState("")
   const [message, setMessage] = useState("")
 
   useEffect(() => {
-    if (!searchParams.has("phone")) return
+    if (!searchParams.has("account")) return
 
-    setPhoneNumber(formatPhoneNumber(searchParams.get("phone")!.trim()))
+    if (!searchParams.get("account")!.includes("@")) {
+      setAccount(formatPhoneNumber(searchParams.get("account")!.trim()))
+    } else {
+      setAccount(searchParams.get("account")!.trim())
+    }
   }, [searchParams])
 
   const handleSubmit = async (values: FormikValues) => {
     setLoading(true);
-    const res = await supabase.auth.verifyOtp({
-      phone: phoneNumber,
-      token: values.code,
-      type: 'sms',
-    })
+    const res = (account.includes('@')) ? (
+      await supabase.auth.verifyOtp({
+        email: account,
+        token: values.code,
+        type: 'email',
+      })
+    ) : (
+      await supabase.auth.verifyOtp({
+        phone: account,
+        token: values.code,
+        type: 'sms',
+      })
+    )
 
     setLoading(false);
     if (!res.error) {
@@ -58,7 +70,7 @@ export default function Verify() {
   return (
     <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
       <div className="">
-        <div className=''>Nhập mã xác nhận được gửi đến {phoneNumber}:</div>
+        <div className=''>Nhập mã xác nhận được gửi đến {account}:</div>
 
         <div className='my-5'>
           <Input

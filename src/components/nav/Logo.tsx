@@ -1,9 +1,19 @@
-import Link from "next/link";
+'use client';
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Logo() {
-  return (
-    <Link href="/" className="flex-shrink-0 text-lg font-semibold">
-      RentxFriend
-    </Link>
-  )
+  const router = useRouter();
+
+  return ( 
+    <Image
+      onClick={() => router.push('/')}
+      src="/images/logo.png" 
+      height="100" 
+      width="100" 
+      alt="Logo" 
+      className="hidden md:block cursor-pointer" 
+    />
+   );
 }

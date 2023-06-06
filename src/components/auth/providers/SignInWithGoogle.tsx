@@ -1,6 +1,6 @@
 'use client'
 
-import { loginFields } from "./formFields";
+import { loginFields } from "../formFields";
 import { supabase } from '@/supabase/supabase-app';
 
 const fields = loginFields;

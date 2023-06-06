@@ -7,7 +7,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import SignInWithGoogle from '../SignInWithGoogle';
+import SignInWithGoogle from '../providers/SignInWithGoogle';
 import { signupFields } from '../formFields';
 
 const fields = signupFields;

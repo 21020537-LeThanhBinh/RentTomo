@@ -7,8 +7,9 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import FormAction from "../FormAction";
 import FormExtra from "../FormExtra";
 import Input from "../Input";
-import SignInWithGoogle from '../SignInWithGoogle';
+import SignInWithGoogle from '../providers/SignInWithGoogle';
 import { loginFields } from "../formFields";
+import SignInWithFacebook from '../providers/SignInWithFacebook';
 
 const fields = loginFields;
 let fieldsState: any = {};
@@ -60,17 +61,13 @@ export default function Login() {
   const handleForgotPassword = async () => {
     if (!loginState.email_phone) {
       setLoginFail(true)
-      setMessage("Vui lòng nhập số điện thoại hoặc email")
+      setMessage("Vui lòng nhập số điện thoại")
       return
     }
 
-    // Add phone login
     const res = (loginState.email_phone.includes('@')) ? (
       await supabase.auth.signInWithOtp({
         email: loginState.email_phone,
-        options: {
-          emailRedirectTo: 'http://localhost:3000/'
-        }
       })
     ) : (
       await supabase.auth.signInWithOtp({
@@ -79,7 +76,7 @@ export default function Login() {
     )
     
     if (!res.error) {
-      router.push(`/?popup=verify&phone=${loginState.email_phone}`)
+      router.push(`/?popup=verify&account=${loginState.email_phone}`)
     } else {
       setLoginFail(true)
       setMessage(res.error.message)
@@ -135,6 +132,7 @@ export default function Login() {
       <p className='text-gray-900 text-center mt-5'>hoặc</p>
 
       <SignInWithGoogle />
+      <SignInWithFacebook />
 
     </form >
   )

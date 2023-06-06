@@ -1,23 +1,26 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AiOutlineMenu } from "react-icons/ai";
 import { CSSTransition } from 'react-transition-group';
+import Avatar from '../Avatar';
 import LoginPage from '../auth/login/LoginPage';
+import SetPasswordPage from '../auth/setPassword/SetPasswordPage';
 import SignupPage from '../auth/signup/SignupPage';
 import VerifyPage from '../auth/verify/VerifyPage';
-import SetPasswordPage from '../auth/setPassword/SetPasswordPage';
+import MenuItem from './MenuItem';
 
-export default function ProfilePicture() {
+export default function UserMenu() {
+  const menuRef = useRef<HTMLDialogElement>(null);
   const modalRef = useRef<HTMLDialogElement>(null)
   const modalRef2 = useRef<HTMLDialogElement>(null)
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalActive, setModalActive] = useState(0)
   const searchParams = useSearchParams()!;
   const [activeTab, setActiveTab] = useState(''); // login, signup
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,18 +30,21 @@ export default function ProfilePicture() {
       console.log(event, session)
     })
 
-    const handleClickOutside = (e: MouseEvent) => {
-      const dialogDimensions = modalRef.current?.getBoundingClientRect()
+    const handleCloseDialog = (e: MouseEvent, dialogRef: HTMLDialogElement, action: () => void) => {
+      const dialogDimensions = dialogRef.getBoundingClientRect()
       if (
         e.clientX < dialogDimensions!.left ||
         e.clientX > dialogDimensions!.right ||
         e.clientY < dialogDimensions!.top ||
         e.clientY > dialogDimensions!.bottom
       ) {
-        modalRef.current?.close()
-        modalRef2.current?.close()
-        router.push('/')
+        action()
       }
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
+      handleCloseDialog(e, modalRef.current!, () => router.push('/'))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -62,7 +68,7 @@ export default function ProfilePicture() {
     if (['verify', 'set-password'].includes(searchParams.get('popup')!)) {
       !modalRef2.current?.open && modalRef2.current?.showModal();
     } else {
-       modalRef2.current?.close();
+      modalRef2.current?.close();
     }
 
     setActiveTab(searchParams.get('popup')!);
@@ -82,15 +88,53 @@ export default function ProfilePicture() {
     }
   }, [modalRef.current?.open, modalRef2.current?.open])
 
-  return (
-    <div className='flex-shrink-0'>
-      {isLoggedIn ? (
-        <Link href="/" onClick={() => supabase.auth.signOut()}>Đăng xuất</Link>
-      ) : (
-        <Link href="/?popup=login" onClick={() => modalRef.current?.showModal()}>Tài khoản</Link>
-      )}
+  const onRent = useCallback(() => {
+    if (!isLoggedIn) {
+      return router.push('/?popup=login')      
+    }
 
-      <dialog ref={modalRef} className='sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
+    console.log("rentModal.onOpen()")
+  }, [isLoggedIn]);
+
+  return (
+    <div className='flex-shrink-0 relative'>
+      <div className="flex flex-row items-center gap-3">
+        <div onClick={onRent} className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+          Phòng của bạn
+        </div>
+        <button onClick={() => !menuRef.current?.open && menuRef.current?.show()} className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
+          <AiOutlineMenu />
+          <div className="hidden md:block">
+            <Avatar src={""} />
+          </div>
+        </button>
+      </div>
+
+      <dialog ref={menuRef} className="rounded-xl shadow-md w-[30vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm mr-0 p-0">
+        <div className="flex flex-col cursor-pointer">
+          {isLoggedIn ? (
+            <>
+              <MenuItem
+                label="Đăng xuất"
+                onClick={() => { supabase.auth.signOut(); router.push('/') }}
+              />
+            </>
+          ) : (
+            <>
+              <MenuItem
+                label="Đăng ký"
+                onClick={() => router.push('/?popup=signup')}
+              />
+              <MenuItem
+                label="Đăng nhập"
+                onClick={() => router.push('/?popup=login')}
+              />
+            </>
+          )}
+        </div>
+      </dialog>
+
+      <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
         <CSSTransition
           in={activeTab === 'login'}
           unmountOnExit
@@ -114,7 +158,7 @@ export default function ProfilePicture() {
         </CSSTransition>
       </dialog>
 
-      <dialog ref={modalRef2} className='sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%] z-10 modalRef2'>
+      <dialog ref={modalRef2} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%] z-10 modalRef2'>
         <CSSTransition
           in={activeTab === 'verify'}
           unmountOnExit

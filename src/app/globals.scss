@@ -26,7 +26,7 @@
     rgb(var(--background-start-rgb));
 } */
 
-dialog[open] {
+dialog[open].popup {
   animation: fadeAndUp 0.2s ease-out forwards;
 }
 
