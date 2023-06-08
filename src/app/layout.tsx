@@ -1,6 +1,7 @@
 import NavBar from '@/components/nav/NavBar'
 import './globals.scss'
 import { Inter } from 'next/font/google'
+import ToasterProvider from '@/providers/ToasterProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ToasterProvider />
         {/* @ts-expect-error Server Component */}
         <NavBar />
         {children}

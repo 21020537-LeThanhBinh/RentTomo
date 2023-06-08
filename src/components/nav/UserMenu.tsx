@@ -20,9 +20,9 @@ export default function UserMenu() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalActive, setModalActive] = useState(0)
-  const searchParams = useSearchParams()!;
   const [activeTab, setActiveTab] = useState(''); // login, signup
   const router = useRouter();
+  const searchParams = useSearchParams();
   const pathname = usePathname()
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function UserMenu() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
-      handleCloseDialog(e, modalRef.current!, () => router.replace(pathname))
+      handleCloseDialog(e, modalRef.current!, () => modalRef.current?.open && router.replace(pathname))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -85,7 +85,7 @@ export default function UserMenu() {
       return router.push(`${pathname}?popup=login`)
     }
 
-    console.log("rentModal.onOpen()")
+    alert('Phòng của bạn: Updating...')
   }, [isLoggedIn, pathname]);
 
   return (
