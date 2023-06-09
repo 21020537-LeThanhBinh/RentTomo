@@ -2,119 +2,155 @@
 
 import Button from '@/components/Button';
 import { utilities } from '@/components/filter/Utilities';
-import Counter from '@/components/input/Counter';
+import AddressSelect from '@/components/input/AddressSelect';
+import CategoryInput from '@/components/input/CategoryInput';
 import ImageUpload from '@/components/input/ImageUpload';
 import Input from '@/components/input/Input';
 import UtilityInput from '@/components/input/UtilityInput';
+import { supabase } from '@/supabase/supabase-app';
+import formatAddress from '@/utils/formatAddress';
+import handleCloseDialog from '@/utils/handleCloseDialog';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-
-enum STEPS {
-  CATEGORY = 0,
-  LOCATION = 1,
-  INFO = 2,
-  IMAGES = 3,
-  DESCRIPTION = 4,
-  PRICE = 5,
-}
 
 export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false)
-  const [map, setMap] = useState<any>(null)
   const router = useRouter()
+  const addressRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    async function fetchMap() {
-      const res = await fetch("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json").then((res) => res.json());
-      setMap(res)
-    }
+    const handleClickOutside = (e: MouseEvent) => {
+      handleCloseDialog(e, addressRef.current!, () => addressRef.current?.close())
+    };
 
-    fetchMap()
-  }, [])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSubmit = async (values: FormikValues) => {
     setIsLoading(true);
 
-    setTimeout(() => {
-      toast.success('Listing created!');
-      setIsLoading(false)
-    }, 1000)
+    const uid = (await supabase.auth.getUser())?.data?.user?.id
+
+    if (!uid) return toast.error('Bạn chưa đăng nhập!')
+    if (Object.keys(values).some((key) => !values[key])) {
+      toast.error('Vui lòng điền đầy đủ thông tin!');
+      return setIsLoading(false);
+    }
+
+    const { data, error } = await supabase
+      .from('posts')
+      .insert([
+        { ...values, author_id: uid, address: formatAddress(values.address) },
+      ])
+
+    if (!error) {
+      toast.success('Đăng tin thành công!');
+      router.refresh()
+      formik.resetForm()
+
+      console.log(data, error)
+    } else {
+      toast.error('Lỗi!');
+
+      console.log(data, error)
+    }
+
+    setIsLoading(false);
   }
 
   const formik = useFormik({
     initialValues: {
       category: "",
-      location: {
+      address: {
         city: "",
         district: "",
         ward: "",
+        street: "",
+        number: "",
       },
-      area: 1,
-      room: 1,
-      bathroom: 1,
-      imageSrc: "",
+      area: 0,
+      imageSrc: [],
       utility: [],
+      title: "",
+      description: "",
+      price: 0,
+      deposit: 0,
     },
     onSubmit: handleSubmit,
   } as FormikConfig<{
     category: string;
-    location: {
+    address: {
       city: string;
       district: string;
       ward: string;
+      street: string;
+      number: string;
     },
     area: number;
-    room: number;
-    bathroom: number;
-    imageSrc: string;
+    imageSrc: string[];
     utility: string[];
+    title: string;
+    description: string;
+    price: number;
+    deposit: number;
   }>
   );
 
-  const getLocationList = (type: string) => {
-    if (type === "city") {
-      return map
-        ?.map((city: any) => city.Name)
-    }
-    if (type === "district") {
-      return map
-        ?.find((city: any) => city.Name === formik.values.location.city)?.Districts
-        ?.map((district: any) => district.Name)
-    }
-    if (type === "ward") {
-      return map
-        ?.find((city: any) => city.Name === formik.values.location.city)?.Districts
-        ?.find((district: any) => district.Name === formik.values.location.district)?.Wards
-        ?.map((ward: any) => ward.Name)
-    }
-  }
-
   return (
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-      <form className="my-8 rounded-2xl border-2">
-        <div className="flex flex-col p-4 gap-4 w-1/3">
+      <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row">
+        <div className="flex flex-col p-4 gap-8 md:w-1/3 w-full">
           <ImageUpload
-            onChange={(value) => formik.setFieldValue("imageSrc", value)}
-            value={formik.values.imageSrc}
+            onChange={(value) => formik.setFieldValue("imageSrc", [value])}
+            value={formik.values.imageSrc[0]}
           />
+
+          {/* Video upload */}
         </div>
 
-        <div className="flex flex-col p-4">
-          <label htmlFor="category" className="font-medium">Loại phòng:</label>
+        <div className="flex flex-col gap-8 p-4">
+          <CategoryInput
+            onChange={(value) => formik.setFieldValue("category", value)}
+            value={formik.values.category}
+          />
 
-          <select name="category" id="category" value={formik.values.category} onChange={formik.handleChange} className='w-1/3'>
-            <option value="Tất cả">Tất cả</option>
-            <option value="Phòng cho thuê">Phòng cho thuê</option>
-            <option value="Phòng ở ghép">Phòng ở ghép</option>
-            <option value="Ký túc xá">Ký túc xá</option>
-            <option value="Nhà nguyên căn">Nhà nguyên căn</option>
-            <option value="Căn hộ">Căn hộ</option>
-          </select>
-        </div>
+          <div>
+            <Input
+              onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}
+              onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
+              value={formatAddress(formik.values.address)}
+              id="address"
+              label="Địa chỉ"
+              disabled={isLoading}
+              required
+            />
 
-        <div className='flex flex-col p-4'>
+            <dialog ref={addressRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
+              <div className="w-full absolute left-0 flex justify-center z-40">
+                <div className="w-full bg-white px-10 pt-20 p-b-10 rounded-2xl">
+                  <div className='flex'>
+                    <button onClick={() => addressRef.current?.close()} className="absolute top-4 text-2xl z-10">🡠</button>
+                    <div className="absolute top-4 left-0 text-2xl text-center w-full">
+                      <span>Chọn địa chỉ</span>
+                    </div>
+                  </div>
+
+                  <AddressSelect
+                    value={formik.values.address}
+                    setFieldValue={(name, value) => formik.setFieldValue(name, value)}
+                    isLoading={isLoading}
+                    addressRef={addressRef}
+                  />
+                </div>
+              </div>
+            </dialog>
+          </div>
+
           <label htmlFor="utility" className="font-medium">Tiện ích:</label>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
@@ -133,101 +169,73 @@ export default function SearchPage() {
               </div>
             ))}
           </div>
-        </div>
 
-        <div className="flex flex-col p-4">
-          <label htmlFor="location" className="font-medium">Địa chỉ:</label>
-
-          <div>
-            <input list="cities" type="text" name="location.city" id="location.city" value={formik?.values?.location?.city} onChange={formik.handleChange} placeholder="Chọn tỉnh thành" />
-            <datalist id="cities">
-              {getLocationList("city")?.map((city: any) => {
-                return <option key={city} value={city}>{city}</option>
-              })}
-            </datalist>
-
-            <input list="districts" type="text" name="location.district" id="location.district" value={formik?.values?.location?.district} onChange={formik.handleChange} placeholder="Chọn quận huyện" />
-            <datalist id="districts">
-              {formik?.values?.location?.city && getLocationList("district")?.map((district: any) => {
-                return <option key={district} value={district}>{district}</option>
-              })}
-            </datalist>
-
-            <input list="wards" type="text" name="location.ward" id="location.ward" value={formik?.values?.location?.ward} onChange={formik.handleChange} placeholder="Chọn phường xã" />
-            <datalist id="wards">
-              {formik?.values?.location?.district && getLocationList("ward")?.map((ward: any) => {
-                return <option key={ward} value={ward}>{ward}</option>
-              })}
-            </datalist>
-          </div>
-        </div>
-
-        <div className="flex flex-col p-4 gap-4">
-          <Counter
+          <Input
             onChange={(value) => formik.setFieldValue("area", value)}
-            value={formik.values.area}
-            title='Diện tích'
-            subtitle='Diện tích phòng (m2)?'
-          />
-          <hr />
-          <Counter
-            onChange={(value) => formik.setFieldValue("room", value)}
-            value={formik.values.room}
-            title="Số phòng"
-            subtitle="Bao nhiêu phòng cho thuê?"
-          />
-          <hr />
-          <Counter
-            onChange={(value) => formik.setFieldValue("bathroom", value)}
-            value={formik.values.bathroom}
-            title="Phòng tắm"
-            subtitle="Có bao nhiêu phòng tắm"
-          />
-        </div>
-
-        <div className="flex flex-col p-4 gap-4">
-          <Input
-            id="title"
-            label="Title"
+            value={formik.values.area ? formik.values.area.toString() : ""}
+            id="area"
+            label="Diện tích"
             disabled={isLoading}
             required
           />
-          <hr />
-          <Input
-            id="description"
-            label="Description"
-            disabled={isLoading}
-            required
-          />
-        </div>
 
-        <div className="flex flex-col p-4 gap-4">
           <Input
+            onChange={(value) => formik.setFieldValue("price", value)}
+            value={formik.values.price ? formik.values.price.toString() : ""}
             id="price"
-            label="Price"
+            label="Giá thuê"
             formatPrice
             type="number"
             disabled={isLoading}
             required
           />
-        </div>
 
-        <div className="flex justify-end">
-          <div className='w-1/3 flex p-4 gap-4'>
-            <Button
-              label='Hủy'
-              onClick={() => router.back()}
-              disabled={isLoading}
-              outline
-            />
-            <Button
-              label='Đăng tin'
-              onClick={() => formik.handleSubmit()}
-              disabled={isLoading}
-            />
+          <Input
+            onChange={(value) => formik.setFieldValue("deposit", value)}
+            value={formik.values.deposit ? formik.values.deposit.toString() : ""}
+            id="deposit"
+            label="Số tiền cọc"
+            formatPrice
+            type="number"
+            disabled={isLoading}
+            required
+          />
+
+          <Input
+            onChange={(value) => formik.setFieldValue("title", value)}
+            value={formik.values.title}
+            id="title"
+            label="Tiêu đề"
+            disabled={isLoading}
+            required
+          />
+
+          <Input
+            onChange={(value) => formik.setFieldValue("description", value)}
+            value={formik.values.description}
+            id="description"
+            label="Mô tả chi tiết"
+            disabled={isLoading}
+            required
+          />
+
+          <div className="flex justify-end">
+            <div className='w-1/3 flex p-4 gap-4'>
+              <Button
+                label='Hủy'
+                onClick={() => router.back()}
+                disabled={isLoading}
+                outline
+              />
+              <Button
+                label='Đăng tin'
+                onClick={() => formik.handleSubmit()}
+                disabled={isLoading}
+              />
+            </div>
           </div>
         </div>
-      </form>
-    </div>
+      </form >
+    </div >
   )
 }

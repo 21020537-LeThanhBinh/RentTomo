@@ -31,7 +31,7 @@ const UtilityBox: React.FC<UtilityBoxProps> = ({
       `}
     >
       <Icon size={30} />
-      <div>
+      <div className="flex-shrink-0 overflow-clip">
         {label}
       </div>
     </div>

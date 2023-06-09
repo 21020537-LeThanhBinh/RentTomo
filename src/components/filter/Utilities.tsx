@@ -1,105 +1,99 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import { TbBeach, TbMountain, TbPool } from 'react-icons/tb';
-import { 
-  GiBarn, 
-  GiBoatFishing, 
-  GiCactus, 
-  GiCastle, 
-  GiCaveEntrance, 
-  GiForestCamp, 
-  GiIsland,
-  GiWindmill
+import { CgScreenWide } from 'react-icons/cg';
+import { FaToilet } from 'react-icons/fa';
+import {
+  GiCctvCamera,
+  GiCookingPot,
+  GiWashingMachine,
+  GiWindow
 } from 'react-icons/gi';
-import { FaSkiing } from 'react-icons/fa';
-import { BsSnow } from 'react-icons/bs';
-import { IoDiamond } from 'react-icons/io5';
-import { MdOutlineVilla } from 'react-icons/md';
+import { IoBed } from 'react-icons/io5';
+import { MdHeatPump, MdOutlinePets } from 'react-icons/md';
+import { RiEBikeFill, RiFridgeFill } from 'react-icons/ri';
+import { TbAirConditioning } from 'react-icons/tb';
 
-import UtilityBox from "../UtilityBox";
+import { AiFillClockCircle, AiOutlineWifi } from 'react-icons/ai';
+import { BiCloset } from 'react-icons/bi';
 import Container from '../Container';
+import UtilityBox from "../UtilityBox";
 
 
 export const utilities = [
   {
     label: 'WC riêng',
-    icon: TbBeach,
+    icon: FaToilet,
     description: '',
   },
   {
     label: 'Chỗ để xe',
-    icon: GiWindmill,
+    icon: RiEBikeFill,
     description: '',
   },
   {
     label: 'Cửa sổ',
-    icon: MdOutlineVilla,
+    icon: GiWindow,
     description: ''
   },
   {
     label: 'An ninh',
-    icon: TbMountain,
+    icon: GiCctvCamera,
     description: ''
   },
   {
     label: 'Wifi',
-    icon: TbPool,
+    icon: AiOutlineWifi,
     description: ''
   },
   {
     label: 'Tự do',
-    icon: GiIsland,
-    description: ''
-  },
-  {
-    label: 'Chủ riêng',
-    icon: GiBoatFishing,
+    icon: AiFillClockCircle,
     description: ''
   },
   {
     label: 'Máy lạnh',
-    icon: FaSkiing,
+    icon: TbAirConditioning,
     description: ''
   },
   {
     label: 'Máy nước nóng',
-    icon: GiCastle,
+    icon: MdHeatPump,
     description: ''
   },
   {
     label: 'Nhà bếp',
-    icon: GiCaveEntrance,
+    icon: GiCookingPot,
     description: ''
   },
   {
     label: 'Tủ lạnh',
-    icon: GiForestCamp,
+    icon: RiFridgeFill,
     description: ''
   },
   {
     label: 'Máy giặt',
-    icon: BsSnow,
+    icon: GiWashingMachine,
     description: ''
   },
   {
     label: 'Giường',
-    icon: GiCactus,
+    icon: IoBed,
     description: ''
   },
   {
     label: 'Tủ đồ',
-    icon: GiBarn,
+    icon: BiCloset,
     description: ''
   },
   {
     label: 'Tivi',
-    icon: IoDiamond,
+    icon: CgScreenWide,
     description: ''
   },
   {
     label: 'Thú cưng',
-    icon: IoDiamond,
+    icon: MdOutlinePets,
     description: ''
   }
 ]

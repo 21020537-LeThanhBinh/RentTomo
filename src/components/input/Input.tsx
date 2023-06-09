@@ -1,6 +1,6 @@
 'use client';
 
-import { BiDollar } from "react-icons/bi";
+import { TbCurrencyDong } from "react-icons/tb";
 
 interface InputProps {
   id: string;
@@ -9,6 +9,9 @@ interface InputProps {
   disabled?: boolean;
   formatPrice?: boolean;
   required?: boolean;
+  onChange: (value: string) => void;
+  value: string;
+  onClick?: () => void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,14 +21,20 @@ const Input: React.FC<InputProps> = ({
   disabled,
   formatPrice,
   required,
+  onChange,
+  value,
+  onClick
 }) => {
   return (
     <div className="w-full relative">
       {formatPrice && (
-        <BiDollar size={24} className="text-neutral-700 absolute top-5 left-2" />
+        <TbCurrencyDong size={24} className="text-neutral-700 absolute top-5 left-2" />
       )}
       <input
-        id={id}
+        onClick={onClick}
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+        id={id} 
         disabled={disabled}
         required={required}
         placeholder=" "
@@ -47,6 +56,7 @@ const Input: React.FC<InputProps> = ({
         `}
       />
       <label
+        htmlFor={id}
         className={`
           absolute 
           text-md
@@ -54,13 +64,13 @@ const Input: React.FC<InputProps> = ({
           transform 
           -translate-y-3 
           top-5 
-          z-10 
           origin-[0] 
           ${formatPrice ? 'left-9' : 'left-4'}
           peer-placeholder-shown:scale-100 
           peer-placeholder-shown:translate-y-0 
           peer-focus:scale-75
           peer-focus:-translate-y-4
+          hover:cursor-text
         `}
       >
         {label}
