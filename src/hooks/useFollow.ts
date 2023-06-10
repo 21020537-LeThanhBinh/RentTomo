@@ -1,4 +1,5 @@
 import { supabase } from "@/supabase/supabase-app";
+import createQueryString from "@/utils/createQueryString";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -33,20 +34,12 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
     (listingId && userId) && fetchData()
   }, [userId, listingId]);
 
-  const createQueryString = useCallback((name: string, value: string) => {
-    const params = new URLSearchParams(searchParams as any)
-    params.set(name, value)
-
-    return params.toString()
-  },
-    [searchParams]
-  )
-
   const toggleFavorite = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
     if (!userId) {
-      router.push(pathname + '?' + createQueryString('popup', 'login'))
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))
+      return;
     }
 
     const { data, error } = !hasFollowed ? (

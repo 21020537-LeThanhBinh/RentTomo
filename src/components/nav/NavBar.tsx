@@ -13,7 +13,7 @@ export default async function NavBar() {
               <Logo />
             </div>
 
-            <div className="flex flex-1 gap-2 w-full md:w-auto">
+            <div className="flex gap-2 w-full md:w-auto">
               <SearchBar />
               <PostBtn />
             </div>
