@@ -9,6 +9,7 @@ import Input from '@/components/input/Input';
 import UtilityInput from '@/components/input/UtilityInput';
 import { supabase } from '@/supabase/supabase-app';
 import formatAddress from '@/utils/formatAddress';
+import formatBigNumber from '@/utils/formatBigNumber';
 import handleCloseDialog from '@/utils/handleCloseDialog';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -55,7 +56,7 @@ export default function SearchPage() {
 
       console.log(data, error)
     } else {
-      toast.error('Lỗi!');
+      toast.error('Đã có lỗi xảy ra!');
 
       console.log(data, error)
     }
@@ -180,23 +181,23 @@ export default function SearchPage() {
           />
 
           <Input
-            onChange={(value) => formik.setFieldValue("price", value)}
-            value={formik.values.price ? formik.values.price.toString() : ""}
+            onChange={(value) => formik.setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
+            value={formatBigNumber(formik.values.price)}
             id="price"
             label="Giá thuê"
             formatPrice
-            type="number"
+            type="string"
             disabled={isLoading}
             required
           />
 
           <Input
-            onChange={(value) => formik.setFieldValue("deposit", value)}
-            value={formik.values.deposit ? formik.values.deposit.toString() : ""}
+            onChange={(value) => formik.setFieldValue("deposit", parseInt(value.replace(/\D/g, "")))}
+            value={formatBigNumber(formik.values.deposit)}
             id="deposit"
             label="Số tiền cọc"
             formatPrice
-            type="number"
+            type="string"
             disabled={isLoading}
             required
           />

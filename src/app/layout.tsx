@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToasterProvider />
-        {/* @ts-expect-error Server Component */}
         <NavBar />
         {children}
       </body>

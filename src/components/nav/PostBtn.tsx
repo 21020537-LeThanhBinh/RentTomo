@@ -13,7 +13,6 @@ export default function PostBtn() {
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) setIsLoggedIn(true)
       else setIsLoggedIn(false)
-      console.log(event, session)
     })
   }, []);
 
@@ -26,7 +25,7 @@ export default function PostBtn() {
   }, [isLoggedIn, pathname]);
 
   return (
-    <button onClick={onClick} className="py-2 px-6 bg-rose-500 rounded-full text-white flex items-center flex-shrink-0 shadow-sm hover:shadow-md transition">
+    <button onClick={onClick} className="py-2 px-6 bg-rose-500 rounded-full text-white flex items-center whitespace-nowrap shadow-sm hover:shadow-md transition">
       Đăng tin
     </button>
   )

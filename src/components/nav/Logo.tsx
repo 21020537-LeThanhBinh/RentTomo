@@ -13,7 +13,7 @@ export default function Logo() {
       height="100" 
       width="100" 
       alt="Logo" 
-      className="hidden md:block cursor-pointer" 
+      className="" 
     />
    );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { BiSearch } from 'react-icons/bi';
 // import { differenceInDays } from 'date-fns';
@@ -17,6 +17,7 @@ export default function SearchBar() {
   const  startDate = params?.get('startDate');
   const  endDate = params?.get('endDate');
   const  guestCount = params?.get('guestCount');
+  const router = useRouter();
 
   const locationLabel = useMemo(() => {
     if (locationValue) {
@@ -52,7 +53,8 @@ export default function SearchBar() {
   }, [guestCount]);
 
   return ( 
-    <div onClick={searchModal.onOpen} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+    // <div onClick={searchModal.onOpen} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+    <div onClick={() => {router.push("/search")}} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
       <div 
         className="
           flex 
