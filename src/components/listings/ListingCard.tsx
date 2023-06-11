@@ -78,67 +78,55 @@ const ListingCard: React.FC<ListingCardProps> = ({
   // }, [reservation]);
 
   return (
-    <div
-      onClick={() => router.push(`/listings/${data.id}`)}
-      className="col-span-1 cursor-pointer group"
-    >
-      <div className="flex flex-col gap-2 w-full">
-        <div
-          className="
-            aspect-square 
-            w-full 
-            relative 
-            overflow-hidden 
-            rounded-xl
-          "
-        >
+    <div onClick={() => router.push(`/listings/${data.id}`)} className="cursor-pointer group h-full">
+      <div className="flex gap-4 h-full">
+        <div className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl">
           <Image
             fill
-            className="
-              object-cover 
-              h-full 
-              w-full 
-              group-hover:scale-110 
-              transition
-            "
             src={data.imageSrc[0]}
             alt="Listing"
+            className="object-cover h-full w-full group-hover:scale-110 transition"
           />
-          <div className="
-            absolute
-            top-3
-            right-3
-          ">
+          <div className="absolute top-3 right-3">
             <HeartButton
               listingId={data.id}
               userId={userId}
             />
           </div>
         </div>
-        <div className="font-semibold text-lg">
-          {/* {location?.region}, {location?.label} */}
-          {data.title}
-        </div>
-        <div className="font-light text-neutral-500">
-          {/* {reservationDate || data.category} */}
-          {data.category}
-        </div>
-        <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">
-            đ {formatBigNumber(price)}
+
+        <div className="flex flex-col justify-between">
+          <div className="font-semibold text-lg">
+            {/* {location?.region}, {location?.label} */}
+            {data.title}
           </div>
-          {!reservation && (
-            <div className="font-light">/ tháng</div>
+          <div className="font-light text-neutral-500">
+            {/* {data.category} */}
+            {data.category}
+          </div>
+          <div className="font-light text-neutral-500">
+            {data.area} m2
+          </div>
+          <div className="flex flex-row items-center gap-1">
+            <div className="font-semibold">
+              đ {formatBigNumber(price)}
+            </div>
+            {!reservation && (
+              <div className="font-light">/ tháng</div>
+            )}
+          </div>
+          <div className="font-light text-neutral-500">
+            {data.address}
+          </div>
+          {onAction && actionLabel && (
+            <Button
+              disabled={disabled}
+              small
+              label={actionLabel}
+              onClick={handleCancel}
+            />
           )}
         </div>
-        {onAction && actionLabel && (
-          <Button
-            disabled={disabled}
-            small
-            label={actionLabel}
-            onClick={handleCancel}
-          />
-        )}
       </div>
     </div>
   );

@@ -1,42 +1,35 @@
 'use client';
 
 import { IconType } from 'react-icons';
-import Select from 'react-select';
+import Select from 'react-select'
 
-export type SelectValue = {
+export type MultiSelectValue = {
   label?: string;
   value?: string;
   icon?: IconType;
 }
 
-interface SelectProps {
-  value?: SelectValue;
-  onChange: (value: SelectValue) => void;
-  options?: SelectValue[];
+interface MultiSelectProps {
+  value?: MultiSelectValue[];
+  onChange: (value: MultiSelectValue) => void;
+  options: MultiSelectValue[];
   placeholder?: string;
-  isClearable?: boolean;
-  alwaysClosed?: boolean;
-  tabIndex?: number;
 }
 
-const ItemSelect: React.FC<SelectProps> = ({
+const MultiItemSelect: React.FC<MultiSelectProps> = ({
   value,
   onChange,
   options,
   placeholder,
-  isClearable = true,
-  alwaysClosed = false,
-  tabIndex
 }) => {
   return (
     <div>
       <Select
-        tabIndex={tabIndex}
         placeholder={placeholder}
-        isClearable={isClearable}
+        isClearable
         options={options}
-        value={value?.label && value}
-        onChange={onChange}
+        value={value?.length && value}
+        onChange={(value) => onChange(value as MultiSelectValue)}
         formatOptionLabel={(option: any) => (
           <div className="flex flex-row items-center gap-3">
             {option?.icon && option?.icon()}
@@ -59,10 +52,10 @@ const ItemSelect: React.FC<SelectProps> = ({
             primary25: '#ffe4e6'
           }
         })}
-        menuIsOpen={alwaysClosed ? false : undefined}
+        isMulti
       />
     </div>
   );
 }
 
-export default ItemSelect;
+export default MultiItemSelect;

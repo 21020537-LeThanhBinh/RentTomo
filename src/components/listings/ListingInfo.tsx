@@ -5,6 +5,8 @@ import { IconType } from "react-icons";
 
 import Avatar from "../Avatar";
 import ListingCategory from "./ListingCategory";
+import UtilityBox from "../UtilityBox";
+import { utilities } from "../filter/Utilities";
 // import ListingCategory from "./ListingCategory";
 
 // const Map = dynamic(() => import('../Map'), { 
@@ -19,6 +21,7 @@ interface ListingInfoProps {
   bathroomCount: number;
   category: string | undefined;
   locationValue: string;
+  utility: string[];
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -29,6 +32,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   bathroomCount = 0,
   category,
   locationValue,
+  utility
 }) => {
   // const { getByValue } = useCountries();
 
@@ -73,16 +77,25 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         </div>
       </div>
       <hr />
-      {category && (
+      {/* {category && (
         <ListingCategory
           // icon={category.icon} 
           label={category}
           // description={category?.description} 
         />
-      )}
+      )} */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
+        {utility.map((item) => (
+          <div key={item} className="col-span-1">
+            <UtilityBox
+              label={item}
+              icon={utilities.find((u) => u.label === item)?.icon as IconType}
+            />
+          </div>
+        ))}
+      </div>
       <hr />
-      <div className="
-      text-lg font-light text-neutral-500">
+      <div className="text-lg font-light text-neutral-500">
         {description}
       </div>
       <hr />

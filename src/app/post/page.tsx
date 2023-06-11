@@ -6,7 +6,8 @@ import AddressSelect from '@/components/input/AddressSelect';
 import CategoryInput from '@/components/input/CategoryInput';
 import ImageUpload from '@/components/input/ImageUpload';
 import Input from '@/components/input/Input';
-import UtilityInput from '@/components/input/UtilityInput';
+import ItemSelect from '@/components/input/ItemSelect';
+import MultiItemSelect from '@/components/input/MultiItemSelect';
 import { supabase } from '@/supabase/supabase-app';
 import formatAddress from '@/utils/formatAddress';
 import formatBigNumber from '@/utils/formatBigNumber';
@@ -114,22 +115,23 @@ export default function SearchPage() {
           {/* Video upload */}
         </div>
 
-        <div className="flex flex-col gap-8 p-4">
+        <div className="flex-1 flex flex-col gap-8 p-4">
           <CategoryInput
             onChange={(value) => formik.setFieldValue("category", value)}
             value={formik.values.category}
           />
 
           <div>
-            <Input
-              onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}
-              onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
-              value={formatAddress(formik.values.address)}
-              id="address"
-              label="Địa chỉ"
-              disabled={isLoading}
-              required
-            />
+            <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
+              <ItemSelect
+                onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
+                value={{ label: formatAddress(formik.values.address) }}
+                placeholder="Địa chỉ"
+                isClearable={false}
+                alwaysClosed={true}
+                tabIndex={-1}
+              />
+            </div>
 
             <dialog ref={addressRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
               <div className="w-full absolute left-0 flex justify-center z-40">
@@ -152,9 +154,18 @@ export default function SearchPage() {
             </dialog>
           </div>
 
-          <label htmlFor="utility" className="font-medium">Tiện ích:</label>
+          <MultiItemSelect
+            placeholder="Thêm tiện ích"
+            options={utilities.map((utility: any) => {
+              return { value: utility.label, label: utility.label, icon: utility.icon }
+            })}
+            value={formik.values.utility.map((utility: string) => { return { value: utility, label: utility, icon: undefined } })}
+            onChange={(utility: any) => {
+              formik.setFieldValue("utility", utility.map((item: any) => item.value))
+            }}
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
+          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
             {utilities.map((item) => (
               <div key={item.label} className="col-span-1">
                 <UtilityInput
@@ -169,7 +180,7 @@ export default function SearchPage() {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
 
           <Input
             onChange={(value) => formik.setFieldValue("area", value)}
