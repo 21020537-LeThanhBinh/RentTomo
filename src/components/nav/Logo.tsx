@@ -10,8 +10,8 @@ export default function Logo() {
     <Image
       onClick={() => router.push('/')}
       src="/images/logo.png" 
-      height="100" 
-      width="100" 
+      height="150" 
+      width="150" 
       alt="Logo" 
       className="" 
     />

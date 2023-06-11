@@ -1,7 +1,7 @@
 'use client';
 
 import { IconType } from 'react-icons';
-import Select from 'react-select'
+import Select from 'react-select';
 
 export type MultiSelectValue = {
   label?: string;
@@ -53,6 +53,7 @@ const MultiItemSelect: React.FC<MultiSelectProps> = ({
           }
         })}
         isMulti
+        closeMenuOnSelect={false}
       />
     </div>
   );

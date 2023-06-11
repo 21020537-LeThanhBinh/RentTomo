@@ -7,7 +7,6 @@ export type AddressValue = {
   city: string;
   district: string;
   ward: string;
-  street: string;
   number: string;
 }
 
@@ -29,6 +28,14 @@ export default function AddressSelect({ value, setFieldValue, isLoading, address
 
     fetchMap()
   }, [])
+
+  useEffect(() => {
+    setFieldValue("address.district", "")
+  }, [value?.city])
+
+  useEffect(() => {
+    setFieldValue("address.ward", "")
+  }, [value?.district])
 
   const getLocationList = (type: string) => {
     if (type === "city") {
@@ -78,18 +85,10 @@ export default function AddressSelect({ value, setFieldValue, isLoading, address
       />
 
       <Input
-        onChange={(value) => setFieldValue("address.street", value)}
-        value={value?.street || ""}
-        id="address.street"
-        label="Chọn tên đường"
-        disabled={isLoading}
-      />
-
-      <Input
         onChange={(value) => setFieldValue("address.number", value)}
         value={value?.number || ""}
         id="address.number"
-        label="Chọn số nhà, ngõ"
+        label="Nhập số nhà, tên đường"
         disabled={isLoading}
       />
 

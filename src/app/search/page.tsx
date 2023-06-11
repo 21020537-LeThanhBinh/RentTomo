@@ -38,6 +38,10 @@ export default async function SearchPage({ searchParams }: HomeProps) {
           ))}
         </div>
       </div>
+
+      <div className="mt-4 py-8 text-center border-2">
+        Pagination: Updating...
+      </div>
     </div>
   )
 }

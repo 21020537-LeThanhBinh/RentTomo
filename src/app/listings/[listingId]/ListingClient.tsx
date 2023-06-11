@@ -6,11 +6,11 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // import { differenceInDays, eachDayOfInterval } from 'date-fns';
 
+import ListingHead from "@/components/listings/ListingHead";
+import ListingInfo from "@/components/listings/ListingInfo";
+import { supabase } from "@/supabase/supabase-app";
 import { SafeReservation } from "@/types";
 import createQueryString from "@/utils/createQueryString";
-import ListingHead from "@/components/listings/ListingHead";
-import { supabase } from "@/supabase/supabase-app";
-import ListingInfo from "@/components/listings/ListingInfo";
 
 // import Container from "@/app/components/Container";
 // import { categories } from "@/app/components/navbar/Categories";
@@ -26,7 +26,7 @@ const initialDateRange = {
 
 interface ListingClientProps {
   reservations?: SafeReservation[];
-  listing: any
+  listing: any;
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
@@ -37,6 +37,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const pathname = usePathname()
   const searchParams = useSearchParams()!
   const [userId, setUserId] = useState<string | null>(null);
+  const [author, setAuthor] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -44,6 +45,19 @@ const ListingClient: React.FC<ListingClientProps> = ({
       else setUserId(null)
     })
   }, []);
+
+  useEffect(() => {
+    if (!listing?.author_id) return;
+
+    supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', listing?.author_id)
+      .then(({ data, error }) => {
+        if (error) return console.log(error)
+        setAuthor(data[0])
+      })
+  }, [listing?.author_id]);
 
   // const disabledDates = useMemo(() => {
   //   let dates: Date[] = [];
@@ -140,7 +154,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             "
           >
             <ListingInfo
-              user={listing.author_id}
+              user={author}
               category={listing.category}
               description={listing.description}
               roomCount={listing.roomCount}

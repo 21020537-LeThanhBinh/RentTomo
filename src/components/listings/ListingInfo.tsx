@@ -14,7 +14,11 @@ import { utilities } from "../filter/Utilities";
 // });
 
 interface ListingInfoProps {
-  user: string | null,
+  user: {
+    id: string;
+    full_name: string;
+    avatar_url: string;
+  } | null,
   description: string;
   guestCount: number;
   roomCount: number;
@@ -51,10 +55,8 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             gap-2
           "
         >
-          {/* <div>Hosted by {user?.name}</div>
-          <Avatar src={user?.image} /> */}
-          <div>Hosted by {user}</div>
-          <Avatar src={""} />
+          <div>Hosted by {user?.full_name || user?.id}</div>
+          <Avatar src={user?.avatar_url} />
         </div>
         <div className="
             flex 

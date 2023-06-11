@@ -72,7 +72,6 @@ export default function SearchPage() {
         city: "",
         district: "",
         ward: "",
-        street: "",
         number: "",
       },
       area: 0,
@@ -90,7 +89,6 @@ export default function SearchPage() {
       city: string;
       district: string;
       ward: string;
-      street: string;
       number: string;
     },
     area: number;

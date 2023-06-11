@@ -10,6 +10,7 @@ import Input from "../Input";
 import SignInWithGoogle from '../providers/SignInWithGoogle';
 import { loginFields } from "../formFields";
 import SignInWithFacebook from '../providers/SignInWithFacebook';
+import { toast } from 'react-hot-toast';
 
 const fields = loginFields;
 let fieldsState: any = {};
@@ -52,6 +53,7 @@ export default function Login() {
     if (!res.error) {
       setLoginFail(false)
       router.push("/")
+      toast.success("Đăng nhập thành công")
     }
     else {
       setLoginFail(true)

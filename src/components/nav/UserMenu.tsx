@@ -18,7 +18,7 @@ export default function UserMenu() {
   const modalRef = useRef<HTMLDialogElement>(null)
   const modalRef2 = useRef<HTMLDialogElement>(null)
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [session, setSession] = useState<any>(null);
   const [modalActive, setModalActive] = useState(0)
   const [activeTab, setActiveTab] = useState(''); // login, signup
   const router = useRouter();
@@ -27,8 +27,7 @@ export default function UserMenu() {
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
-      if (session) setIsLoggedIn(true)
-      else setIsLoggedIn(false)
+      setSession(session)
       console.log(event, session)
     })
   }, []);
@@ -81,12 +80,12 @@ export default function UserMenu() {
   }, [modalRef.current?.open, modalRef2.current?.open])
 
   const onRent = useCallback(() => {
-    if (!isLoggedIn) {
+    if (!session) {
       return router.push(`${pathname}?popup=login`)
     }
 
     alert('Phòng của bạn: Updating...')
-  }, [isLoggedIn, pathname]);
+  }, [session, pathname]);
 
   return (
     <div className='flex-shrink-0 relative'>
@@ -97,14 +96,14 @@ export default function UserMenu() {
         <button onClick={() => !menuRef.current?.open && menuRef.current?.show()} className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <Avatar src={""} />
+            <Avatar src={session?.user?.user_metadata?.avatar_url} />
           </div>
         </button>
       </div>
 
-      <dialog ref={menuRef} className="rounded-xl shadow-md w-[30vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm mr-0 p-0">
+      <dialog ref={menuRef} className="rounded-xl shadow-md w-[26vw] lg:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm mr-0 p-0">
         <div className="flex flex-col cursor-pointer">
-          {isLoggedIn ? (
+          {session ? (
             <>
               <MenuItem
                 label="Đăng xuất"
