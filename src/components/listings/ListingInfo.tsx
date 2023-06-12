@@ -1,92 +1,51 @@
 'use client';
 
-import dynamic from "next/dynamic";
 import { IconType } from "react-icons";
 
-import Avatar from "../Avatar";
-import ListingCategory from "./ListingCategory";
 import UtilityBox from "../UtilityBox";
 import { utilities } from "../filter/Utilities";
-// import ListingCategory from "./ListingCategory";
-
+import Heading from "../Heading";
 // const Map = dynamic(() => import('../Map'), { 
 //   ssr: false 
 // });
 
 interface ListingInfoProps {
-  user: {
-    id: string;
-    full_name: string;
-    avatar_url: string;
-  } | null,
   description: string;
-  guestCount: number;
-  roomCount: number;
-  bathroomCount: number;
   category: string | undefined;
-  locationValue: string;
   utility: string[];
+  area: number;
+  title: string;
+  address: string;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
-  user,
   description,
-  guestCount = 0,
-  roomCount = 0,
-  bathroomCount = 0,
   category,
-  locationValue,
-  utility
+  utility,
+  area,
+  title,
+  address,
 }) => {
-  // const { getByValue } = useCountries();
-
-  // const coordinates = getByValue(locationValue)?.latlng
-
   return (
     <div className="col-span-4 flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <div
-          className="
-            text-xl 
-            font-semibold 
-            flex 
-            flex-row 
-            items-center
-            gap-2
-          "
-        >
-          <div>Hosted by {user?.full_name || user?.id}</div>
-          <Avatar src={user?.avatar_url} />
-        </div>
-        <div className="
-            flex 
-            flex-row 
-            items-center 
-            gap-4 
-            font-light
-            text-neutral-500
-          "
-        >
-          <div>
-            {guestCount} guests
-          </div>
-          <div>
-            {roomCount} rooms
-          </div>
-          <div>
-            {bathroomCount} bathrooms
-          </div>
-        </div>
+      <Heading
+        title={title}
+      />
+
+      <div className="text-xl font-semibold flex flex-row items-center gap-2">
+        Thông tin phòng
+      </div>
+      <div className="flex flex-col gap-2 text-neutral-600">
+        <span>Loại phòng: {category}</span>
+        <span>Diện tích: {area} m²</span>
+        <span>Địa chỉ: {address}</span>
       </div>
       <hr />
-      {/* {category && (
-        <ListingCategory
-          // icon={category.icon} 
-          label={category}
-          // description={category?.description} 
-        />
-      )} */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
+
+      <div className="text-xl font-semibold flex flex-row items-center gap-2">
+        Tiện ích
+      </div>
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
         {utility.map((item) => (
           <div key={item} className="col-span-1">
             <UtilityBox
@@ -97,7 +56,11 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         ))}
       </div>
       <hr />
-      <div className="text-lg font-light text-neutral-500">
+
+      <div className="text-xl font-semibold flex flex-row items-center gap-2">
+        Mô tả thêm
+      </div>
+      <div className="text-neutral-600">
         {description}
       </div>
       <hr />

@@ -18,17 +18,17 @@ const UtilityBox: React.FC<UtilityBoxProps> = ({
       className={`
         flex 
         items-center 
-        justify-center 
         gap-2
         p-3
         border-b-2
         transition
+        cursor-pointer
         ${selected ? 'border-b-neutral-800' : 'border-transparent'}
-        ${selected ? 'text-neutral-800' : 'text-neutral-500'}
+        ${selected ? 'text-neutral-800' : 'text-neutral-600'}
       `}
     >
       {Icon && <Icon size={26} />}
-      <div className="font-medium text-sm">
+      <div className="">
         {label}
       </div>
     </div>

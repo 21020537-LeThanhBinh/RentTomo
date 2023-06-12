@@ -4,28 +4,32 @@ import Image from "next/image";
 
 import Heading from "../Heading";
 import HeartButton from "../HeartButton";
+import { useEffect, useState } from "react";
+import { supabase } from "@/supabase/supabase-app";
 
 interface ListingHeadProps {
-  title: string;
-  address: string;
   imageSrc: string;
   id: string;
-  userId?: string | null
 }
 
 const ListingHead: React.FC<ListingHeadProps> = ({
-  title,
-  address,
   imageSrc,
   id,
-  userId
 }) => {
-  return ( 
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) setUserId(session.user.id)
+      else setUserId(null)
+
+      if (event === 'INITIAL_SESSION') setIsLoading(false)
+    })
+  }, []);
+
+  return (
     <>
-      <Heading
-        title={title}
-        subtitle={`${address}`}
-      />
       <div className="
           w-full
           h-[60vh]
@@ -47,14 +51,16 @@ const ListingHead: React.FC<ListingHeadProps> = ({
             right-5
           "
         >
-          <HeartButton 
-            listingId={id}
-            userId={userId}
-          />
+          {!isLoading && (
+            <HeartButton
+              listingId={id}
+              userId={userId}
+            />
+          )}
         </div>
       </div>
     </>
-   );
+  );
 }
- 
+
 export default ListingHead;

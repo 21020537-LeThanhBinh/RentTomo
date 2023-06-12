@@ -6,6 +6,7 @@ import { FaToilet } from 'react-icons/fa';
 import {
   GiCctvCamera,
   GiCookingPot,
+  GiHouseKeys,
   GiWashingMachine,
   GiWindow
 } from 'react-icons/gi';
@@ -94,6 +95,11 @@ export const utilities = [
   {
     label: 'Thú cưng',
     icon: MdOutlinePets,
+    description: ''
+  },
+  {
+    label: 'Không chung chủ',
+    icon: GiHouseKeys,
     description: ''
   }
 ]

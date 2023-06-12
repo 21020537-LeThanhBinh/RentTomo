@@ -1,191 +1,187 @@
 'use client';
 
-// import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-// import { Range } from "react-date-range";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-// import { differenceInDays, eachDayOfInterval } from 'date-fns';
+import { useEffect, useState } from "react";
 
-import ListingHead from "@/components/listings/ListingHead";
-import ListingInfo from "@/components/listings/ListingInfo";
+import Avatar from "@/components/Avatar";
+import ListingReservOwner from "@/components/listings/ListingReservOwner";
+import ListingReservation from "@/components/listings/ListingReservation";
 import { supabase } from "@/supabase/supabase-app";
-import { SafeReservation } from "@/types";
+import { User } from "@/types";
 import createQueryString from "@/utils/createQueryString";
-
-// import Container from "@/app/components/Container";
-// import { categories } from "@/app/components/navbar/Categories";
-// import ListingHead from "@/app/components/listings/ListingHead";
-// import ListingInfo from "@/app/components/listings/ListingInfo";
-// import ListingReservation from "@/app/components/listings/ListingReservation";
-
-const initialDateRange = {
-  startDate: new Date(),
-  endDate: new Date(),
-  key: 'selection'
-};
+import { toast } from "react-hot-toast";
 
 interface ListingClientProps {
-  reservations?: SafeReservation[];
   listing: any;
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
   listing,
-  reservations = [],
 }) => {
   const router = useRouter();
   const pathname = usePathname()
   const searchParams = useSearchParams()!
+
+  const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
-  const [author, setAuthor] = useState<any>(null);
+  const [isOwner, setIsOwner] = useState(false);
+
+  const [host, setHost] = useState<User | null>(null);
+  const [members, setMembers] = useState<User[]>([]);
+  const [requests, setRequests] = useState<User[]>([]);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) setUserId(session.user.id)
       else setUserId(null)
+
+      if (event === 'INITIAL_SESSION') setIsLoading(false)
+
+      setIsOwner(session?.user?.id === listing?.author?.id)
     })
   }, []);
 
+  const fetchListingRequests = async () => {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select('type, profiles (id, full_name, avatar_url)')
+      .eq('post_id', listing.id)
+      .order('created_at', { ascending: true }) as any
+
+    if (error) {
+      toast.error('Có lỗi xảy ra.');
+      console.log(error);
+    } else {
+      setRequests(data.filter((item: any) => item.type === "request").map((item: any) => item.profiles));
+      setHost(data.find((item: any) => item.type === "host")?.profiles);
+      setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
+    }
+  }
+
   useEffect(() => {
-    if (!listing?.author_id) return;
+    if (!listing?.id) return;
 
-    supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', listing?.author_id)
-      .then(({ data, error }) => {
-        if (error) return console.log(error)
-        setAuthor(data[0])
-      })
-  }, [listing?.author_id]);
+    fetchListingRequests();
+  }, [listing?.id]);
 
-  // const disabledDates = useMemo(() => {
-  //   let dates: Date[] = [];
-
-  //   reservations.forEach((reservation: any) => {
-  //     const range = eachDayOfInterval({
-  //       start: new Date(reservation.startDate),
-  //       end: new Date(reservation.endDate)
-  //     });
-
-  //     dates = [...dates, ...range];
-  //   });
-
-  //   return dates;
-  // }, [reservations]);
-
-  // const category = useMemo(() => {
-  //    return categories.find((items) => 
-  //     items.label === listing.category);
-  // }, [listing.category]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(listing.price);
-  // const [dateRange, setDateRange] = useState<Range>(initialDateRange);
-
-  const onCreateReservation = useCallback(() => {
+  const onReservation = async () => {
     if (!userId) {
-      // return loginModal.onOpen();
       router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))
       return;
     }
     setIsLoading(true);
 
-    // axios.post('/api/reservations', {
-    //   totalPrice,
-    //   startDate: dateRange.startDate,
-    //   endDate: dateRange.endDate,
-    //   listingId: listing?.id
-    // })
-    //   .then(() => {
-    //     toast.success('Listing reserved!');
-    //     setDateRange(initialDateRange);
-    //     router.push('/trips');
-    //   })
-    //   .catch(() => {
-    //     toast.error('Something went wrong.');
-    //   })
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //   })
-  },
-    [
-      totalPrice,
-      // dateRange,
-      listing?.id,
-      router,
-      userId,
-      // loginModal
-    ]);
+    const { data, error } = (requests.some((item: any) => item.id === userId)) ? (
+      // Cancel reservation
+      await supabase
+        .from('rooms')
+        .delete()
+        .eq('user_id', userId)
+        .eq('post_id', listing.id)
+    ) : (
+      // Reserve listing
+      await supabase
+        .from('rooms')
+        .insert([
+          { user_id: userId, post_id: listing.id },
+        ])
+    )
 
-  // useEffect(() => {
-  //   if (dateRange.startDate && dateRange.endDate) {
-  //     const dayCount = differenceInDays(
-  //       dateRange.endDate,
-  //       dateRange.startDate
-  //     );
+    if (error) {
+      toast.error('Có lỗi xảy ra.');
+      console.log(error);
+    } else {
+      toast.success('Thành công!');
+    }
 
-  //     if (dayCount && listing.price) {
-  //       setTotalPrice(dayCount * listing.price);
-  //     } else {
-  //       setTotalPrice(listing.price);
-  //     }
-  //   }
-  // }, [dateRange, listing.price]);
+    setIsLoading(false);
+    fetchListingRequests();
+  }
+
+  const onOwnerAction = async (userId: string, action: string) => {
+    setIsLoading(true);
+
+    const { data, error } = (action === "accept") ? (
+      // Accept request
+      await supabase
+        .from('rooms')
+        .update({ type: host ? 'member' : 'host' })
+        .eq('user_id', userId)
+        .eq('post_id', listing.id)
+    ) : (
+      // Cancel request
+      await supabase
+        .from('rooms')
+        .delete()
+        .eq('user_id', userId)
+        .eq('post_id', listing.id)
+    )
+
+    if (error) {
+      toast.error('Có lỗi xảy ra.');
+      console.log(error);
+    } else {
+      toast.success('Thành công!');
+    }
+
+    setIsLoading(false);
+    fetchListingRequests();
+  }
 
   return (
-    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-      {/* <div className="max-w-screen-lg mx-auto"> */}
-        <div className="flex flex-col gap-6">
-          <ListingHead
-            title={listing.title}
-            imageSrc={listing.imageSrc[0]}
-            address={listing.address}
-            id={listing.id}
-            userId={userId}
-          />
-          <div
-            className="
-              grid 
-              grid-cols-1 
-              md:grid-cols-7 
-              md:gap-10 
-              mt-6
-            "
-          >
-            <ListingInfo
-              user={author}
-              category={listing.category}
-              description={listing.description}
-              roomCount={listing.roomCount}
-              guestCount={listing.guestCount}
-              bathroomCount={listing.bathroomCount}
-              locationValue={listing.locationValue}
-              utility={listing.utility}
-            />
-            <div
-              className="
-                order-first 
-                mb-10 
-                md:order-last 
-                md:col-span-3
-              "
-            >
-              {/* <ListingReservation
-                price={listing.price}
-                totalPrice={totalPrice}
-                onChangeDate={(value) => setDateRange(value)}
-                dateRange={dateRange}
-                onSubmit={onCreateReservation}
-                disabled={isLoading}
-                disabledDates={disabledDates}
-              /> */}
+    <>
+      <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
+        {host ? (
+          <div className="flex flex-col gap-2 p-4">
+            <div className="text-xl font-semibold">Thông tin các thành viên</div>
+
+            <div className="flex gap-2 items-center">
+              <Avatar src={host?.avatar_url} />
+              <span className="text-neutral-600">{host?.full_name}</span>
             </div>
+
+            {members?.map((member) => (
+              <div className="flex gap-2 items-center">
+                <Avatar src={member?.avatar_url} />
+                <span className="text-neutral-600">{member?.full_name}</span>
+              </div>
+            ))}
           </div>
-        </div>
-      {/* </div> */}
-    </div>
-  );
+        ) : (
+          <div className="flex items-center gap-1 p-4">
+            {requests.some((request) => userId === request.id) ? (
+              <span>Yêu cầu thành công. Vui lòng chờ chủ phòng xác nhận.</span>
+            ) : (
+              <span>Chưa có người đặt phòng!</span>
+            )}
+          </div>
+        )}
+      </div>
+      <hr />
+
+      {(isOwner || host?.id === userId || members.some((member) => member.id === userId)) ? (
+        <ListingReservOwner
+          price={listing.price}
+          onSubmit={onOwnerAction}
+          disabled={isLoading}
+          requests={requests}
+          members={members}
+        />
+      ) : (
+        <></>
+      )}
+
+      <ListingReservation
+        price={listing.price}
+        onSubmit={onReservation}
+        disabled={isLoading || host?.id === userId || members.some((member) => member.id === userId)}
+        requesting={requests.some((request) => userId === request.id)}
+        host={host}
+        members={members}
+        deposit={listing.deposit}
+      />
+    </>
+  )
 }
 
 export default ListingClient;

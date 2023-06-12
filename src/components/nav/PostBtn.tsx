@@ -1,6 +1,7 @@
 'use client'
 
 import { supabase } from "@/supabase/supabase-app";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -16,17 +17,16 @@ export default function PostBtn() {
     })
   }, []);
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback((e: any) => {
     if (!isLoggedIn) {
+      e.preventDefault()
       return router.push(`${pathname}?popup=login`)
     }
-
-    router.push('/post')
   }, [isLoggedIn, pathname]);
 
   return (
-    <button onClick={onClick} className="py-2 px-6 bg-rose-500 rounded-full text-white flex items-center whitespace-nowrap shadow-sm hover:shadow-md transition">
+    <Link href={'/post'} onClick={onClick} className="py-2 px-6 bg-rose-500 rounded-full text-white flex items-center whitespace-nowrap shadow-sm hover:shadow-md transition">
       Đăng tin
-    </button>
+    </Link>
   )
 }
