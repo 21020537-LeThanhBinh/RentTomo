@@ -7,7 +7,6 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import SignInWithGoogle from '../providers/SignInWithGoogle';
 import { signupFields } from '../formFields';
 
 const fields = signupFields;
@@ -29,7 +28,7 @@ export default function SetPassword() {
     setLoading(false)
     if (!res.error) {
       console.log(res)
-      router.push(`/`)
+      router.push(`/?popup=set-user-info-1`)
     } else {
       setMessage(res.error.message)
     }
@@ -43,10 +42,10 @@ export default function SetPassword() {
     validationSchema: Yup.object({
       password: Yup.string()
         .min(8, "Minimum 8 characters")
-        .required("Required!"),
+        .required("Hãy nhập đủ thông tin"),
       confirm_password: Yup.string()
         .oneOf([Yup.ref("password")], "Password's not match")
-        .required("Required!")
+        .required("Hãy nhập đủ thông tin")
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -112,13 +111,9 @@ export default function SetPassword() {
           </FormAction>
         ) : (
           <FormAction handleSubmit={formik.handleSubmit} >
-            Đăng ký
+            Xác nhận
           </FormAction>
         )}
-
-        <p className='text-gray-900 text-center mt-5'>hoặc</p>
-
-        <SignInWithGoogle />
 
       </div>
     </form>

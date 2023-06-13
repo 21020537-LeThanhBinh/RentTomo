@@ -14,7 +14,7 @@ export default function FormExtra({ handleForgotPassword }: { handleForgotPasswo
       </div>
 
       <div className="text-sm">
-        <button type="button" onClick={() => handleForgotPassword()} className="font-medium text-red-600 hover:text-red-500">
+        <button type="button" onClick={() => handleForgotPassword()} className="font-medium text-rose-600 hover:text-rose-500">
           Quên mật khẩu?
         </button>
       </div>

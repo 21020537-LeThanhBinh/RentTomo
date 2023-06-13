@@ -68,7 +68,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
             <p>Đang tính toán</p>
           ) : (
             <>
-              đ {formatBigNumber((price + deposit) / (members.length + 2) )} <span className="text-md font-normal text-neutral-600">/ người</span>
+              đ {formatBigNumber((price + deposit) / (members.length + (host ? 1 : 0) + 1) )} <span className="text-md font-normal text-neutral-600">/ người</span>
             </>
           )}
         </div>

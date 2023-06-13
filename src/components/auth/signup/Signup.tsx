@@ -8,8 +8,9 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import SignInWithGoogle from '../providers/SignInWithGoogle';
 import { signupFields } from '../formFields';
+import SignInWithFacebook from '../providers/SignInWithFacebook';
+import SignInWithGoogle from '../providers/SignInWithGoogle';
 
 const fields = signupFields;
 let fieldsState: any = {};
@@ -45,7 +46,7 @@ export default function Signup() {
       phone: Yup.string()
         // .matches(/^[0-9]*$/, 'Phone number must not contain special characters')
         .min(10, "Mininum 10 characters")
-        .required("Required!"),
+        .required("Hãy nhập đủ thông tin"),
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -76,11 +77,12 @@ export default function Signup() {
           )}
         </div>
 
-        
         {message && (
           <p className="text-red-500 text-sm">{message}</p>
         )}
+      </div>
 
+      <div>
         {loading ? (
           <FormAction>
             <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-gray-400 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +100,8 @@ export default function Signup() {
         <p className='text-gray-900 text-center mt-5'>hoặc</p>
 
         <SignInWithGoogle />
-
+        <SignInWithFacebook />
+        
       </div>
     </form>
   )

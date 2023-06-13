@@ -1,10 +1,5 @@
-'use client';
-
-import { IconType } from "react-icons";
-
-import UtilityBox from "../UtilityBox";
-import { utilities } from "../filter/Utilities";
 import Heading from "../Heading";
+import UtilityBox from "../UtilityBox";
 // const Map = dynamic(() => import('../Map'), { 
 //   ssr: false 
 // });
@@ -45,12 +40,11 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="text-xl font-semibold flex flex-row items-center gap-2">
         Tiện ích
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-[50vh] overflow-y-auto">
         {utility.map((item) => (
           <div key={item} className="col-span-1">
             <UtilityBox
               label={item}
-              icon={utilities.find((u) => u.label === item)?.icon as IconType}
             />
           </div>
         ))}
@@ -60,7 +54,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="text-xl font-semibold flex flex-row items-center gap-2">
         Mô tả thêm
       </div>
-      <div className="text-neutral-600">
+      <div className="text-neutral-600 whitespace-pre-line">
         {description}
       </div>
       <hr />

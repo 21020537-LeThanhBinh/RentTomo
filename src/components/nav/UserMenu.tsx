@@ -1,26 +1,26 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
+import createQueryString from '@/utils/createQueryString';
+import handleCloseDialog from '@/utils/handleCloseDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from "react-icons/ai";
-import { CSSTransition } from 'react-transition-group';
 import Avatar from '../Avatar';
-import LoginPage from '../auth/login/LoginPage';
-import SetPasswordPage from '../auth/setPassword/SetPasswordPage';
-import SignupPage from '../auth/signup/SignupPage';
-import VerifyPage from '../auth/verify/VerifyPage';
+import AuthPopup from './AuthPopup';
 import MenuItem from './MenuItem';
-import handleCloseDialog from '@/utils/handleCloseDialog';
+import SetUserInfoPopup from './SetUserInfoPopup';
 
 export default function UserMenu() {
   const menuRef = useRef<HTMLDialogElement>(null);
-  const modalRef = useRef<HTMLDialogElement>(null)
-  const modalRef2 = useRef<HTMLDialogElement>(null)
+  const modalRef1 = useRef<HTMLDialogElement>(null);
+  const modalRef2 = useRef<HTMLDialogElement>(null);
+  const modalRef3 = useRef<HTMLDialogElement>(null);
 
   const [session, setSession] = useState<any>(null);
-  const [modalActive, setModalActive] = useState(0)
-  const [activeTab, setActiveTab] = useState(''); // login, signup
+  const [sessionEvent, setSessionEvent] = useState<any>(null);
+  const [modalActive, setModalActive] = useState(0);
+  const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, set-user-info-...
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname()
@@ -28,14 +28,23 @@ export default function UserMenu() {
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
+      setSessionEvent(event)
       console.log(event, session)
     })
+
+    const handleClickOutside = (e: MouseEvent) => {
+      handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
-      handleCloseDialog(e, modalRef.current!, () => modalRef.current?.open && router.replace(pathname))
+      handleCloseDialog(e, modalRef1.current!, () => modalRef1.current?.open && router.push(pathname))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -45,39 +54,63 @@ export default function UserMenu() {
   }, [pathname]);
 
   useEffect(() => {
+    if (!session || searchParams.has('account')) {
+      return;
+    }
+
+    if ((sessionEvent == 'SIGNED_IN' || sessionEvent == 'INITIAL_SESSION') && (!session.user?.user_metadata?.year_of_birth)) {
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'set-user-info-1'))
+    }
+
+    if ((sessionEvent == 'USER_UPDATED') && (session.user?.user_metadata?.year_of_birth) && (searchParams.get('popup') == 'set-user-info-1')) {
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'set-user-info-2'))
+    }
+
+  }, [session, sessionEvent, searchParams]);
+
+  useEffect(() => {
+    const popup = searchParams.get('popup')!;
+
+    // Close all popup
     if (!searchParams.has('popup')) {
-      modalRef.current?.close();
+      modalRef1.current?.close();
       modalRef2.current?.close();
+      modalRef3.current?.close();
       setActiveTab("");
       return;
     }
 
-    if (!modalRef.current?.open) {
-      modalRef.current?.showModal();
+    if (['login', 'signup', 'verify', 'set-password'].includes(popup)) {
+      !modalRef1.current?.open && modalRef1.current?.showModal();
+    } else {
+      modalRef1.current?.close();
     }
 
-    if (['verify', 'set-password'].includes(searchParams.get('popup')!)) {
+    if (['verify', 'set-password'].includes(popup)) {
       !modalRef2.current?.open && modalRef2.current?.showModal();
     } else {
       modalRef2.current?.close();
     }
 
-    setActiveTab(searchParams.get('popup')!);
+    if (popup.startsWith('set-user-info')) {
+      !modalRef3.current?.open && modalRef3.current?.showModal();
+    } else {
+      modalRef3.current?.close();
+    }
+
+    setActiveTab(popup);
   }, [searchParams])
 
   useEffect(() => {
-    if (modalRef2.current?.open) {
-      setTimeout(() => {
-        setModalActive(2)
-      }, 200)
-    } else if (modalRef.current?.open) {
-      setTimeout(() => {
-        setModalActive(1)
-      }, 200)
-    } else {
-      setModalActive(0)
+    const newModalActive = modalRef3.current?.open ? 3 : modalRef2.current?.open ? 2 : modalRef1.current?.open ? 1 : 0;
+
+    if (!newModalActive) {
+      return setModalActive(0)
     }
-  }, [modalRef.current?.open, modalRef2.current?.open])
+    setTimeout(() => {
+      setModalActive(newModalActive)
+    }, 200)
+  }, [modalRef1.current?.open, modalRef2.current?.open, modalRef3.current?.open])
 
   const onRent = useCallback(() => {
     if (!session) {
@@ -107,7 +140,7 @@ export default function UserMenu() {
             <>
               <MenuItem
                 label="Đăng xuất"
-                onClick={() => { supabase.auth.signOut(); router.push('/') }}
+                onClick={() => supabase.auth.signOut()}
               />
             </>
           ) : (
@@ -125,53 +158,21 @@ export default function UserMenu() {
         </div>
       </dialog>
 
-      <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
-        <CSSTransition
-          in={activeTab === 'login'}
-          unmountOnExit
-          timeout={500}
-          classNames={modalActive ? "menu-login" : ""}
-        >
-          <div className='w-full absolute left-0'>
-            <LoginPage />
-          </div>
-        </CSSTransition>
+      <AuthPopup
+        modalRef1={modalRef1}
+        modalRef2={modalRef2}
+        modalActive={modalActive}
+        activeTab={activeTab}
+      />
 
-        <CSSTransition
-          in={activeTab === 'signup'}
-          unmountOnExit
-          timeout={500}
-          classNames={modalActive ? "menu-signup" : ""}
-        >
-          <div className='w-full absolute left-0'>
-            <SignupPage />
-          </div>
-        </CSSTransition>
-      </dialog>
-
-      <dialog ref={modalRef2} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%] z-10 modalRef2'>
-        <CSSTransition
-          in={activeTab === 'verify'}
-          unmountOnExit
-          timeout={500}
-          classNames={modalActive == 2 ? "menu-login" : ""}
-        >
-          <div className='w-full absolute left-0'>
-            <VerifyPage />
-          </div>
-        </CSSTransition>
-
-        <CSSTransition
-          in={activeTab === 'set-password'}
-          unmountOnExit
-          timeout={500}
-          classNames={modalActive == 2 ? "menu-signup" : ""}
-        >
-          <div className='w-full absolute left-0'>
-            <SetPasswordPage />
-          </div>
-        </CSSTransition>
-      </dialog>
+      <SetUserInfoPopup
+        modalRef={modalRef3}
+        modalActive={modalActive}
+        activeTab={activeTab}
+        onBack={() => router.back()}
+        onNext={() => router.push(pathname)}
+        session={session}
+      />
     </div>
   );
 };

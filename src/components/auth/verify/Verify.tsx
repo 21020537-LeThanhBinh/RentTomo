@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import SignInWithGoogle from '../providers/SignInWithGoogle';
+import createQueryString from '@/utils/createQueryString';
 
 export default function Verify() {
   const [loading, setLoading] = useState(false)
@@ -46,7 +46,7 @@ export default function Verify() {
 
     setLoading(false);
     if (!res.error) {
-      router.push(`${pathname}?popup=set-password`)
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'set-password'))
     } else {
       setMessage(res.error.message)
     }
@@ -60,7 +60,7 @@ export default function Verify() {
       code: Yup.string()
         .min(6, "Mã xác nhận gồm 6 ký tự")
         .max(6, "Mã xác nhận gồm 6 ký tự")
-        .required("Required!"),
+        .required("Hãy nhập đủ thông tin"),
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -71,7 +71,7 @@ export default function Verify() {
   return (
     <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
       <div className="">
-        <div className=''>Nhập mã xác nhận được gửi đến {account}:</div>
+        <div className='my-5'>Nhập mã xác nhận được gửi đến {account}:</div>
 
         <div className='my-5'>
           <Input
@@ -96,7 +96,9 @@ export default function Verify() {
         {message && (
           <p className="text-red-500 text-sm">{message}</p>
         )}
+      </div>
 
+      <div>
         {loading ? (
           <FormAction>
             <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-gray-400 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,14 +109,9 @@ export default function Verify() {
           </FormAction>
         ) : (
           <FormAction handleSubmit={formik.handleSubmit} >
-            Tiếp tục
+            Xác nhận
           </FormAction>
         )}
-
-        <p className='text-gray-900 text-center mt-5'>hoặc</p>
-
-        <SignInWithGoogle />
-
       </div>
     </form>
   )

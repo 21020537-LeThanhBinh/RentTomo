@@ -52,7 +52,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }, [reservation, data.price]);
 
   return (
-    <div onClick={() => router.push(`/listings/${data.id}`)} className="cursor-pointer group h-full">
+    <div onClick={() => router.push(`/listings/${data.id}`)} className="cursor-pointer group h-full max-h-[180px]">
       <div className="flex gap-4 h-full">
         <div className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl flex-shrink-0">
           <Image

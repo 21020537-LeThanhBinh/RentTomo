@@ -24,7 +24,7 @@ export default function SearchBar() {
       return getByValue(locationValue as string)?.label;
     }
 
-    return 'Anywhere';
+    return 'Vị trí';
   }, [locationValue, getByValue]);
 
   const durationLabel = useMemo(() => {
@@ -41,7 +41,7 @@ export default function SearchBar() {
       return `${diff} Days`;
     }
 
-    return 'Any Week'
+    return 'Khoảng cách'
   }, [startDate, endDate]);
 
   const guestLabel = useMemo(() => {
@@ -49,7 +49,7 @@ export default function SearchBar() {
       return `${guestCount} Guests`;
     }
 
-    return 'Add Guests';
+    return 'Thêm bạn';
   }, [guestCount]);
 
   return ( 
@@ -68,6 +68,7 @@ export default function SearchBar() {
             text-sm 
             font-semibold 
             px-6
+            whitespace-nowrap
           "
         >
           {locationLabel}
@@ -99,14 +100,7 @@ export default function SearchBar() {
           "
         >
           <div className="hidden sm:block">{guestLabel}</div>
-          <div 
-            className="
-              p-2 
-              bg-rose-500 
-              rounded-full 
-              text-white
-            "
-          >
+          <div className="p-2 bg-rose-500 rounded-full text-white">
             <BiSearch size={18} />
           </div>
         </div>

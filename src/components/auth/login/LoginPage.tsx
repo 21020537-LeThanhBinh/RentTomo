@@ -6,8 +6,8 @@ export default function LoginPage() {
   const pathname = usePathname();
 
   return (
-    <div className="flex justify-center z-40">
-      <div className="w-full bg-white p-10 rounded-2xl">
+    <div className="flex justify-center">
+      <div className="w-full bg-white p-8 rounded-2xl">
         <Header
           heading="Đăng nhập tài khoản"
           paragraph="Chưa có tài khoản? "

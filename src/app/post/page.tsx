@@ -2,7 +2,7 @@
 
 import Button from '@/components/Button';
 import { utilities } from '@/components/filter/Utilities';
-import AddressSelect from '@/components/input/AddressSelect';
+import AddressInputPopup from '@/components/input/AddressInputPopup';
 import CategoryInput from '@/components/input/CategoryInput';
 import ImageUpload from '@/components/input/ImageUpload';
 import Input from '@/components/input/Input';
@@ -103,8 +103,8 @@ export default function SearchPage() {
 
   return (
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-      <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row">
-        <div className="flex flex-col p-4 gap-8 md:w-1/3 w-full">
+      <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6">
+        <div className="flex flex-col gap-4 md:w-1/3 w-full">
           <ImageUpload
             onChange={(value) => formik.setFieldValue("imageSrc", [value])}
             value={formik.values.imageSrc[0]}
@@ -113,7 +113,7 @@ export default function SearchPage() {
           {/* Video upload */}
         </div>
 
-        <div className="flex-1 flex flex-col gap-8 p-4">
+        <div className="flex-1 flex flex-col gap-4">
           <CategoryInput
             onChange={(value) => formik.setFieldValue("category", value)}
             value={formik.values.category}
@@ -131,25 +131,12 @@ export default function SearchPage() {
               />
             </div>
 
-            <dialog ref={addressRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
-              <div className="w-full absolute left-0 flex justify-center z-40">
-                <div className="w-full bg-white px-10 pt-20 p-b-10 rounded-2xl">
-                  <div className='flex'>
-                    <button onClick={() => addressRef.current?.close()} className="absolute top-4 text-2xl z-10">🡠</button>
-                    <div className="absolute top-4 left-0 text-2xl text-center w-full">
-                      <span>Chọn địa chỉ</span>
-                    </div>
-                  </div>
-
-                  <AddressSelect
-                    value={formik.values.address}
-                    setFieldValue={(name, value) => formik.setFieldValue(name, value)}
-                    isLoading={isLoading}
-                    addressRef={addressRef}
-                  />
-                </div>
-              </div>
-            </dialog>
+            <AddressInputPopup
+              value={formik.values.address}
+              setFieldValue={(name, value) => formik.setFieldValue(name, value)}
+              isLoading={isLoading}
+              addressRef={addressRef}
+            />
           </div>
 
           <MultiItemSelect
@@ -227,10 +214,11 @@ export default function SearchPage() {
             label="Mô tả chi tiết"
             disabled={isLoading}
             required
+            multiline
           />
 
-          <div className="flex justify-end">
-            <div className='w-1/3 flex p-4 gap-4'>
+          <div className="flex justify-end mt-2">
+            <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
               <Button
                 label='Hủy'
                 onClick={() => router.back()}

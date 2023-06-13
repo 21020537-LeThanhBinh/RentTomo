@@ -1,25 +1,26 @@
 'use client';
 
 import { IconType } from "react-icons";
+import { utilities } from "./filter/Utilities";
 
 interface UtilityBoxProps {
-  icon?: IconType,
   label: string;
   selected?: boolean;
 }
 
 const UtilityBox: React.FC<UtilityBoxProps> = ({
-  icon: Icon,
   label,
   selected,
 }) => {
+  const Icon = utilities.find((u) => u.label === label)?.icon as IconType
+
   return ( 
     <div
       className={`
         flex 
         items-center 
         gap-2
-        p-3
+        p-2
         border-b-2
         transition
         cursor-pointer
@@ -27,8 +28,8 @@ const UtilityBox: React.FC<UtilityBoxProps> = ({
         ${selected ? 'text-neutral-800' : 'text-neutral-600'}
       `}
     >
-      {Icon && <Icon size={26} />}
-      <div className="">
+      {Icon && <Icon size={26} className="flex-shrink-0" />}
+      <div className="whitespace-nowrap truncate">
         {label}
       </div>
     </div>
