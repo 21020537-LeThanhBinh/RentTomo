@@ -1,20 +1,15 @@
 'use client';
 
+import { supabase } from "@/supabase/supabase-app";
+import formatBigNumber from "@/utils/formatBigNumber";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-// import { format } from 'date-fns';
-
-// import useCountries from "@/app/hooks/useCountries";
-
-// import HeartButton from "../HeartButton";
-import { supabase } from "@/supabase/supabase-app";
-import formatBigNumber from "@/utils/formatBigNumber";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import HeartButton from "../HeartButton";
 import Avatar from "../Avatar";
+import HeartButton from "../HeartButton";
 
 interface ListingCardProps {
   data: any;
@@ -97,15 +92,39 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
           <div className="absolute bottom-0 right-0 w-1/3 sm:w-1/2 h-4/5 flex flex-col justify-end text-neutral-500 font-light">
             <div className="px-4 flex items-center gap-2">
-              <span className="hidden sm:block whitespace-nowrap">Người đăng:</span>
-              <Avatar src={data.author?.avatar_url} />
+              {data.members.length ? (
+                <>
+                  <span className="hidden sm:block whitespace-nowrap">Thành viên:</span>
+                  <div className="flex-1 flex">
+                    {data.members.map((item: any) => (
+                      <div key={item?.id} className="list-avatar">
+                        <Avatar src={item?.avatar_url} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : data.followers.length ? (
+                <>
+                  <span className="hidden sm:block whitespace-nowrap">Theo dõi:</span>
+                  <div className="flex-1 flex">
+                    {data.followers.map((item: any) => (
+                      <div key={item?.id} className="list-avatar">
+                        <Avatar src={item?.avatar_url} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <span className="hidden sm:block whitespace-nowrap">Thành viên: Chưa có</span>
+              )}
+
             </div>
 
             {/* <div className="px-4">
               <span className="whitespace-nowrap">Đã tham gia:</span>
-            </div>
+            </div> */}
 
-            <div className="px-4 flex items-center gap-2">
+            {/* <div className="px-4 flex items-center gap-2">
               <span className="whitespace-nowrap">Đang theo dõi:</span>
               <div className="flex">
                 {data.followers.map((item: any) => (

@@ -22,11 +22,14 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   members,
   deposit
 }) => {
+  const isJoined = disabled
+  const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
+
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold">
-          đ {formatBigNumber(price / (members.length + (host ? 1 : 0) + 1))}
+          đ {formatBigNumber(price / memberNumb)}
         </div>
         <div className="text-neutral-600">
           / tháng / người
@@ -64,7 +67,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           Tổng cộng
         </div>
         <div>
-          đ {formatBigNumber((price + deposit) / (members.length + (host ? 1 : 0) + 1))} <span className="text-md font-normal text-neutral-600">/ người</span>
+          đ {formatBigNumber((price + deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>
         </div>
       </div>
     </div>

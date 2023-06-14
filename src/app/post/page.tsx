@@ -150,23 +150,6 @@ export default function SearchPage() {
             }}
           />
 
-          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
-            {utilities.map((item) => (
-              <div key={item.label} className="col-span-1">
-                <UtilityInput
-                  onClick={(utility) => {
-                    formik.values.utility.some((utility: string) => utility === item.label) ?
-                      formik.setFieldValue("utility", formik.values.utility.filter((utility: string) => utility !== item.label)) :
-                      formik.setFieldValue("utility", [...formik.values.utility, utility])
-                  }}
-                  selected={formik.values.utility.some((utility: string) => utility === item.label)}
-                  label={item.label}
-                  icon={item.icon}
-                />
-              </div>
-            ))}
-          </div> */}
-
           <Input
             onChange={(value) => formik.setFieldValue("area", value)}
             value={formik.values.area ? formik.values.area.toString() : ""}

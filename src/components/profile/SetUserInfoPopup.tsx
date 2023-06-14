@@ -9,6 +9,7 @@ import Avatar from "../Avatar";
 import Button from "../Button";
 import Input from "../input/Input";
 import PopupInputContainer from "../input/PopupInputContainer";
+import ItemSelect from "../input/ItemSelect";
 
 export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onBack, onNext, session }: {
   modalRef: React.MutableRefObject<HTMLDialogElement | null>,
@@ -51,6 +52,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     const updateInfo = {
       full_name: values.full_name,
       year_of_birth: values.year_of_birth,
+      is_male: values.is_male,
     }
 
     // Public profile
@@ -98,6 +100,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       email: "",
       full_name: "",
       year_of_birth: "",
+      is_male: undefined,
     },
     validationSchema: Yup.object({
       phone: Yup.string()
@@ -115,6 +118,8 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
           return year > 1900 && year < new Date().getFullYear();
         })
         .required("Hãy nhập đủ thông tin"),
+      is_male: Yup.boolean()
+        .required("Hãy nhập đủ thông tin"),
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -122,6 +127,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     email: string;
     full_name: string;
     year_of_birth: string;
+    is_male?: boolean;
   }>
   );
 
@@ -147,6 +153,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     formik.setFieldValue("phone", formatPhoneNumber(session.user.phone || session.user.user_metadata?.phone));
     formik.setFieldValue("full_name", session.user.user_metadata?.full_name);
     formik.setFieldValue("year_of_birth", session.user.user_metadata?.year_of_birth);
+    formik.setFieldValue("is_male", session.user.user_metadata?.is_male);
 
     // Second page
     formik2.setFieldValue("avatar_url", session.user.user_metadata?.avatar_url);
@@ -214,6 +221,16 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 onBlur={formik.handleBlur}
                 required
               />
+              <ItemSelect
+                onChange={(value) => {
+                  formik.setFieldValue("is_male", (value.label === 'Nam'))
+                  setIsUpdated(true)
+                }}
+                value={(formik.values.is_male === undefined) ? {} : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
+                options={[{ label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
+                placeholder="Giới tính"
+                isClearable={false}
+              />
 
               {(formik.errors.email && formik.touched.email) ? (
                 <p className="text-red-500 text-sm">{formik.errors.email}</p>
@@ -223,6 +240,8 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 <p className="text-red-500 text-sm">{formik.errors.full_name}</p>
               ) : (formik.errors.year_of_birth && formik.touched.year_of_birth) ? (
                 <p className="text-red-500 text-sm">{formik.errors.year_of_birth}</p>
+              ) : (formik.errors.is_male && formik.touched.is_male) ? (
+                <p className="text-red-500 text-sm">{formik.errors.is_male}</p>
               ) : message ? (
                 <p className="text-red-500 text-sm">{message}</p>
               ) : null
