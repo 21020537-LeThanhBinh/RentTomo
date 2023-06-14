@@ -44,7 +44,9 @@ dialog[open].popup {
 
 .menu-login-enter {
   position: absolute;
-  transform: translateX(-100%);
+  left: 0;
+  top: 0;
+  transform: translateX(-110%);
 }
 
 .menu-login-enter-active {
@@ -54,16 +56,18 @@ dialog[open].popup {
 
 .menu-login-exit {
   position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .menu-login-exit-active {
-  transform: translateX(-100%);
+  transform: translateX(-110%);
   transition: all 0.2s ease-out;
 }
 
 .menu-signup-enter {
   /* position: absolute; */
-  transform: translateX(100%);
+  transform: translateX(110%);
 }
 
 .menu-signup-enter-active {
@@ -76,7 +80,7 @@ dialog[open].popup {
 }
 
 .menu-signup-exit-active {
-  transform: translateX(100%);
+  transform: translateX(110%);
   transition: all 0.2s ease-out;
 }
 

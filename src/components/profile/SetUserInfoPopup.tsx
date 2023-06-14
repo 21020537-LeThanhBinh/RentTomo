@@ -1,13 +1,14 @@
-import { CSSTransition } from "react-transition-group";
-import Input from "../input/Input";
-import { useEffect, useState } from "react";
-import { FormikConfig, FormikValues, useFormik } from "formik";
-import * as Yup from 'yup';
-import Button from "../Button";
 import { supabase } from "@/supabase/supabase-app";
 import formatPhoneNumber from "@/utils/formatPhoneNumber";
-import PopupInputContainer from "../input/PopupInputContainer";
+import { FormikConfig, FormikValues, useFormik } from "formik";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { CSSTransition } from "react-transition-group";
+import * as Yup from 'yup';
+import Avatar from "../Avatar";
+import Button from "../Button";
+import Input from "../input/Input";
+import PopupInputContainer from "../input/PopupInputContainer";
 
 export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onBack, onNext, session }: {
   modalRef: React.MutableRefObject<HTMLDialogElement | null>,
@@ -19,17 +20,23 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
 }) {
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const handleSubmit = async (values: FormikValues) => {
+    if (!isUpdated && session?.user?.user_metadata?.year_of_birth) {
+      onNext();
+      return;
+    }
     setLoading(true);
 
-    const { data, error } = (activeTab === 'set-user-info-1') ?
-      await onSubmit1(values) :
-      await onSubmit2(values)
+    const { data, error } = (activeTab === 'edit-profile-1') ?
+      await onSubmit1(values) : (activeTab === 'edit-profile-2') ?
+        await onSubmit2(values) : { data: null, error: null };
 
     if (!error) {
       toast.success("Đã lưu cập nhật.");
-      (activeTab === 'set-user-info-2') && onNext();
+      // edit-profile-1 complete will auto go to edit-profile-2
+      (activeTab != 'edit-profile-1') && onNext();
     } else {
       toast.error("Đã có lỗi xảy ra.")
       console.log(error)
@@ -37,45 +44,51 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     }
 
     setLoading(false);
+    setIsUpdated(false);
   }
 
   const onSubmit1 = async (values: FormikValues) => {
+    const updateInfo = {
+      full_name: values.full_name,
+      year_of_birth: values.year_of_birth,
+    }
+
+    // Public profile
     const res = await supabase
       .from('profiles')
-      .update({
-        full_name: values.full_name,
-        year_of_birth: values.year_of_birth,
-      })
+      .update(updateInfo)
       .eq('id', session.user.id)
 
     if (res.error) return res;
 
+    // Metadata
     return await supabase.auth.updateUser({
       data: {
         email: values.email,
         phone: formatPhoneNumber(values.phone),
-        full_name: values.full_name,
-        year_of_birth: values.year_of_birth,
+        ...updateInfo
       }
     })
   }
 
   const onSubmit2 = async (values: FormikValues) => {
+    const updateInfo = {
+      avatar_url: values.avatar_url,
+      contact: values.contact,
+      description: values.description
+    }
+
+    // Public profile
     const res = await supabase
       .from('profiles')
-      .update({
-        avatar_url: values.avatar_url,
-        contact: values.contact,
-        description: values.description
-      })
+      .update(updateInfo)
       .eq('id', session.user.id)
 
     if (res.error) return res;
 
+    // Metadata
     return await supabase.auth.updateUser({
-      data: {
-        avatar_url: values.avatar_url,
-      }
+      data: updateInfo
     })
   }
 
@@ -127,18 +140,24 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
   );
 
   useEffect(() => {
-    if (session) {
-      formik.setFieldValue("email", session.user.email);
-      session.user.phone && formik.setFieldValue("phone", formatPhoneNumber(session.user.phone));
-      !formik.values.full_name && formik.setFieldValue("full_name", session.user.user_metadata?.full_name);
-      !formik.values.year_of_birth && formik.setFieldValue("year_of_birth", session.user.user_metadata?.year_of_birth);
-    }
-  }, [session])
+    if (!session || isUpdated) return
+
+    // First page
+    formik.setFieldValue("email", session.user.email || session.user.user_metadata?.email);
+    formik.setFieldValue("phone", formatPhoneNumber(session.user.phone || session.user.user_metadata?.phone));
+    formik.setFieldValue("full_name", session.user.user_metadata?.full_name);
+    formik.setFieldValue("year_of_birth", session.user.user_metadata?.year_of_birth);
+
+    // Second page
+    formik2.setFieldValue("avatar_url", session.user.user_metadata?.avatar_url);
+    formik2.setFieldValue("contact", session.user.user_metadata?.contact);
+    formik2.setFieldValue("description", session.user.user_metadata?.description);
+  }, [session, isUpdated])
 
   return (
-    <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden'>
+    <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-hidden'>
       <CSSTransition
-        in={activeTab === 'set-user-info-1'}
+        in={activeTab === 'edit-profile-1'}
         unmountOnExit
         timeout={500}
         classNames={modalActive ? "menu-login" : ""}
@@ -147,7 +166,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
           <form onSubmit={formik.handleSubmit} className="h-full flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Input
-                onChange={(value) => formik.setFieldValue("email", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("email", value)
+                  setIsUpdated(true)
+                }}
                 value={formik.values.email}
                 id="email"
                 label="Email"
@@ -156,7 +178,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 required
               />
               <Input
-                onChange={(value) => formik.setFieldValue("phone", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("phone", value)
+                  setIsUpdated(true)
+                }}
                 value={formik.values.phone}
                 id="phone"
                 label="Số điện thoại"
@@ -165,7 +190,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 required
               />
               <Input
-                onChange={(value) => formik.setFieldValue("full_name", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("full_name", value)
+                  setIsUpdated(true)
+                }}
                 value={formik.values.full_name}
                 id="full_name"
                 label="Họ và tên"
@@ -174,7 +202,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 required
               />
               <Input
-                onChange={(value) => formik.setFieldValue("year_of_birth", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("year_of_birth", value)
+                  setIsUpdated(true)
+                }}
                 value={formik.values.year_of_birth}
                 id="year_of_birth"
                 label="Năm sinh"
@@ -201,9 +232,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
             <div className="flex justify-end gap-2">
               <div className='w-1/3'>
                 <Button
-                  label='Tiếp tục'
+                  label={isUpdated ? 'Tiếp tục' : 'Bỏ qua'}
                   onClick={() => { }}
                   disabled={isLoading}
+                  outline={!isUpdated}
                 />
               </div>
             </div>
@@ -212,24 +244,24 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       </CSSTransition>
 
       <CSSTransition
-        in={activeTab === 'set-user-info-2'}
+        in={activeTab === 'edit-profile-2'}
         unmountOnExit
         timeout={500}
         classNames={modalActive ? "menu-signup" : ""}
       >
         <PopupInputContainer label="Thông tin cá nhân" onBack={onBack}>
+          <div className="flex-1 flex flex-col gap-2 items-center pb-4 relative">
+            <Avatar src={session?.user?.user_metadata?.avatar_url} size={60} />
+            <span className="text-neutral-600 text-lg">{session?.user?.user_metadata?.full_name}</span>
+          </div>
+
           <form onSubmit={formik2.handleSubmit} className="h-full flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Input
-                onChange={(value) => formik2.setFieldValue("avatar_url", value)}
-                value={formik2.values.avatar_url}
-                id="avatar_url"
-                label="Avatar"
-                disabled={isLoading}
-                onBlur={formik2.handleBlur}
-              />
-              <Input
-                onChange={(value) => formik2.setFieldValue("contact", value)}
+                onChange={(value) => {
+                  formik2.setFieldValue("contact", value)
+                  setIsUpdated(true)
+                }}
                 value={formik2.values.contact}
                 id="contact"
                 label="Liên hệ"
@@ -238,7 +270,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 multiline
               />
               <Input
-                onChange={(value) => formik2.setFieldValue("description", value)}
+                onChange={(value) => {
+                  formik2.setFieldValue("description", value)
+                  setIsUpdated(true)
+                }}
                 value={formik2.values.description}
                 id="description"
                 label="Giới thiệu bản thân"
@@ -250,9 +285,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
             <div className="flex justify-end gap-2">
               <div className='w-1/3'>
                 <Button
-                  label='Tiếp tục'
+                  label={isUpdated ? 'Cập nhật' : 'Bỏ qua'}
                   onClick={() => { }}
                   disabled={isLoading}
+                  outline={!isUpdated}
                 />
               </div>
             </div>

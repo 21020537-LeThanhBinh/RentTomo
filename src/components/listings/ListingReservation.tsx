@@ -26,10 +26,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold">
-          đ {formatBigNumber(price)}
+          đ {formatBigNumber(price / (members.length + (host ? 1 : 0) + 1))}
         </div>
         <div className="text-neutral-600">
-          / tháng
+          / tháng / người
         </div>
       </div>
       <hr />
@@ -49,7 +49,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           />
         )}
       </div>
-      
+
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">
         <div className="w-full text-center">Phí lần đầu</div>
         <div className="w-full flex justify-between">
@@ -61,16 +61,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
       <div className="p-4 flex items-center justify-between font-semibold text-lg">
         <div>
-          Sau khi chia
+          Tổng cộng
         </div>
         <div>
-          {false ? (
-            <p>Đang tính toán</p>
-          ) : (
-            <>
-              đ {formatBigNumber((price + deposit) / (members.length + (host ? 1 : 0) + 1) )} <span className="text-md font-normal text-neutral-600">/ người</span>
-            </>
-          )}
+          đ {formatBigNumber((price + deposit) / (members.length + (host ? 1 : 0) + 1))} <span className="text-md font-normal text-neutral-600">/ người</span>
         </div>
       </div>
     </div>

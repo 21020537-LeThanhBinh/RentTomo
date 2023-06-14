@@ -1,3 +1,5 @@
+'use client'
+
 export default function PopupInputContainer({ label, onBack, children }: { label: string, onBack: () => void, children: React.ReactNode }) {
   return (
     <div className="w-full rounded-2xl p-2 pt-12">

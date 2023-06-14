@@ -1,3 +1,4 @@
+import formatBigNumber from "@/utils/formatBigNumber";
 import Heading from "../Heading";
 import UtilityBox from "../UtilityBox";
 // const Map = dynamic(() => import('../Map'), { 
@@ -11,6 +12,7 @@ interface ListingInfoProps {
   area: number;
   title: string;
   address: string;
+  price: number;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -20,6 +22,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   area,
   title,
   address,
+  price
 }) => {
   return (
     <div className="col-span-4 flex flex-col gap-8">
@@ -33,6 +36,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="flex flex-col gap-2 text-neutral-600">
         <span>Loại phòng: {category}</span>
         <span>Diện tích: {area} m²</span>
+        <span>Giá gốc: {formatBigNumber(price)} đ</span>
         <span>Địa chỉ: {address}</span>
       </div>
       <hr />

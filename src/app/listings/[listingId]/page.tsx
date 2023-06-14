@@ -52,6 +52,7 @@ const ListingPage = async ({ params }: { params: IParams }) => {
             area={listing.area}
             title={listing.title}
             address={listing.address}
+            price={listing.price}
           />
 
           <div className="order-first mb-10 md:order-last md:col-span-3 flex flex-col gap-4">
@@ -65,7 +66,6 @@ const ListingPage = async ({ params }: { params: IParams }) => {
                 </div>
 
                 <div className="flex-1 h-full pl-4 border-l-[1px]">
-                  <p className="text-neutral-600">Liên hệ:</p>
                   <p className="text-neutral-600 whitespace-pre-line">{listing.author?.contact}</p>
                 </div>
               </div>

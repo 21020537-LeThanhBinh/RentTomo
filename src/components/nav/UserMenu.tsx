@@ -9,7 +9,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from '../Avatar';
 import AuthPopup from './AuthPopup';
 import MenuItem from './MenuItem';
-import SetUserInfoPopup from './SetUserInfoPopup';
+import SetUserInfoPopup from '../profile/SetUserInfoPopup';
 
 export default function UserMenu() {
   const menuRef = useRef<HTMLDialogElement>(null);
@@ -20,7 +20,7 @@ export default function UserMenu() {
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
   const [modalActive, setModalActive] = useState(0);
-  const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, set-user-info-...
+  const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, edit-profile-...
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname()
@@ -45,6 +45,7 @@ export default function UserMenu() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       handleCloseDialog(e, modalRef1.current!, () => modalRef1.current?.open && router.push(pathname))
+      // handleCloseDialog(e, modalRef3.current!, () => modalRef3.current?.open && router.push(pathname))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -59,11 +60,11 @@ export default function UserMenu() {
     }
 
     if ((sessionEvent == 'SIGNED_IN' || sessionEvent == 'INITIAL_SESSION') && (!session.user?.user_metadata?.year_of_birth)) {
-      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'set-user-info-1'))
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-1'))
     }
 
-    if ((sessionEvent == 'USER_UPDATED') && (session.user?.user_metadata?.year_of_birth) && (searchParams.get('popup') == 'set-user-info-1')) {
-      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'set-user-info-2'))
+    if ((sessionEvent == 'USER_UPDATED') && (session.user?.user_metadata?.year_of_birth) && (searchParams.get('popup') == 'edit-profile-1')) {
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))
     }
 
   }, [session, sessionEvent, searchParams]);
@@ -92,7 +93,7 @@ export default function UserMenu() {
       modalRef2.current?.close();
     }
 
-    if (popup.startsWith('set-user-info')) {
+    if (popup.startsWith('edit-profile-')) {
       !modalRef3.current?.open && modalRef3.current?.showModal();
     } else {
       modalRef3.current?.close();
@@ -104,9 +105,6 @@ export default function UserMenu() {
   useEffect(() => {
     const newModalActive = modalRef3.current?.open ? 3 : modalRef2.current?.open ? 2 : modalRef1.current?.open ? 1 : 0;
 
-    if (!newModalActive) {
-      return setModalActive(0)
-    }
     setTimeout(() => {
       setModalActive(newModalActive)
     }, 200)
@@ -119,6 +117,11 @@ export default function UserMenu() {
 
     alert('Phòng của bạn: Updating...')
   }, [session, pathname]);
+
+  const handleSignOut = useCallback(async () => {
+    await supabase.auth.signOut()
+    router.push(pathname)
+  }, [pathname]);
 
   return (
     <div className='flex-shrink-0 relative'>
@@ -135,23 +138,27 @@ export default function UserMenu() {
       </div>
 
       <dialog ref={menuRef} className="rounded-xl shadow-md w-[26vw] lg:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm mr-0 p-0">
-        <div className="flex flex-col cursor-pointer">
+        <div className="flex flex-col cursor-pointer" onClick={() => menuRef.current?.close()}>
           {session ? (
             <>
               <MenuItem
+                label={session.user?.user_metadata?.full_name}
+                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}
+              />
+              <MenuItem
                 label="Đăng xuất"
-                onClick={() => supabase.auth.signOut()}
+                onClick={handleSignOut}
               />
             </>
           ) : (
             <>
               <MenuItem
                 label="Đăng ký"
-                onClick={() => router.push(`${pathname}?popup=signup`)}
+                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'signup'))}
               />
               <MenuItem
                 label="Đăng nhập"
-                onClick={() => router.push(`${pathname}?popup=login`)}
+                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))}
               />
             </>
           )}
@@ -170,7 +177,7 @@ export default function UserMenu() {
         modalActive={modalActive}
         activeTab={activeTab}
         onBack={() => router.back()}
-        onNext={() => router.push(pathname)}
+        onNext={() => router.push((activeTab == 'edit-profile-1') ? (pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2')) : (pathname))}
         session={session}
       />
     </div>

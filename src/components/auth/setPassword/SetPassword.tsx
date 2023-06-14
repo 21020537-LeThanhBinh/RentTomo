@@ -28,7 +28,7 @@ export default function SetPassword() {
     setLoading(false)
     if (!res.error) {
       console.log(res)
-      router.push(`/?popup=set-user-info-1`)
+      router.push(`/?popup=edit-profile-1`)
     } else {
       setMessage(res.error.message)
     }

@@ -44,7 +44,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const fetchListingRequests = async () => {
     const { data, error } = await supabase
       .from('rooms')
-      .select('type, profiles (id, full_name, avatar_url)')
+      .select('type, profiles (id, full_name, avatar_url, description, contact)')
       .eq('post_id', listing.id)
       .order('created_at', { ascending: true }) as any
 
@@ -133,17 +133,32 @@ const ListingClient: React.FC<ListingClientProps> = ({
       <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
         {host ? (
           <div className="flex flex-col gap-2 p-4">
-            <div className="text-xl font-semibold">Thông tin các thành viên</div>
+            <div className="text-xl font-semibold">Các thành viên</div>
 
-            <div className="flex gap-2 items-center">
-              <Avatar src={host?.avatar_url} />
-              <span className="text-neutral-600">{host?.full_name}</span>
+            <div className="flex items-center h-full">
+              <div className="flex-1 h-full flex gap-2 items-center pr-4 py-2">
+                <Avatar src={host?.avatar_url} />
+                <div className="text-neutral-600">
+                  <span>{host?.full_name} </span>
+                  <span className="whitespace-nowrap text-sm font-light">(Trưởng phòng)</span>
+                </div>
+              </div>
+
+              <div className="flex-1 h-full pl-4 border-l-[1px]">
+                <p className="text-neutral-600 whitespace-pre-line">{host?.description}</p>
+              </div>
             </div>
 
             {members?.map((member) => (
-              <div className="flex gap-2 items-center">
-                <Avatar src={member?.avatar_url} />
-                <span className="text-neutral-600">{member?.full_name}</span>
+              <div key={member.id} className="flex items-center h-full">
+                <div className="flex-1 h-full flex gap-2 items-center pr-4 py-2">
+                  <Avatar src={member?.avatar_url} />
+                  <span className="text-neutral-600">{member?.full_name}</span>
+                </div>
+
+                <div className="flex-1 h-full pl-4 border-l-[1px]">
+                  <p className="text-neutral-600 whitespace-pre-line">{member?.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -157,7 +172,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
           </div>
         )}
       </div>
-      <hr />
 
       {(isOwner || host?.id === userId || members.some((member) => member.id === userId)) ? (
         <ListingReservOwner
