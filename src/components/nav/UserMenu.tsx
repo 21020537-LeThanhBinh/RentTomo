@@ -5,11 +5,11 @@ import createQueryString from '@/utils/createQueryString';
 import handleCloseDialog from '@/utils/handleCloseDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from '../Avatar';
+import SetUserInfoPopup from '../profile/SetUserInfoPopup';
 import AuthPopup from './AuthPopup';
 import MenuItem from './MenuItem';
-import SetUserInfoPopup from '../profile/SetUserInfoPopup';
+import { AiOutlineMenu } from 'react-icons/ai';
 
 export default function UserMenu() {
   const menuRef = useRef<HTMLDialogElement>(null);
@@ -124,25 +124,25 @@ export default function UserMenu() {
   }, [pathname]);
 
   return (
-    <div className='flex-shrink-0 relative'>
+    <div className='flex justify-end flex-shrink-0 relative'>
       <div className="flex flex-row items-center gap-3">
-        <div onClick={onRent} className="hidden lg:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-          Phòng của bạn
-        </div>
-        <button onClick={() => !menuRef.current?.open && menuRef.current?.show()} className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
-          <AiOutlineMenu />
+        <button onClick={() => !menuRef.current?.open && menuRef.current?.show()} className="p-4 md:py-2 md:px-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
+          <AiOutlineMenu className='block lg:hidden'/>
+          <div className='font-semibold hidden lg:block'>
+            {session?.user?.user_metadata?.full_name}
+          </div>
           <div className="hidden md:block">
             <Avatar src={session?.user?.user_metadata?.avatar_url} />
           </div>
         </button>
       </div>
 
-      <dialog ref={menuRef} className="rounded-xl shadow-md w-[26vw] lg:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm mr-0 p-0">
+      <dialog ref={menuRef} className="rounded-xl shadow-md w-[26vw] lg:w-2/3 bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
         <div className="flex flex-col cursor-pointer" onClick={() => menuRef.current?.close()}>
           {session ? (
             <>
               <MenuItem
-                label={session.user?.user_metadata?.full_name}
+                label="Thông tin cá nhân"
                 onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}
               />
               <MenuItem

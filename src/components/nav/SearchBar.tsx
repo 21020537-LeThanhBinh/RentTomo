@@ -100,7 +100,7 @@ export default function SearchBar() {
           "
         >
           <div className="hidden sm:block">{guestLabel}</div>
-          <div className="p-2 bg-rose-500 rounded-full text-white">
+          <div className="p-2 bg-yellow-400 rounded-full text-white">
             <BiSearch size={18} />
           </div>
         </div>

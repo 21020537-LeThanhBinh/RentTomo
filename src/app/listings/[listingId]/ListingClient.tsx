@@ -188,11 +188,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
       <ListingReservation
         price={listing.price}
         onSubmit={onReservation}
-        disabled={isLoading || isOwner || host?.id === userId || members.some((member) => member.id === userId)}
+        disabled={isLoading || isOwner || host?.id === userId}
         requesting={requests.some((request) => userId === request.id)}
         host={host}
         members={members}
         deposit={listing.deposit}
+        userId={userId}
       />
     </>
   )

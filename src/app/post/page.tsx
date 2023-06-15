@@ -1,6 +1,7 @@
 'use client'
 
 import Button from '@/components/Button';
+import Heading from '@/components/Heading';
 import { utilities } from '@/components/filter/Utilities';
 import AddressInputPopup from '@/components/input/AddressInputPopup';
 import CategoryInput from '@/components/input/CategoryInput';
@@ -105,6 +106,10 @@ export default function SearchPage() {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
       <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6">
         <div className="flex flex-col gap-4 md:w-1/3 w-full">
+          <div className='font-semibold text-lg text-neutral-600'>
+            Hình ảnh và Video
+          </div>
+
           <ImageUpload
             onChange={(value) => formik.setFieldValue("imageSrc", [value])}
             value={formik.values.imageSrc[0]}
@@ -114,6 +119,10 @@ export default function SearchPage() {
         </div>
 
         <div className="flex-1 flex flex-col gap-4">
+          <div className='font-semibold text-lg text-neutral-600'>
+            Thông tin chung
+          </div>
+
           <CategoryInput
             onChange={(value) => formik.setFieldValue("category", value)}
             value={formik.values.category}
@@ -159,6 +168,10 @@ export default function SearchPage() {
             required
           />
 
+          <div className='font-semibold text-lg text-neutral-600 mt-2'>
+            Giá thuê và các khoản phí
+          </div>
+
           <Input
             onChange={(value) => formik.setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
             value={formatBigNumber(formik.values.price)}
@@ -174,12 +187,16 @@ export default function SearchPage() {
             onChange={(value) => formik.setFieldValue("deposit", parseInt(value.replace(/\D/g, "")))}
             value={formatBigNumber(formik.values.deposit)}
             id="deposit"
-            label="Số tiền cọc"
+            label="Tiền cọc"
             formatPrice
             type="string"
             disabled={isLoading}
             required
           />
+
+          <div className='font-semibold text-lg text-neutral-600 mt-2'>
+            Nội dung tin đăng
+          </div>
 
           <Input
             onChange={(value) => formik.setFieldValue("title", value)}

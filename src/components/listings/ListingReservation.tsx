@@ -11,6 +11,7 @@ interface ListingReservationProps {
   host: any;
   members: any[];
   deposit: number;
+  userId: string | null;
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -20,9 +21,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   requesting,
   host,
   members,
-  deposit
+  deposit,
+  userId,
 }) => {
-  const isJoined = disabled
+  const isJoined = members.some((item) => item.id === userId)
   const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
 
   return (
@@ -38,26 +40,30 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <hr />
 
       <div className="p-4">
-        {requesting ? (
-          <Button
-            disabled={disabled}
-            label="Huỷ yêu cầu"
-            onClick={onSubmit}
-          />
-        ) : (
-          <Button
-            disabled={disabled}
-            label={host ? "Tham gia" : "Đặt phòng"}
-            onClick={onSubmit}
-          />
-        )}
+        <Button
+          disabled={disabled || isJoined}
+          label={requesting ? "Huỷ yêu cầu" : (!host ? "Đặt phòng" : "Tham gia")}
+          onClick={onSubmit}
+        />
       </div>
 
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">
-        <div className="w-full text-center">Phí lần đầu</div>
+        <div className="w-full text-center">Các phí khác</div>
         <div className="w-full flex justify-between">
           <span>Tiền cọc</span>
           <span>đ {formatBigNumber(deposit)}</span>
+        </div>
+        <div className="w-full flex justify-between">
+          <span>Điện</span>
+          <span>đ 0 / kWh</span>
+        </div>
+        <div className="w-full flex justify-between">
+          <span>Nước</span>
+          <span>đ 0 / khối</span>
+        </div>
+        <div className="w-full flex justify-between">
+          <span>Wifi</span>
+          <span>đ 0 / tháng</span>
         </div>
       </div>
       <hr />

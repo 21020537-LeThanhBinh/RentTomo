@@ -16,8 +16,7 @@ async function getListings() {
     .from('posts')
     .select(`
       id, title, address, area, category, created_at, imageSrc, price, utility, 
-      members: profiles!rooms (id, full_name, avatar_url, description, contact),
-      followers: profiles!follows (id, full_name, avatar_url)
+      members: profiles!rooms (id, full_name, avatar_url, description, contact)
     `)
     .order('created_at', { ascending: false })
 

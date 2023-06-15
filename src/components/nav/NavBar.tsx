@@ -17,7 +17,7 @@ export default async function NavBar() {
             <PostBtn />
           </div>
 
-          <div className="flex flex-1 justify-end">
+          <div className="flex-1">
             <UserMenu />
           </div>
         </div>

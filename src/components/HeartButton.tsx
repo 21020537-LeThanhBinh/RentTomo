@@ -1,7 +1,7 @@
 'use client';
 
 import useFollow from "@/hooks/useFollow";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { AiFillBell, AiOutlineBell } from "react-icons/ai";
 
 interface HeartButtonProps {
   listingId: string
@@ -27,7 +27,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         cursor-pointer
       "
     >
-      <AiOutlineHeart
+      <AiOutlineBell
         size={28}
         className="
           fill-white
@@ -36,10 +36,10 @@ const HeartButton: React.FC<HeartButtonProps> = ({
           -right-[2px]
         "
       />
-      <AiFillHeart
+      <AiFillBell
         size={24}
         className={
-          hasFollowed ? 'fill-rose-500' : 'fill-neutral-500/70'
+          hasFollowed ? 'fill-cyber-yellow' : 'fill-neutral-500/70'
         }
       />
     </div>

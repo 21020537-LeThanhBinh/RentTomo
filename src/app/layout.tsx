@@ -6,7 +6,7 @@ import ToasterProvider from '@/providers/ToasterProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'RentxFriend',
+  title: 'RentTomo',
   description: 'Ứng dụng tìm phòng trọ và bạn ở ghép nhanh chóng cho sinh viên',
 }
 

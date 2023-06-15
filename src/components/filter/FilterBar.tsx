@@ -23,12 +23,12 @@ export default function FilterBar() {
       </div>
 
       <div className="flex flex-col gap-4 mt-14">
-        <CategoryInput
+        {/* <CategoryInput
           onChange={(value) => setCategory(value)}
           value={category}
-        />
+        /> */}
 
-        <Input
+        {/* <Input
           onChange={(value) => setPrice(parseInt(value.replace(/\D/g, "")))}
           value={formatBigNumber(price)}
           id="price"
@@ -37,7 +37,7 @@ export default function FilterBar() {
           type="string"
           disabled={isLoading}
           required
-        />
+        /> */}
 
 
         {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-h-[50vh] overflow-y-auto">
@@ -57,7 +57,7 @@ export default function FilterBar() {
           ))}
         </div> */}
 
-        <MultiItemSelect
+        {/* <MultiItemSelect
           placeholder="Thêm tiện ích"
           options={utilities.map((utility: any) => {
             return { value: utility.label, label: utility.label, icon: utility.icon }
@@ -66,9 +66,9 @@ export default function FilterBar() {
           onChange={(utility: any) => {
             setUtility(utility.map((item: any) => item.value))
           }}
-        />
+        /> */}
 
-        <ItemSelect
+        {/* <ItemSelect
           onChange={(value) => {
             setIsMale((value.label === 'Nam'))
           }}
@@ -76,7 +76,7 @@ export default function FilterBar() {
           options={[{ label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
           placeholder="Giới tính"
           isClearable={false}
-        />
+        /> */}
       </div>
 
       <div className="flex justify-end mt-6">
@@ -85,6 +85,7 @@ export default function FilterBar() {
             label='Áp dụng'
             onClick={() => { }}
             disabled={isLoading}
+            outline
           />
         </div>
       </div>

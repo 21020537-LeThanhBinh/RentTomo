@@ -91,9 +91,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
 
           <div className="absolute bottom-0 right-0 w-1/3 sm:w-1/2 h-4/5 flex flex-col justify-end text-neutral-500 font-light">
-            <div className="px-4 flex items-center gap-2">
+            <div className="px-4 flex items-center gap-4">
               {data.members.length ? (
-                <>
+                <div className="flex items-center gap-2">
                   <span className="hidden sm:block whitespace-nowrap">Thành viên:</span>
                   <div className="flex-1 flex">
                     {data.members.map((item: any) => (
@@ -102,38 +102,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
                       </div>
                     ))}
                   </div>
-                </>
-              ) : data.followers.length ? (
-                <>
-                  <span className="hidden sm:block whitespace-nowrap">Theo dõi:</span>
-                  <div className="flex-1 flex">
-                    {data.followers.map((item: any) => (
-                      <div key={item?.id} className="list-avatar">
-                        <Avatar src={item?.avatar_url} />
-                      </div>
-                    ))}
-                  </div>
-                </>
+                </div>
               ) : (
                 <span className="hidden sm:block whitespace-nowrap">Thành viên: Chưa có</span>
               )}
-
             </div>
-
-            {/* <div className="px-4">
-              <span className="whitespace-nowrap">Đã tham gia:</span>
-            </div> */}
-
-            {/* <div className="px-4 flex items-center gap-2">
-              <span className="whitespace-nowrap">Đang theo dõi:</span>
-              <div className="flex">
-                {data.followers.map((item: any) => (
-                  <div key={item?.id} className="list-avatar">
-                    <Avatar src={item?.avatar_url} />
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

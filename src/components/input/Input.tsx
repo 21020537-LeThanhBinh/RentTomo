@@ -73,6 +73,7 @@ const Input: React.FC<InputProps> = ({
           placeholder=" "
           onBlur={onBlur}
           className={className}
+          minRows={3}
         />
       ) : (
         <input
