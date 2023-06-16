@@ -1,26 +1,29 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
-import createQueryString from '@/utils/createQueryString';
+import { createQueryString } from '@/utils/queryString';
 import handleCloseDialog from '@/utils/handleCloseDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { AiOutlineMenu } from 'react-icons/ai';
 import Avatar from '../Avatar';
-import SetUserInfoPopup from '../profile/SetUserInfoPopup';
+import SetUserInfoPopup from '../profile/EditProfilePopup';
 import AuthPopup from './AuthPopup';
 import MenuItem from './MenuItem';
-import { AiOutlineMenu } from 'react-icons/ai';
 
 export default function UserMenu() {
-  const menuRef = useRef<HTMLDialogElement>(null);
+  const menuRef = useRef<any>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const modalRef1 = useRef<HTMLDialogElement>(null);
   const modalRef2 = useRef<HTMLDialogElement>(null);
   const modalRef3 = useRef<HTMLDialogElement>(null);
 
+  const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, edit-profile-...
+  const [modalActive, setModalActive] = useState(false);
+  
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
-  const [modalActive, setModalActive] = useState(0);
-  const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, edit-profile-...
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname()
@@ -33,7 +36,10 @@ export default function UserMenu() {
     })
 
     const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, menuRef.current!, () => menuRef.current?.close())
+      // handleCloseDialog(e, menuRef.current!, () => setMenuOpen(false))
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -77,7 +83,10 @@ export default function UserMenu() {
       modalRef1.current?.close();
       modalRef2.current?.close();
       modalRef3.current?.close();
+
       setActiveTab("");
+      setModalActive(false);
+      
       return;
     }
 
@@ -103,20 +112,13 @@ export default function UserMenu() {
   }, [searchParams])
 
   useEffect(() => {
-    const newModalActive = modalRef3.current?.open ? 3 : modalRef2.current?.open ? 2 : modalRef1.current?.open ? 1 : 0;
+    const newModalActive = modalRef3.current?.open || modalRef2.current?.open || modalRef1.current?.open;
 
-    setTimeout(() => {
-      setModalActive(newModalActive)
+    if (!newModalActive) setModalActive(false);
+    else setTimeout(() => {
+      setModalActive(true)
     }, 200)
   }, [modalRef1.current?.open, modalRef2.current?.open, modalRef3.current?.open])
-
-  const onRent = useCallback(() => {
-    if (!session) {
-      return router.push(`${pathname}?popup=login`)
-    }
-
-    alert('Phòng của bạn: Updating...')
-  }, [session, pathname]);
 
   const handleSignOut = useCallback(async () => {
     await supabase.auth.signOut()
@@ -125,45 +127,45 @@ export default function UserMenu() {
 
   return (
     <div className='flex justify-end flex-shrink-0 relative'>
-      <div className="flex flex-row items-center gap-3">
-        <button onClick={() => !menuRef.current?.open && menuRef.current?.show()} className="p-4 md:py-2 md:px-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
-          <AiOutlineMenu className='block lg:hidden'/>
+      <div ref={menuRef} className="flex flex-row items-center gap-3">
+        <button onClick={() => setMenuOpen(!menuOpen)} className="p-4 md:py-2 md:px-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
+          <AiOutlineMenu className='block lg:hidden' />
           <div className='font-semibold hidden lg:block'>
-            {session?.user?.user_metadata?.full_name}
+            {session?.user?.user_metadata?.full_name || 'Tài khoản'}
           </div>
           <div className="hidden md:block">
             <Avatar src={session?.user?.user_metadata?.avatar_url} />
           </div>
         </button>
-      </div>
 
-      <dialog ref={menuRef} className="rounded-xl shadow-md w-[26vw] lg:w-2/3 bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
-        <div className="flex flex-col cursor-pointer" onClick={() => menuRef.current?.close()}>
-          {session ? (
-            <>
-              <MenuItem
-                label="Thông tin cá nhân"
-                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}
-              />
-              <MenuItem
-                label="Đăng xuất"
-                onClick={handleSignOut}
-              />
-            </>
-          ) : (
-            <>
-              <MenuItem
-                label="Đăng ký"
-                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'signup'))}
-              />
-              <MenuItem
-                label="Đăng nhập"
-                onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))}
-              />
-            </>
-          )}
-        </div>
-      </dialog>
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-3/5 bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
+          <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
+            {session ? (
+              <>
+                <MenuItem
+                  label="Thông tin cá nhân"
+                  onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}
+                />
+                <MenuItem
+                  label="Đăng xuất"
+                  onClick={handleSignOut}
+                />
+              </>
+            ) : (
+              <>
+                <MenuItem
+                  label="Đăng ký"
+                  onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'signup'))}
+                />
+                <MenuItem
+                  label="Đăng nhập"
+                  onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))}
+                />
+              </>
+            )}
+          </div>
+        </dialog>
+      </div>
 
       <AuthPopup
         modalRef1={modalRef1}

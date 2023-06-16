@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
-import createQueryString from '@/utils/createQueryString';
+import { createQueryString } from '@/utils/queryString';
 
 export default function Verify() {
   const [loading, setLoading] = useState(false)

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconType } from "react-icons";
-import { utilities } from "./filter/Utilities";
+import { utilities } from "./input/UtilityInput";
 
 interface UtilityBoxProps {
   label: string;

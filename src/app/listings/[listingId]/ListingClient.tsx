@@ -8,7 +8,7 @@ import ListingReservOwner from "@/components/listings/ListingReservOwner";
 import ListingReservation from "@/components/listings/ListingReservation";
 import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
-import createQueryString from "@/utils/createQueryString";
+import { createQueryString } from "@/utils/queryString";
 import { toast } from "react-hot-toast";
 
 interface ListingClientProps {

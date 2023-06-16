@@ -2,7 +2,7 @@
 
 import Button from '@/components/Button';
 import Heading from '@/components/Heading';
-import { utilities } from '@/components/filter/Utilities';
+import { utilities } from '@/components/input/UtilityInput';
 import AddressInputPopup from '@/components/input/AddressInputPopup';
 import CategoryInput from '@/components/input/CategoryInput';
 import ImageUpload from '@/components/input/ImageUpload';

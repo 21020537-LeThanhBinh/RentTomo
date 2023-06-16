@@ -1,5 +1,5 @@
 import { supabase } from "@/supabase/supabase-app";
-import createQueryString from "@/utils/createQueryString";
+import { createQueryString } from "@/utils/queryString";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";

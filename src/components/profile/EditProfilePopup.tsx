@@ -13,7 +13,7 @@ import ItemSelect from "../input/ItemSelect";
 
 export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onBack, onNext, session }: {
   modalRef: React.MutableRefObject<HTMLDialogElement | null>,
-  modalActive: number,
+  modalActive: boolean,
   activeTab: string,
   onBack: () => void,
   onNext: () => void,
@@ -298,6 +298,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 label="Giới thiệu bản thân"
                 disabled={isLoading}
                 onBlur={formik2.handleBlur}
+                multiline
               />
             </div>
 

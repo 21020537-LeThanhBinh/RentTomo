@@ -1,6 +1,6 @@
 'use client'
 
-import createQueryString from "@/utils/createQueryString";
+import { createQueryString } from "@/utils/queryString";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactPaginate from "react-paginate";
 

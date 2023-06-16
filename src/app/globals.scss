@@ -44,8 +44,6 @@ dialog[open].popup {
 
 .menu-login-enter {
   position: absolute;
-  left: 0;
-  top: 0;
   transform: translateX(-110%);
 }
 
@@ -56,8 +54,6 @@ dialog[open].popup {
 
 .menu-login-exit {
   position: absolute;
-  left: 0;
-  top: 0;
 }
 
 .menu-login-exit-active {
@@ -75,9 +71,9 @@ dialog[open].popup {
   transition: all 0.2s ease-out;
 }
 
-.menu-signup-exit {
-  /* position: absolute; */
-}
+// .menu-signup-exit {
+//   position: absolute;
+// }
 
 .menu-signup-exit-active {
   transform: translateX(110%);
@@ -90,4 +86,19 @@ dialog[open].popup {
 
 .list-avatar:not(:first-child) {
   margin-left: -8px;
+}
+
+.price-range-track-1 {
+  background-color: #222222; 
+  height: 2px;
+}
+
+.price-range-track-0 {
+  background-color: #ddd; 
+  height: 2px;
+}
+
+.price-range-track-2 {
+  background-color: #ddd; 
+  height: 2px;
 }

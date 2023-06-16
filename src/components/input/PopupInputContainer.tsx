@@ -1,6 +1,10 @@
 'use client'
 
-export default function PopupInputContainer({ label, onBack, children }: { label: string, onBack: () => void, children: React.ReactNode }) {
+export default function PopupInputContainer({
+  label, onBack, children, className
+}: {
+  label: string, onBack: () => void, children: React.ReactNode, className?: string
+}) {
   return (
     <div className="w-full rounded-2xl p-2 pt-12">
       <div className='flex'>
@@ -10,7 +14,7 @@ export default function PopupInputContainer({ label, onBack, children }: { label
         </div>
       </div>
 
-      <div className="pt-8">
+      <div className={`pt-8 ${className}`}>
         {children}
       </div>
     </div>

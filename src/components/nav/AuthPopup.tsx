@@ -3,13 +3,18 @@ import LoginPage from "../auth/login/LoginPage";
 import SetPasswordPage from "../auth/setPassword/SetPasswordPage";
 import SignupPage from "../auth/signup/SignupPage";
 import VerifyPage from "../auth/verify/VerifyPage";
+import { useEffect } from "react";
 
 export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab }: {
   modalRef1: React.MutableRefObject<HTMLDialogElement | null>,
   modalRef2: React.MutableRefObject<HTMLDialogElement | null>,
-  modalActive: number,
+  modalActive: boolean,
   activeTab: string,
 }) {
+  useEffect(() => {
+    console.log(modalActive)
+  }, [modalActive])
+
   return (
     <>
       <dialog ref={modalRef1} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
@@ -17,7 +22,7 @@ export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab
           in={activeTab === 'login'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive == 1 ? "menu-login" : ""}
+          classNames={modalActive ? "menu-login" : ""}
         >
           <div className='w-full absolute left-0'>
             <LoginPage />
@@ -28,7 +33,7 @@ export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab
           in={activeTab === 'signup'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive == 1 ? "menu-signup" : ""}
+          classNames={modalActive ? "menu-signup" : ""}
         >
           <div className='w-full absolute left-0'>
             <SignupPage />
@@ -41,7 +46,7 @@ export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab
           in={activeTab === 'verify'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive == 2 ? "menu-login" : ""}
+          classNames={modalActive ? "menu-login" : ""}
         >
           <div className='w-full absolute left-0'>
             <VerifyPage />
@@ -52,7 +57,7 @@ export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab
           in={activeTab === 'set-password'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive == 2 ? "menu-signup" : ""}
+          classNames={modalActive ? "menu-signup" : ""}
         >
           <div className='w-full absolute left-0'>
             <SetPasswordPage />

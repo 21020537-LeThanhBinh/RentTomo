@@ -7,20 +7,22 @@ interface CategoryInputProps {
   value: string;
 }
 
+export const categoryOptions = [
+  { label: "Phòng cho thuê", value: "Phòng cho thuê" },
+  { label: "Căn hộ", value: "Căn hộ" },
+  { label: "Ký túc xá", value: "Ký túc xá" },
+  { label: "Nhà nguyên căn", value: "Nhà nguyên căn" },
+]
+
 const CategoryInput: React.FC<CategoryInputProps> = ({
   onChange,
-  value
+  value,
 }) => {
   return (
     <ItemSelect
-      onChange={(value: any) => onChange(value?.value)}
-      value={{ label: value, value: value }}
-      options={[
-        { label: "Phòng cho thuê", value: "Phòng cho thuê" },
-        { label: "Ký túc xá", value: "Ký túc xá" },
-        { label: "Nhà nguyên căn", value: "Nhà nguyên căn" },
-        { label: "Căn hộ", value: "Căn hộ" }
-      ]}
+      onChange={(value: any) => onChange(value?.label)}
+      value={{ label: value }}
+      options={categoryOptions}
       placeholder="Chọn loại phòng"
     />
   );

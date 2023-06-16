@@ -10,6 +10,7 @@ import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import Avatar from "../Avatar";
 import HeartButton from "../HeartButton";
+import Link from "next/link";
 
 interface ListingCardProps {
   data: any;
@@ -47,9 +48,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }, [reservation, data.price]);
 
   return (
-    <div onClick={() => router.push(`/listings/${data.id}`)} className="cursor-pointer group h-full max-h-[180px]">
+    <div className="group h-full max-h-[180px]">
       <div className="flex gap-4 h-full">
-        <div className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl flex-shrink-0">
+        <Link href={`/listings/${data.id}`} className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl flex-shrink-0">
           <Image
             fill
             src={data.imageSrc[0]}
@@ -62,16 +63,16 @@ const ListingCard: React.FC<ListingCardProps> = ({
               userId={userId}
             />
           </div>
-        </div>
+        </Link>
 
         <div className="flex-1 flex flex-col gap-2 relative w-2/3">
-          <div className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
+          <Link href={`/listings/${data.id}`} className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
             {data.title}
-          </div>
+          </Link>
 
           <div className="font-light text-neutral-500 flex items-center gap-1 w-1/2">
             <BsHouseFill className="hidden sm:block" />
-            <span className="whitespace-nowrap hidden sm:block">{data.category}</span>
+            <span className="whitespace-nowrap hidden sm:block mr-2">{data.category}</span>
             <FaRuler />
             <span className="whitespace-nowrap truncate block">{data.area} m²</span>
           </div>
@@ -83,10 +84,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
               <div className="font-light">/ tháng</div>
             )}
           </div>
-          <div className="font-light text-neutral-500 flex flex-1 items-end pr-4 w-2/3 sm:w-1/2">
+          <div className="font-light text-neutral-500 flex flex-1 items-end w-2/3 sm:w-1/2">
             <div className="flex items-center gap-1 w-full">
               <ImLocation />
-              <span className="whitespace-nowrap truncate block">{data.address.split(',').slice(1).join(', ')}</span>
+              <span className="whitespace-nowrap truncate block">{data.address.replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}</span>
             </div>
           </div>
 
