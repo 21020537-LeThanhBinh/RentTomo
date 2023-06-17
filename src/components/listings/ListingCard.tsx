@@ -53,7 +53,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <Link href={`/listings/${data.id}`} className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl flex-shrink-0">
           <Image
             fill
-            src={data.imageSrc[0]}
+            src={data.image_src[0]}
             alt="Listing"
             className="object-cover h-full w-full group-hover:scale-110 transition"
           />
@@ -93,7 +93,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
           <div className="absolute bottom-0 right-0 w-1/3 sm:w-1/2 h-4/5 flex flex-col justify-end text-neutral-500 font-light">
             <div className="px-4 flex items-center gap-4">
-              {data.members.length ? (
+              {data.members?.[0].id ? (
                 <div className="flex items-center gap-2">
                   <span className="hidden sm:block whitespace-nowrap">Thành viên:</span>
                   <div className="flex-1 flex">

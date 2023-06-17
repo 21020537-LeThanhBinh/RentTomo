@@ -13,7 +13,7 @@ async function getListingById(id: string) {
   let { data, error } = await supabase
     .from('posts')
     .select(`
-      id, title, address, area, category, created_at, imageSrc, price, deposit, utility, description,
+      id, title, address, area, category, created_at, image_src, price, deposit, utility, description,
       author: profiles!posts_author_id_fkey (id, full_name, avatar_url, contact),
       followers: profiles!follows (id, full_name, avatar_url)
     `)
@@ -41,7 +41,7 @@ const ListingPage = async ({ params }: { params: IParams }) => {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
       <div className="flex flex-col gap-6">
         <ListingHead
-          imageSrc={listing.imageSrc[0]}
+          imageSrc={listing.image_src[0]}
           id={listing.id}
         />
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">

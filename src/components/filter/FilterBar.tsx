@@ -1,20 +1,20 @@
 'use client'
 
-import { createQueryString } from "@/utils/queryString"
+import { ISearchParams } from "@/types"
 import handleCloseDialog from "@/utils/handleCloseDialog"
 import { usePathname, useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
+import { BsDashLg } from "react-icons/bs"
 import ReactSlider from 'react-slider'
 import Button from "../Button"
 import { categoryOptions } from "../input/CategoryInput"
+import Input from "../input/Input"
 import ItemSelect from "../input/ItemSelect"
 import MultiItemSelect from "../input/MultiItemSelect"
 import PopupInputContainer from "../input/PopupInputContainer"
 import { utilities } from "../input/UtilityInput"
 import CategorySelect from "./CategorySelect"
-import Input from "../input/Input"
-import { BsDashLg } from "react-icons/bs"
-import { ISearchParams } from "@/types"
+import Link from "next/link"
 
 export default function FilterBar({ searchParams, children }: { searchParams: ISearchParams, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -22,17 +22,13 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
   const router = useRouter()
   const pathname = usePathname()
 
-  const [category, setCategory] = useState<string[]>(categoryOptions.map((option) => option.value))
-
-  const [minPrice, setMinPrice] = useState<number>(0)
-  const [maxPrice, setMaxPrice] = useState<number>(15)
-
-  const [minArea, setMinArea] = useState<number>(0)
-  const [maxArea, setMaxArea] = useState<number>(150)
-
-  const [utility, setUtility] = useState<string[]>([])
-
-  const [isMale, setIsMale] = useState<boolean | undefined>()
+  const [category, setCategory] = useState<string[]>(searchParams.category ? searchParams.category?.split(',') : categoryOptions.map((option) => option.value))
+  const [minPrice, setMinPrice] = useState<number>(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
+  const [maxPrice, setMaxPrice] = useState<number>(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
+  const [minArea, setMinArea] = useState<number>(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
+  const [maxArea, setMaxArea] = useState<number>(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
+  const [utility, setUtility] = useState<string[]>(searchParams.utility ? searchParams.utility?.split(',') : [])
+  const [isMale, setIsMale] = useState<boolean | undefined>((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -45,18 +41,28 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
     };
   }, []);
 
+  useEffect(() => {
+    setCategory(searchParams.category ? searchParams.category?.split(',') : categoryOptions.map((option) => option.value))
+    setMinPrice(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
+    setMaxPrice(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
+    setMinArea(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
+    setMaxArea(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
+    setUtility(searchParams.utility ? searchParams.utility?.split(',') : [])
+    setIsMale((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
+  }, [searchParams])
+
   const onApply = async () => {
     setIsLoading(true);
 
-    router.push(pathname + '?'
-      + ((category.length < 4) ? createQueryString(searchParams, 'category', category) : createQueryString(searchParams, 'category', ''))
-      + '&' + createQueryString(searchParams, 'minPrice', minPrice)
-      + '&' + createQueryString(searchParams, 'maxPrice', maxPrice)
-      + '&' + createQueryString(searchParams, 'minArea', minArea)
-      + '&' + createQueryString(searchParams, 'maxArea', maxArea)
-      + '&' + createQueryString(searchParams, 'utility', utility)
-      + '&' + createQueryString(searchParams, 'isMale', isMale)
-    )
+    const params = new URLSearchParams(searchParams as any)
+    params.set('category', (category.length < 4) ? category.toString() : '')
+    params.set('minPrice', minPrice.toString())
+    params.set('maxPrice', (maxPrice < 15) ? maxPrice.toString() : '')
+    params.set('minArea', minArea.toString())
+    params.set('maxArea', maxArea.toString())
+    params.set('utility', utility.toString())
+    params.set('isMale', isMale?.toString() || 'undefined')
+    router.push('/search?' + params.toString())
 
     setIsLoading(false)
     dialogRef.current?.close()
@@ -108,14 +114,14 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
               id="minPrice"
               label="Tối thiểu"
               value={minPrice.toString()}
-              onChange={(value) => setMinPrice(parseInt(value))}
+              onChange={(value) => setMinPrice(value ? parseInt(value) : 0)}
             />
             <BsDashLg size={30} />
             <Input
               id="maxPrice"
               label="Tối đa"
               value={maxPrice.toString()}
-              onChange={(value) => setMaxPrice(parseInt(value))}
+              onChange={(value) => setMaxPrice(value ? parseInt(value) : 0)}
             />
           </div>
 
@@ -144,14 +150,14 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
               id="minArea"
               label="Tối thiểu"
               value={minArea.toString()}
-              onChange={(value) => setMinArea(parseInt(value))}
+              onChange={(value) => setMinArea(value ? parseInt(value) : 0)}
             />
             <BsDashLg size={30} />
             <Input
               id="maxArea"
               label="Tối đa"
               value={maxArea.toString()}
-              onChange={(value) => setMaxArea(parseInt(value))}
+              onChange={(value) => setMaxArea(value ? parseInt(value) : 0)}
             />
           </div>
 
@@ -174,15 +180,19 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
           </div>
           <ItemSelect
             onChange={(value) => {
-              setIsMale((value.label === 'Nam'))
+              setIsMale(value === null ? undefined : (value.label === 'Nam'))
             }}
             value={(isMale === undefined) ? {} : (isMale ? { label: 'Nam' } : { label: 'Nữ' })}
             options={[{ label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
             placeholder="Giới tính"
-            isClearable={false}
           />
 
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-between items-center mt-6">
+            <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
+              <Link href='/search' onClick={() => dialogRef.current?.close()} className="underline whitespace-nowrap text-neutral-600 font-semibold">
+                Cài lại
+              </Link>
+            </div>
             <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
               <Button
                 label='Áp dụng'
