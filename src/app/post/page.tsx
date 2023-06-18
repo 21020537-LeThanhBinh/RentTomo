@@ -48,7 +48,7 @@ export default function SearchPage() {
     const { data, error } = await supabase
       .from('posts')
       .insert([
-        { ...values, author_id: uid, address: formatAddress(values.address) },
+        { ...values, author_id: uid, address: values.address.number, ward_id: values.address.ward_id },
       ])
 
     if (!error) {
@@ -74,9 +74,10 @@ export default function SearchPage() {
         district: "",
         ward: "",
         number: "",
+        ward_id: "",
       },
       area: 0,
-      imageSrc: [],
+      image_src: [],
       utility: [],
       title: "",
       description: "",
@@ -93,7 +94,7 @@ export default function SearchPage() {
       number: string;
     },
     area: number;
-    imageSrc: string[];
+    image_src: string[];
     utility: string[];
     title: string;
     description: string;
@@ -111,8 +112,8 @@ export default function SearchPage() {
           </div>
 
           <ImageUpload
-            onChange={(value) => formik.setFieldValue("imageSrc", [value])}
-            value={formik.values.imageSrc[0]}
+            onChange={(value) => formik.setFieldValue("image_src", [value])}
+            value={formik.values.image_src[0]}
           />
 
           {/* Video upload */}

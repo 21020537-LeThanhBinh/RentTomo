@@ -5,7 +5,7 @@ export function createQueryString(searchParams: any, name: string, value: any) {
   return params.toString()
 }
 
-export function deleteQueryString(searchParams: any, name: string, value: any) {
+export function deleteQueryString(searchParams: any, name: string) {
   const params = new URLSearchParams(searchParams as any)
   params.delete(name)
 

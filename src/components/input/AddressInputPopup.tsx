@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import cityList from '../../../public/DiaGioiHanhChinhVN.json' assert { type: 'json' };
 import Button from "../Button";
 import Input from "./Input";
 import ItemSelect from "./ItemSelect";
@@ -19,42 +20,36 @@ interface AddressProps {
 }
 
 export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef }: AddressProps) {
-  const [map, setMap] = useState<any>(null)
-
-  useEffect(() => {
-    async function fetchMap() {
-      const res = await fetch("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json").then((res) => res.json());
-      setMap(res)
-    }
-
-    fetchMap()
-  }, [])
+  const [districtList, setDistrictList] = useState<any[]>([])
+  const [wardList, setWardList] = useState<any[]>([])
 
   useEffect(() => {
     setFieldValue("address.district", "")
+    setDistrictList(cityList.find((city: any) => city.Name === value?.city)?.Districts || [])
   }, [value?.city])
 
   useEffect(() => {
     setFieldValue("address.ward", "")
+    setWardList(districtList.find((district: any) => district.Name === value?.district)?.Wards || [])
   }, [value?.district])
 
-  const getLocationList = (type: string) => {
-    if (type === "city") {
-      return map
-        ?.map((city: any) => city.Name)
-    }
-    if (type === "district") {
-      return map
-        ?.find((city: any) => city.Name === value?.city)?.Districts
-        ?.map((district: any) => district.Name)
-    }
-    if (type === "ward") {
-      return map
-        ?.find((city: any) => city.Name === value?.city)?.Districts
-        ?.find((district: any) => district.Name === value?.district)?.Wards
-        ?.map((ward: any) => ward.Name)
-    }
-  }
+  // const getLocationList = (type: string) => {
+  //   if (type === "city") {
+  //     return cityList
+  //       ?.map((city: any) => city.Name)
+  //   }
+  //   if (type === "district") {
+  //     return cityList
+  //       ?.find((city: any) => city.Name === value?.city)?.Districts
+  //       ?.map((district: any) => district.Name)
+  //   }
+  //   if (type === "ward") {
+  //     return cityList
+  //       ?.find((city: any) => city.Name === value?.city)?.Districts
+  //       ?.find((district: any) => district.Name === value?.district)?.Wards
+  //       ?.map((ward: any) => ward.Name)
+  //   }
+  // }
 
   return (
     <dialog ref={addressRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden'>
@@ -63,29 +58,38 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
           <div className="flex flex-col gap-4">
             <ItemSelect
               placeholder="Chọn tỉnh thành"
-              options={getLocationList("city")?.map((city: any) => {
-                return { value: city, label: city }
+              options={cityList?.map((city: any) => {
+                return { value: city.Name, label: city.Name, Id: city.Id }
               })}
               value={{ label: value?.city, value: value?.city }}
-              onChange={(value: any) => setFieldValue("address.city", value?.value)}
+              onChange={(value: any) => {
+                setFieldValue("address.city", value?.value)
+                setDistrictList(cityList.find((city: any) => city.Id === value?.Id)?.Districts || [])
+              }}
             />
 
             <ItemSelect
               placeholder="Chọn quận huyện"
-              options={getLocationList("district")?.map((district: any) => {
-                return { value: district, label: district }
+              options={districtList.map((district: any) => {
+                return { value: district.Name, label: district.Name, Id: district.Id }
               })}
               value={{ label: value?.district, value: value?.district }}
-              onChange={(value: any) => setFieldValue("address.district", value?.value)}
+              onChange={(value: any) => {
+                setFieldValue("address.district", value?.value)
+                setWardList(districtList.find((district: any) => district.Id === value?.Id)?.Wards || [])
+              }}
             />
 
             <ItemSelect
               placeholder="Chọn phường xã"
-              options={getLocationList("ward")?.map((ward: any) => {
-                return { value: ward, label: ward }
+              options={wardList.map((ward: any) => {
+                return { value: ward.Name, label: ward.Name, Id: ward.Id }
               })}
               value={{ label: value?.ward, value: value?.ward }}
-              onChange={(value: any) => setFieldValue("address.ward", value?.value)}
+              onChange={(value: any) => {
+                setFieldValue("address.ward", value?.value)
+                setFieldValue("address.ward_id", value?.Id)
+              }}
             />
 
             <Input

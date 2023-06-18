@@ -10,7 +10,7 @@ export const revalidate = 60 // revalidate this page every 60 seconds
 async function getListings(searchParams: ISearchParams) {
   let query = supabase
     .from('posts_members')
-    .select(`id, title, address, area, category, created_at, image_src, price, utility, members`)
+    .select(`id, title, address, area, category, created_at, image_src, price, utility, ward_id, members`)
 
   if (searchParams.category)
     query = query.in('category', searchParams.category.split(','))
