@@ -1,108 +1,123 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
-import { BiSearch } from 'react-icons/bi';
-// import { differenceInDays } from 'date-fns';
-
-import useSearchModal from '@/hooks/useSearchModal';
-import useCountries from '@/hooks/useCountries';
+import { useState } from 'react';
+import { BiCurrentLocation, BiSearch } from 'react-icons/bi';
+import { MdOutlineLocationSearching } from 'react-icons/md';
+import Select from 'react-select';
 
 export default function SearchBar() {
-  const searchModal = useSearchModal();
   const params = useSearchParams();
-  const { getByValue } = useCountries();
 
-  const  locationValue = params?.get('locationValue'); 
-  const  startDate = params?.get('startDate');
-  const  endDate = params?.get('endDate');
-  const  guestCount = params?.get('guestCount');
+  const locationValue = params?.get('locationValue');
   const router = useRouter();
 
-  const locationLabel = useMemo(() => {
-    if (locationValue) {
-      return getByValue(locationValue as string)?.label;
-    }
+  const [searchType, setSearchType] = useState<string>("Khu vực");
+  const [locationLabel, setLocationLabel] = useState<string>("");
 
-    return 'Vị trí';
-  }, [locationValue, getByValue]);
+  return (
+    <div onClick={() => { router.push("/search") }} className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[367px] relative py-2 rounded-full">
+      <div className="flex items-center justify-between">
+        <Select
+          options={[
+            { label: 'Khu vực', value: 'Khu vực', icon: MdOutlineLocationSearching },
+            { label: 'Lân cận', value: 'Lân cận', icon: BiCurrentLocation }
+          ]}
+          value={{ label: searchType }}
+          isSearchable={false}
+          onChange={(value: any) => setSearchType(value?.label)}
+          formatOptionLabel={(option: any) => (
+            <div className="flex flex-row items-center gap-3">
+              {option?.icon?.()}
+              <div>
+                {option?.label}
+              </div>
+            </div>
+          )}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary: 'black',
+              primary25: '#ffe4e6'
+            }
+          })}
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              border: 0,
+              boxShadow: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }),
+            valueContainer: (baseStyles, state) => ({
+              ...baseStyles,
+              padding: 0,
+            }),
+            indicatorSeparator: (baseStyles, state) => ({
+              ...baseStyles,
+              width: 0,
+            }),
+          }}
+          className='flex-shrink-0 pl-6 pr-2 text-sm font-semibold border-r-[1px]'
+        />
 
-  const durationLabel = useMemo(() => {
-    if (startDate && endDate) {
-      const start = new Date(startDate as string);
-      const end = new Date(endDate as string);
-      // let diff = differenceInDays(end, start);
-      let diff = 0;
+        <Select
+          options={[]}
+          value={locationLabel && { label: locationLabel }}
+          onChange={(value: any) => setLocationLabel(value?.label)}
+          isClearable
+          placeholder={searchType === 'Khu vực' ? 'Nhập tên đường, quận, ...' : 'Nhập địa điểm chính xác'}
+          formatOptionLabel={(option: any) => (
+            <div className="flex flex-row items-center gap-3">
+              {option?.icon && option?.icon()}
+              <div>
+                {option?.label}
+              </div>
+            </div>
+          )}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary: 'black',
+              primary25: '#ffe4e6'
+            }
+          })}
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              border: 0,
+              boxShadow: 'none',
+              padding: 0,
+              cursor: 'text',
+              // width: '224px',
+            }),
+            dropdownIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              width: 0,
+              padding: 0,
+            }),
+            indicatorSeparator: (baseStyles, state) => ({
+              ...baseStyles,
+              width: 0,
+            }),
+            valueContainer: (baseStyles, state) => ({
+              ...baseStyles,
+              paddingRight: 0,
+              maxWidth: '100%',
+              // whiteSpace: 'nowrap',
+              // overflow: 'hidden',
+              // textOverflow: 'ellipsis',
+            }),
+          }}
+          className='flex-1 pl-2 pr-12 text-sm overflow-hidden whitespace-nowrap'
+        />
 
-      if (diff === 0) {
-        diff = 1;
-      }
-
-      return `${diff} Days`;
-    }
-
-    return 'Khoảng cách'
-  }, [startDate, endDate]);
-
-  const guestLabel = useMemo(() => {
-    if (guestCount) {
-      return `${guestCount} Guests`;
-    }
-
-    return 'Thêm bạn';
-  }, [guestCount]);
-
-  return ( 
-    // <div onClick={searchModal.onOpen} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
-    <div onClick={() => {router.push("/search")}} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
-      <div 
-        className="
-          flex 
-          flex-row 
-          items-center 
-          justify-between
-        "
-      >
-        <div 
-          className="
-            text-sm 
-            font-semibold 
-            px-6
-            whitespace-nowrap
-          "
-        >
-          {locationLabel}
-        </div>
-        <div 
-          className="
-            hidden 
-            sm:block 
-            text-sm 
-            font-semibold 
-            px-6 
-            border-x-[1px] 
-            flex-1 
-            text-center
-          "
-        >
-          {durationLabel}
-        </div>
-        <div 
-          className="
-            text-sm 
-            pl-6 
-            pr-2 
-            text-gray-600 
-            flex 
-            flex-row 
-            items-center 
-            gap-3
-          "
-        >
-          <div className="hidden sm:block">{guestLabel}</div>
-          <div className="p-2 bg-yellow-400 rounded-full text-white">
+        <div className='absolute right-2'>
+          <button className="p-2 bg-yellow-400 rounded-full text-white">
             <BiSearch size={18} />
-          </div>
+          </button>
         </div>
       </div>
     </div>

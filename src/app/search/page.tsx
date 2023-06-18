@@ -47,8 +47,8 @@ export default async function SearchPage({ searchParams }: { searchParams: ISear
 
   return (
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-      <div className="flex gap-6 flex-col md:flex-row mt-8">
-        <div className="w-full md:w-1/3">
+      <div className="flex gap-6 flex-col lg:flex-row mt-8">
+        <div className="w-full lg:w-1/4">
           <FilterBar searchParams={searchParams}>
             <div className="absolute top-6 left-0 text-xl font-semibold text-center w-full">
               <span>Bộ lọc</span>
@@ -111,7 +111,7 @@ export default async function SearchPage({ searchParams }: { searchParams: ISear
           </FilterBar>
         </div>
 
-        <div className="w-full flex flex-col gap-6 min-h-[65vh] relative">
+        <div className="w-full lg:w-3/4 flex flex-col gap-6 min-h-[65vh] relative">
           {listings.length ? listings.map((listing: any) => (
             <ListingCard
               key={listing.id}

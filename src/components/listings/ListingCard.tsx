@@ -3,33 +3,19 @@
 import { supabase } from "@/supabase/supabase-app";
 import formatBigNumber from "@/utils/formatBigNumber";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import Avatar from "../Avatar";
 import HeartButton from "../HeartButton";
-import Link from "next/link";
 
 interface ListingCardProps {
   data: any;
-  reservation?: any;
-  onAction?: (id: string) => void;
-  disabled?: boolean;
-  actionLabel?: string;
-  actionId?: string;
 };
 
-const ListingCard: React.FC<ListingCardProps> = ({
-  data,
-  reservation,
-  onAction,
-  disabled,
-  actionLabel,
-  actionId = '',
-}) => {
-  const router = useRouter();
+const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,18 +25,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
     })
   }, []);
 
-  const price = useMemo(() => {
-    if (reservation) {
-      return reservation.totalPrice;
-    }
-
-    return data.price;
-  }, [reservation, data.price]);
-
   return (
-    <div className="group h-full max-h-[180px]">
+    <div className="group h-full max-h-36">
       <div className="flex gap-4 h-full">
-        <Link href={`/listings/${data.id}`} className="aspect-[4/3] w-1/4 relative overflow-hidden rounded-xl flex-shrink-0">
+        <Link href={`/listings/${data.id}`} className="aspect-[4/3] w-1/4 md:w-1/5 relative overflow-hidden rounded-xl flex-shrink-0">
           <Image
             fill
             src={data.image_src[0]}
@@ -65,7 +43,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </Link>
 
-        <div className="flex-1 flex flex-col gap-2 relative w-2/3">
+        <div className="flex-1 flex flex-col gap-2 relative w-3/4 lg:w-4/5">
           <Link href={`/listings/${data.id}`} className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
             {data.title}
           </Link>
@@ -78,16 +56,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
           <div className="flex flex-row items-center gap-1">
             <div className="font-semibold">
-              đ {formatBigNumber(price)}
+              đ {formatBigNumber(data.price)}
             </div>
-            {!reservation && (
-              <div className="font-light">/ tháng</div>
-            )}
+            <div className="font-light">/ tháng</div>
           </div>
           <div className="font-light text-neutral-500 flex flex-1 items-end w-2/3 sm:w-1/2">
             <div className="flex items-center gap-1 w-full">
               <ImLocation />
-              <span className="whitespace-nowrap truncate block">{data.address.replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}</span>
+              <span className="whitespace-nowrap truncate block">{data.address.replace(/Phường|Quận|Tỉnh|Thành phố/g, '').split(',').slice(1).join(', ')}</span>
             </div>
           </div>
 

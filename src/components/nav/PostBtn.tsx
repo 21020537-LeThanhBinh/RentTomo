@@ -25,8 +25,8 @@ export default function PostBtn() {
   }, [isLoggedIn, pathname]);
 
   return (
-    <Link href={'/post'} onClick={onClick} className="py-2 px-6 bg-yellow-400 rounded-full text-white flex items-center whitespace-nowrap shadow-sm hover:shadow-md transition font-semibold">
-      Đăng tin
+    <Link href={'/post'} onClick={onClick} className="hidden sm:flex py-3 px-6 bg-yellow-400 rounded-full text-white items-center whitespace-nowrap shadow-sm hover:shadow-md transition font-semibold border-[1px]">
+      <span>Đăng tin</span>
     </Link>
   )
 }

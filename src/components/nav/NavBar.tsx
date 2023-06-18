@@ -7,17 +7,17 @@ export default async function NavBar() {
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm py-4 border-b-[1px]">
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-        <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
-          <div className="sm:flex-1 hidden sm:flex">
+        <div className="flex flex-row items-center justify-between gap-2 md:gap-6">
+          <div className="lg:flex-1 hidden sm:flex">
             <Logo />
           </div>
 
-          <div className="flex gap-2 w-full md:w-auto">
+          <div className="flex flex-[2] items-center gap-2 w-full md:w-auto">
             <SearchBar />
             <PostBtn />
           </div>
 
-          <div className="flex-1">
+          <div className="lg:flex-1">
             <UserMenu />
           </div>
         </div>

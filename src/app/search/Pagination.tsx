@@ -4,7 +4,7 @@ import { createQueryString } from "@/utils/queryString";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactPaginate from "react-paginate";
 
-export default function Pagination({ itemsLength = 20, itemsPerPage = 2 }: { itemsLength?: number, itemsPerPage?: number }) {
+export default function Pagination({ itemsLength = 5, itemsPerPage = 2 }: { itemsLength?: number, itemsPerPage?: number }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

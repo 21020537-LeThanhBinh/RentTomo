@@ -21,7 +21,7 @@ export default function UserMenu() {
 
   const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, edit-profile-...
   const [modalActive, setModalActive] = useState(false);
-  
+
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
   const router = useRouter();
@@ -86,7 +86,7 @@ export default function UserMenu() {
 
       setActiveTab("");
       setModalActive(false);
-      
+
       return;
     }
 
@@ -128,7 +128,7 @@ export default function UserMenu() {
   return (
     <div className='flex justify-end flex-shrink-0 relative'>
       <div ref={menuRef} className="flex flex-row items-center gap-3">
-        <button onClick={() => setMenuOpen(!menuOpen)} className="p-4 md:py-2 md:px-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
+        <button onClick={() => setMenuOpen(!menuOpen)} className="p-4 md:py-2 md:pl-4 md:pr-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
           <AiOutlineMenu className='block lg:hidden' />
           <div className='font-semibold hidden lg:block'>
             {session?.user?.user_metadata?.full_name || 'Tài khoản'}
@@ -138,10 +138,15 @@ export default function UserMenu() {
           </div>
         </button>
 
-        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-3/5 bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
           <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
             {session ? (
               <>
+                <MenuItem
+                  label="Đăng tin"
+                  onClick={() => router.push('/post')}
+                  className='sm:hidden'
+                />
                 <MenuItem
                   label="Thông tin cá nhân"
                   onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}

@@ -17,7 +17,7 @@ import CategorySelect from "./CategorySelect"
 import Link from "next/link"
 
 export default function FilterBar({ searchParams, children }: { searchParams: ISearchParams, children: React.ReactNode }) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
   const pathname = usePathname()
@@ -31,6 +31,8 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
   const [isMale, setIsMale] = useState<boolean | undefined>((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
 
   useEffect(() => {
+    setIsLoading(false)
+
     const handleClickOutside = (e: MouseEvent) => {
       handleCloseDialog(e, dialogRef.current!, () => dialogRef.current?.close())
     };
@@ -70,7 +72,7 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
 
   return (
     <>
-      <div onClick={() => !dialogRef.current?.open && dialogRef.current?.showModal()} className="p-6 border-[1px] rounded-xl relative cursor-pointer">
+      <div onClick={() => !dialogRef.current?.open && dialogRef.current?.showModal()} className={`p-6 border-[1px] rounded-xl relative ${!isLoading && 'cursor-pointer hover:shadow-md'}`}>
         {children}
       </div>
 
@@ -99,15 +101,14 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
             ariaLabel={['Lower thumb', 'Upper thumb']}
             ariaValuetext={state => `Thumb value ${state.valueNow}`}
             pearling
-            minDistance={1}
-            className="flex items-center w-full h-[50px]"
-            thumbClassName="border-[1px] rounded-full w-8 h-8 bg-primary-500 cursor-pointer bg-white flex justify-center items-center text-sm font-semibold shadow-md"
-            trackClassName="price-range-track"
             value={[minPrice, maxPrice]}
             onChange={(value) => {
               setMinPrice(value[0])
               setMaxPrice(value[1])
             }}
+            className="flex items-center w-full h-[50px]"
+            thumbClassName="border-[1px] rounded-full w-8 h-8 bg-primary-500 cursor-pointer bg-white flex justify-center items-center text-sm font-semibold shadow-md"
+            trackClassName="price-range-track"
           />
           <div className="flex justify-between items-center gap-4">
             <Input
@@ -135,15 +136,14 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
             ariaLabel={['Lower thumb', 'Upper thumb']}
             ariaValuetext={state => `Thumb value ${state.valueNow}`}
             pearling
-            minDistance={1}
-            className="flex items-center w-full h-[50px]"
-            thumbClassName="border-[1px] rounded-full w-8 h-8 bg-primary-500 cursor-pointer bg-white flex justify-center items-center text-sm font-semibold shadow-md"
-            trackClassName="price-range-track"
             value={[minArea, maxArea]}
             onChange={(value) => {
               setMinArea(value[0])
               setMaxArea(value[1])
             }}
+            className="flex items-center w-full h-[50px]"
+            thumbClassName="border-[1px] rounded-full w-8 h-8 bg-primary-500 cursor-pointer bg-white flex justify-center items-center text-sm font-semibold shadow-md"
+            trackClassName="price-range-track"
           />
           <div className="flex justify-between items-center gap-4">
             <Input
