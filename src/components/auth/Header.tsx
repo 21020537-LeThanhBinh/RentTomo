@@ -21,7 +21,7 @@ export default function Header({
       <div className="flex justify-center">
         <img
           alt=""
-          src="favicon.ico"
+          src="/favicon.ico"
           className="h-14 w-14"
         />
       </div>

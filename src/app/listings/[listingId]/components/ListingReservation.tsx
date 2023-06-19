@@ -1,17 +1,16 @@
 'use client';
 
+import Button from "@/components/Button";
 import formatBigNumber from "@/utils/formatBigNumber";
-import Button from "../Button";
+import { useContext } from "react";
+import { ListingContext } from "../ListingContext";
 
 interface ListingReservationProps {
   price: number;
   onSubmit: () => void;
   disabled?: boolean;
   requesting: boolean;
-  host: any;
-  members: any[];
   deposit: number;
-  userId: string | null;
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -19,18 +18,17 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   onSubmit,
   disabled,
   requesting,
-  host,
-  members,
   deposit,
-  userId,
 }) => {
-  const isJoined = members.some((item) => item.id === userId)
+  const { userId, members, host } = useContext(ListingContext);
+
+  const isJoined = members?.some((item) => item.id === userId) || host?.id === userId
   const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
 
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
-        <div className="text-2xl font-semibold">
+        <div className="text-2xl font-semibold whitespace-nowrap">
           đ {formatBigNumber(price / memberNumb)}
         </div>
         <div className="text-neutral-600">

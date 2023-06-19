@@ -82,6 +82,10 @@ export default function SearchBar() {
               ...baseStyles,
               width: 0,
             }),
+            dropdownIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              paddingLeft: 0,
+            }),
           }}
           className='flex-shrink-0 pl-6 pr-2 text-sm font-semibold border-r-[1px]'
         />
@@ -136,7 +140,7 @@ export default function SearchBar() {
               maxWidth: '100%',
             }),
           }}
-          className='flex-1 pl-2 pr-12 text-sm whitespace-nowrap'
+          className='flex-1 pl-2 pr-12 text-sm whitespace-nowrap overflow-x-clip'
         />
 
         <div className='absolute right-2'>

@@ -3,7 +3,7 @@ import { supabase } from "@/supabase/supabase-app";
 import ListingClient from "./ListingClient";
 import ListingHead from "@/components/listings/ListingHead";
 import ListingInfo from "@/components/listings/ListingInfo";
-import Avatar from "@/components/Avatar";
+import OwnerInfo from "./components/OwnerInfo";
 
 interface IParams {
   listingId: string;
@@ -19,6 +19,7 @@ async function getListingById(id: string) {
     `)
     .eq('id', id)
     .limit(1)
+    .single()
 
   if (!error && data) {
     return data
@@ -29,7 +30,7 @@ async function getListingById(id: string) {
 }
 
 const ListingPage = async ({ params }: { params: IParams }) => {
-  const listing = (await getListingById(params.listingId))?.[0] as any;
+  const listing = (await getListingById(params.listingId)) as any;
 
   if (!listing) {
     return (
@@ -57,20 +58,11 @@ const ListingPage = async ({ params }: { params: IParams }) => {
           />
 
           <div className="order-first mb-10 md:order-last md:col-span-3 flex flex-col gap-4">
-            <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden flex flex-col gap-2 p-4">
-              <div className="text-xl font-semibold">Thông tin chủ phòng</div>
-
-              <div className="flex md:flex-col lg:flex-row items-center h-full">
-                <div className="flex-1 h-full flex gap-2 items-center pr-4 py-2">
-                  <Avatar src={listing.author?.avatar_url} />
-                  <span className="text-neutral-600">{listing.author?.full_name}</span>
-                </div>
-
-                <div className="flex-1 h-full pl-4 border-l-[1px]">
-                  <p className="text-neutral-600 whitespace-pre-line">{listing.author?.contact}</p>
-                </div>
-              </div>
-            </div>
+            <OwnerInfo
+              avatar_url={listing.author?.avatar_url}
+              full_name={listing.author?.full_name}
+              contact={listing.author?.contact}
+            />
 
             <ListingClient listing={listing} />
           </div>

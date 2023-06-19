@@ -3,13 +3,13 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import Avatar from "@/components/Avatar";
-import ListingReservOwner from "@/components/listings/ListingReservOwner";
-import ListingReservation from "@/components/listings/ListingReservation";
 import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
-import { createQueryString } from "@/utils/queryString";
 import { toast } from "react-hot-toast";
+import ListingReservation from "./components/ListingReservation";
+import MembersInfo from "./components/MembersInfo";
+import ListingRequests from "./components/ListingReservOwner";
+import ContextProvider from "./ListingContext";
 
 interface ListingClientProps {
   listing: any;
@@ -24,8 +24,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
-  const [isOwner, setIsOwner] = useState(false);
-
   const [host, setHost] = useState<User | null>(null);
   const [members, setMembers] = useState<User[]>([]);
   const [requests, setRequests] = useState<User[]>([]);
@@ -36,12 +34,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
       else setUserId(null)
 
       if (event === 'INITIAL_SESSION') setIsLoading(false)
-
-      setIsOwner(session?.user?.id === listing?.author?.id)
     })
   }, []);
 
-  const fetchListingRequests = async () => {
+  const fetchRoomInfo = async () => {
+    setIsLoading(true);
+
     const { data, error } = await supabase
       .from('rooms')
       .select('type, profiles (id, full_name, avatar_url, description, contact)')
@@ -56,20 +54,20 @@ const ListingClient: React.FC<ListingClientProps> = ({
       setHost(data.find((item: any) => item.type === "host")?.profiles);
       setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
     }
+
+    setIsLoading(false);
   }
 
+  // On router refresh
   useEffect(() => {
     if (!listing?.id) return;
 
-    fetchListingRequests();
-  }, [listing?.id]);
+    fetchRoomInfo();
+    console.log('fetch room info')
+  }, [listing]);
 
   const onReservation = async () => {
-    if (!userId) {
-      router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'login'))
-      return;
-    }
-    setIsLoading(true);
+    if (!userId) return router.push(pathname + '?popup=login')
 
     const { data, error } = (requests.some((item: any) => item.id === userId)) ? (
       // Cancel reservation
@@ -94,13 +92,10 @@ const ListingClient: React.FC<ListingClientProps> = ({
       toast.success('Thành công!');
     }
 
-    setIsLoading(false);
-    fetchListingRequests();
+    router.refresh()
   }
 
   const onOwnerAction = async (userId: string, action: string) => {
-    setIsLoading(true);
-
     const { data, error } = (action === "accept") ? (
       // Accept request
       await supabase
@@ -124,78 +119,39 @@ const ListingClient: React.FC<ListingClientProps> = ({
       toast.success('Thành công!');
     }
 
-    setIsLoading(false);
-    fetchListingRequests();
+    router.refresh()
   }
 
   return (
-    <>
-      <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
-        {host ? (
-          <div className="flex flex-col gap-2 p-4">
-            <div className="text-xl font-semibold">Các thành viên</div>
+    <ContextProvider
+      userId={userId}
+      listingId={listing.id}
+      members={members}
+      host={host}
+    >
+      <MembersInfo
+        host={host}
+        members={members}
+        requests={requests}
+        userId={userId}
+      />
 
-            <div className="flex items-center h-full">
-              <div className="flex-1 h-full flex gap-2 items-center pr-4 py-2">
-                <Avatar src={host?.avatar_url} />
-                <div className="text-neutral-600">
-                  <span>{host?.full_name} </span>
-                  <span className="whitespace-nowrap text-sm font-light">(Trưởng phòng)</span>
-                </div>
-              </div>
-
-              <div className="flex-1 h-full pl-4 border-l-[1px]">
-                <p className="text-neutral-600 whitespace-pre-line">{host?.description}</p>
-              </div>
-            </div>
-
-            {members?.map((member) => (
-              <div key={member.id} className="flex items-center h-full">
-                <div className="flex-1 h-full flex gap-2 items-center pr-4 py-2">
-                  <Avatar src={member?.avatar_url} />
-                  <span className="text-neutral-600">{member?.full_name}</span>
-                </div>
-
-                <div className="flex-1 h-full pl-4 border-l-[1px]">
-                  <p className="text-neutral-600 whitespace-pre-line">{member?.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center gap-1 p-4">
-            {requests.some((request) => userId === request.id) ? (
-              <span>Yêu cầu thành công. Vui lòng chờ chủ phòng xác nhận.</span>
-            ) : (
-              <span>Chưa có người đặt phòng!</span>
-            )}
-          </div>
-        )}
-      </div>
-
-      {(isOwner || host?.id === userId || members.some((member) => member.id === userId)) ? (
-        <ListingReservOwner
-          price={listing.price}
+      {((userId === listing?.author?.id && !host) || host?.id === userId || members.some((member) => member.id === userId)) && (
+        <ListingRequests
           onSubmit={onOwnerAction}
           disabled={isLoading}
           requests={requests}
-          members={members}
         />
-      ) : (
-        <></>
       )}
 
       <ListingReservation
         price={listing.price}
         onSubmit={onReservation}
-        disabled={isLoading || isOwner || host?.id === userId}
+        disabled={isLoading || (userId === listing?.author?.id) || host?.id === userId}
         requesting={requests.some((request) => userId === request.id)}
-        host={host}
-        members={members}
         deposit={listing.deposit}
-        userId={userId}
       />
-    </>
+    </ContextProvider>
   )
 }
 

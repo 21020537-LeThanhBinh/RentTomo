@@ -43,7 +43,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="flex flex-col gap-2 text-neutral-600">
         <span>Loại phòng: {category}</span>
         <span>Diện tích: {area} m²</span>
-        <span>Giá gốc: {formatBigNumber(price)} đ</span>
+        <span>Giá gốc: {formatBigNumber(price)} đ / tháng</span>
         <span>Địa chỉ: {address + ', ' + parseAddressId(address_id)}</span>
       </div>
       <hr />

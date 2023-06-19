@@ -9,7 +9,7 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import Avatar from '../Avatar';
 import SetUserInfoPopup from '../profile/EditProfilePopup';
 import AuthPopup from './AuthPopup';
-import MenuItem from './MenuItem';
+import MenuItem from '../MenuItem';
 
 export default function UserMenu() {
   const menuRef = useRef<any>(null);
