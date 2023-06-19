@@ -10,7 +10,19 @@ export const revalidate = 60 // revalidate this page every 60 seconds
 async function getListings(searchParams: ISearchParams) {
   let query = supabase
     .from('posts_members')
-    .select(`id, title, address, area, category, created_at, image_src, price, utility, ward_id, members`)
+    .select(`id, title, address, address_id, area, category, created_at, image_src, price, utility, members`)
+
+  if (searchParams.location_id && searchParams.level) {
+    if (searchParams.level === '0') {
+      query = query.eq('address_id->>city_id', searchParams.location_id)
+    }
+    else if (searchParams.level === '1') {
+      query = query.eq('address_id->>district_id', searchParams.location_id)
+    }
+    else if (searchParams.level === '2') {
+      query = query.eq('address_id->>ward_id', searchParams.location_id)
+    }
+  }
 
   if (searchParams.category)
     query = query.in('category', searchParams.category.split(','))
@@ -27,13 +39,13 @@ async function getListings(searchParams: ISearchParams) {
   if (searchParams.utility)
     query = query.contains('utility', searchParams.utility.split(','))
 
-  if(searchParams.isMale && searchParams.isMale !== "undefined") 
+  if (searchParams.isMale && searchParams.isMale !== "undefined")
     query = query.or(`members.cs.${JSON.stringify([{ is_male: (searchParams.isMale == 'true') }])}, members.cs.${JSON.stringify([{ is_male: null }])}`)
 
   query = query.order('created_at', { ascending: false })
 
   const { data, error } = await query
-  
+
   if (!error && data) {
     return data
   } else {

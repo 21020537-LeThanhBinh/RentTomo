@@ -1,14 +1,14 @@
 'use client';
 
 import useFollow from "@/hooks/useFollow";
-import { AiFillBell, AiOutlineBell } from "react-icons/ai";
+import { BsBell, BsBellFill, BsBellSlashFill } from "react-icons/bs";
 
 interface HeartButtonProps {
   listingId: string
   userId?: string | null
 }
 
-const HeartButton: React.FC<HeartButtonProps> = ({ 
+const HeartButton: React.FC<HeartButtonProps> = ({
   listingId,
   userId
 }) => {
@@ -18,7 +18,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   });
 
   return (
-    <div 
+    <div
       onClick={toggleFavorite}
       className="
         relative
@@ -27,7 +27,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         cursor-pointer
       "
     >
-      <AiOutlineBell
+      <BsBell
         size={28}
         className="
           fill-white
@@ -36,14 +36,14 @@ const HeartButton: React.FC<HeartButtonProps> = ({
           -right-[2px]
         "
       />
-      <AiFillBell
+      <BsBellFill
         size={24}
         className={
-          hasFollowed ? 'fill-cyber-yellow' : 'fill-neutral-500/70'
+          hasFollowed ? 'fill-yellow-400' : 'fill-neutral-500/70'
         }
       />
     </div>
-   );
+  );
 }
- 
+
 export default HeartButton;

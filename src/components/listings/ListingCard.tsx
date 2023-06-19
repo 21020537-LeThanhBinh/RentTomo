@@ -11,6 +11,7 @@ import { ImLocation } from "react-icons/im";
 import Avatar from "../Avatar";
 import HeartButton from "../HeartButton";
 import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
+import { parseAddressId } from "@/utils/parseAddress";
 
 interface ListingCardProps {
   data: any;
@@ -65,7 +66,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
             <div className="flex items-center gap-1 w-full">
               <ImLocation />
               <span className="whitespace-nowrap truncate block">
-                {(data.address + ', ' + map.find((item) => item.id === data.ward_id)?.label).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
+                {(data.address + ', ' + parseAddressId(data.address_id)).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
               </span>
             </div>
           </div>

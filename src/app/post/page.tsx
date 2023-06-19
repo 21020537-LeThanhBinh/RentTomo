@@ -1,16 +1,14 @@
 'use client'
 
 import Button from '@/components/Button';
-import Heading from '@/components/Heading';
-import { utilities } from '@/components/input/UtilityInput';
 import AddressInputPopup from '@/components/input/AddressInputPopup';
 import CategoryInput from '@/components/input/CategoryInput';
 import ImageUpload from '@/components/input/ImageUpload';
 import Input from '@/components/input/Input';
 import ItemSelect from '@/components/input/ItemSelect';
 import MultiItemSelect from '@/components/input/MultiItemSelect';
+import { utilities } from '@/components/input/UtilityInput';
 import { supabase } from '@/supabase/supabase-app';
-import formatAddress from '@/utils/formatAddress';
 import formatBigNumber from '@/utils/formatBigNumber';
 import handleCloseDialog from '@/utils/handleCloseDialog';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
@@ -22,6 +20,7 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
+  const [addressLabel, setAddressLabel] = useState<string>()
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -47,9 +46,16 @@ export default function SearchPage() {
 
     const { data, error } = await supabase
       .from('posts')
-      .insert([
-        { ...values, author_id: uid, address: values.address.number, ward_id: values.address.ward_id },
-      ])
+      .insert([{
+        ...values,
+        author_id: uid,
+        address: values.address.number,
+        address_id: {
+          city_id: values.address.city_id,
+          district_id: values.address.district_id,
+          ward_id: values.address.ward_id
+        },
+      }])
 
     if (!error) {
       toast.success('Đăng tin thành công!');
@@ -70,11 +76,10 @@ export default function SearchPage() {
     initialValues: {
       category: "",
       address: {
-        city: "",
-        district: "",
-        ward: "",
-        number: "",
+        city_id: "",
+        district_id: "",
         ward_id: "",
+        number: "",
       },
       area: 0,
       image_src: [],
@@ -88,9 +93,9 @@ export default function SearchPage() {
   } as FormikConfig<{
     category: string;
     address: {
-      city: string;
-      district: string;
-      ward: string;
+      city_id: string;
+      district_id: string;
+      ward_id: string;
       number: string;
     },
     area: number;
@@ -133,7 +138,7 @@ export default function SearchPage() {
             <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
               <ItemSelect
                 onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
-                value={{ label: formatAddress(formik.values.address) }}
+                value={{ label: addressLabel }}
                 placeholder="Địa chỉ"
                 isClearable={false}
                 alwaysClosed={true}
@@ -146,6 +151,7 @@ export default function SearchPage() {
               setFieldValue={(name, value) => formik.setFieldValue(name, value)}
               isLoading={isLoading}
               addressRef={addressRef}
+              setAddressLabel={setAddressLabel}
             />
           </div>
 

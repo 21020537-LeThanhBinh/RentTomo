@@ -1,6 +1,7 @@
 import formatBigNumber from "@/utils/formatBigNumber";
 import Heading from "../Heading";
 import UtilityBox from "../UtilityBox";
+import { parseAddressId } from "@/utils/parseAddress";
 // const Map = dynamic(() => import('../Map'), { 
 //   ssr: false 
 // });
@@ -13,6 +14,11 @@ interface ListingInfoProps {
   title: string;
   address: string;
   price: number;
+  address_id: {
+    city_id: string,
+    district_id: string,
+    ward_id: string,
+  };
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -22,7 +28,8 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   area,
   title,
   address,
-  price
+  price,
+  address_id
 }) => {
   return (
     <div className="col-span-4 flex flex-col gap-8">
@@ -37,7 +44,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         <span>Loại phòng: {category}</span>
         <span>Diện tích: {area} m²</span>
         <span>Giá gốc: {formatBigNumber(price)} đ</span>
-        <span>Địa chỉ: {address}</span>
+        <span>Địa chỉ: {address + ', ' + parseAddressId(address_id)}</span>
       </div>
       <hr />
 

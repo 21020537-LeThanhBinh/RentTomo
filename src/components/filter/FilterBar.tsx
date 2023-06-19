@@ -2,11 +2,11 @@
 
 import { ISearchParams } from "@/types"
 import handleCloseDialog from "@/utils/handleCloseDialog"
+import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import { BsDashLg } from "react-icons/bs"
 import ReactSlider from 'react-slider'
-import Button from "../Button"
 import { categoryOptions } from "../input/CategoryInput"
 import Input from "../input/Input"
 import ItemSelect from "../input/ItemSelect"
@@ -14,7 +14,6 @@ import MultiItemSelect from "../input/MultiItemSelect"
 import PopupInputContainer from "../input/PopupInputContainer"
 import { utilities } from "../input/UtilityInput"
 import CategorySelect from "./CategorySelect"
-import Link from "next/link"
 
 export default function FilterBar({ searchParams, children }: { searchParams: ISearchParams, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -194,11 +193,12 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
               </Link>
             </div>
             <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
-              <Button
-                label='Áp dụng'
+              <button
                 onClick={onApply}
-                disabled={isLoading}
-              />
+                className={`relative rounded-lg hover:opacity-80 transition w-full text-white bg-neutral-800 border-neutral-800 text-md py-3 font-semibold border-2`}
+              >
+                Áp dụng
+              </button>
             </div>
           </div>
         </PopupInputContainer>

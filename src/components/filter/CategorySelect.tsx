@@ -10,7 +10,7 @@ export default function CategorySelect({
     return (
       <button
         className={`
-        py-2 px-4 border-[1px] flex-1
+        py-2 px-4 border-[1px] flex-1 hover:opacity-80 transition
         ${category.find((item) => item === label) ? 'bg-neutral-800 text-white' : 'bg-white text-neutral-600 hover:border-black'}
         first:rounded-l-xl last:rounded-r-xl
       `}

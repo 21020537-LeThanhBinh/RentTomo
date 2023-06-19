@@ -7,7 +7,7 @@ import { MdOutlineLocationSearching } from 'react-icons/md';
 import Select from 'react-select';
 import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
 import MenuList from '../../utils/MenuList';
-import { createQueryString, deleteQueryString } from '@/utils/queryString';
+import { parseAddressIdSingle } from '@/utils/parseAddress';
 
 export default function SearchBar() {
   const router = useRouter();
@@ -15,20 +15,29 @@ export default function SearchBar() {
   const searchParams = useSearchParams();
 
   const [searchType, setSearchType] = useState<string>("Khu vực");
-  const [locationLabel, setLocationLabel] = useState<string>(searchParams?.get('location') || "");
+  const [locationId, setLocationId] = useState<string>(searchParams?.get('location_id') || "");
+  const [level, setLevel] = useState<number>(0);
 
   const onSearch = () => {
-    if (!locationLabel)
-      router.push('/search?' + deleteQueryString(searchParams, 'location'))
-    else
-      router.push('/search?' + createQueryString(searchParams, 'location', locationLabel))
+    const params = new URLSearchParams(searchParams as any)
+
+    if (!locationId) {
+      params.delete("location_id")
+      params.delete("level")
+    }
+    else {
+      params.set('location_id', locationId)
+      params.set('level', level.toString())
+    }
+    
+    router.push('/search?' + params.toString())
   }
 
   useEffect(() => {
-    if (locationLabel === (searchParams?.get('location') || "")) return
+    if (locationId === (searchParams?.get('location_id') || "")) return
 
     onSearch()
-  }, [locationLabel]);
+  }, [locationId]);
 
   return (
     <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[367px] relative py-2 rounded-full">
@@ -79,8 +88,8 @@ export default function SearchBar() {
 
         <Select
           options={map}
-          value={locationLabel && { label: locationLabel }}
-          onChange={(value: any) => setLocationLabel(value?.label)}
+          value={locationId && { label: parseAddressIdSingle(locationId) }}
+          onChange={(value: any) => { setLocationId(value?.id); setLevel(value?.level) }}
           isClearable
           placeholder={searchType === 'Khu vực' ? 'Nhập tên phường, quận, ...' : 'Nhập địa điểm chính xác'}
           components={{ MenuList }}
@@ -131,7 +140,7 @@ export default function SearchBar() {
         />
 
         <div className='absolute right-2'>
-          <button onClick={onSearch} className="p-2 bg-yellow-400 rounded-full text-white">
+          <button onClick={onSearch} className="p-2 bg-sky-500 rounded-full text-white">
             <BiSearch size={18} />
           </button>
         </div>

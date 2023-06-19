@@ -7,6 +7,8 @@ export type User = {
 }
 
 export interface ISearchParams {
+  location_id?: string
+  level?: string
   category?: string
   minPrice?: string
   maxPrice?: string
