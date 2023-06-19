@@ -95,7 +95,7 @@ export default function SearchBar() {
           value={locationId && { label: parseAddressIdSingle(locationId) }}
           onChange={(value: any) => { setLocationId(value?.id); setLevel(value?.level) }}
           isClearable
-          placeholder={searchType === 'Khu vực' ? 'Nhập tên phường, quận, ...' : 'Nhập địa điểm chính xác'}
+          placeholder={searchType === 'Khu vực' ? 'Nhập tên phường, quận, ...' : '(Đang cập nhật ...)'}
           components={{ MenuList }}
           formatOptionLabel={(option: any) => (
             <div className="flex flex-row items-center gap-3">

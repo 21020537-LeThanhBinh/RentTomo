@@ -149,7 +149,12 @@ export default function UserMenu() {
                 />
                 <MenuItem
                   label="Thông tin cá nhân"
-                  onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))}
+                  onClick={() => {
+                    router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))
+                    // When the popup is buggy
+                    if (searchParams.get('popup') == 'edit-profile-2' && !modalRef3.current?.open)
+                      modalRef3.current?.showModal();
+                  }}
                 />
                 <MenuItem
                   label="Đăng xuất"

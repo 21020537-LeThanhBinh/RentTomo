@@ -1,6 +1,6 @@
 import EmptyState from "@/components/EmptyState";
 import FilterBar from "@/components/filter/FilterBar";
-import ListingCard from "@/components/listings/ListingCard";
+import ListingCard from "@/app/search/ListingCard";
 import { supabase } from "@/supabase/supabase-app";
 import { ISearchParams } from "@/types";
 import Pagination from "./Pagination";

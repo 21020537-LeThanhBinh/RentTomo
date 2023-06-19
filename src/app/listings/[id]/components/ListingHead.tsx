@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 
-import Heading from "../Heading";
-import HeartButton from "../HeartButton";
 import { useEffect, useState } from "react";
 import { supabase } from "@/supabase/supabase-app";
+import HeartButton from "@/components/HeartButton";
 
 interface ListingHeadProps {
   imageSrc: string;

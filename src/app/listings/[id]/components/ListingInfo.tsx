@@ -1,6 +1,6 @@
 import formatBigNumber from "@/utils/formatBigNumber";
-import Heading from "../Heading";
-import UtilityBox from "../UtilityBox";
+import Heading from "../../../../components/Heading";
+import UtilityBox from "../../../../components/UtilityBox";
 import { parseAddressId } from "@/utils/parseAddress";
 // const Map = dynamic(() => import('../Map'), { 
 //   ssr: false 

@@ -12,8 +12,8 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
-  title = "No exact matches",
-  subtitle = "Try changing or removing some of your filters.",
+  title = "Không tìm thấy kết quả nào.",
+  subtitle = "Hãy thử lại với các tiêu chí khác.",
   showReset
 }) => {
   const router = useRouter();

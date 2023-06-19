@@ -2,16 +2,15 @@
 
 import { supabase } from "@/supabase/supabase-app";
 import formatBigNumber from "@/utils/formatBigNumber";
+import { parseAddressId } from "@/utils/parseAddress";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import Avatar from "../Avatar";
-import HeartButton from "../HeartButton";
-import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
-import { parseAddressId } from "@/utils/parseAddress";
+import Avatar from "../../components/Avatar";
+import HeartButton from "../../components/HeartButton";
 
 interface ListingCardProps {
   data: any;
@@ -30,20 +29,22 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
   return (
     <div className="group h-full max-h-36">
       <div className="flex gap-4 h-full">
-        <Link href={`/listings/${data.id}`} className="aspect-[4/3] w-1/4 md:w-1/5 relative overflow-hidden rounded-xl flex-shrink-0">
-          <Image
-            fill
-            src={data.image_src[0]}
-            alt="Listing"
-            className="object-cover h-full w-full group-hover:scale-110 transition"
-          />
+        <div className="aspect-[4/3] w-1/4 md:w-1/5 relative overflow-hidden rounded-xl flex-shrink-0">
+          <Link href={`/listings/${data.id}`}>
+            <Image
+              fill
+              src={data.image_src[0]}
+              alt="Listing"
+              className="object-cover h-full w-full group-hover:scale-110 transition"
+            />
+          </Link>
           <div className="absolute top-3 right-3">
             <HeartButton
               listingId={data.id}
               userId={userId}
             />
           </div>
-        </Link>
+        </div>
 
         <div className="flex-1 flex flex-col gap-2 relative w-3/4 lg:w-4/5">
           <Link href={`/listings/${data.id}`} className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
@@ -64,7 +65,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
           </div>
           <div className="font-light text-neutral-500 flex flex-1 items-end w-2/3 sm:w-1/2">
             <div className="flex items-center gap-1 w-full">
-              <ImLocation />
+              <ImLocation className="flex-shrink-0"/>
               <span className="whitespace-nowrap truncate block">
                 {(data.address + ', ' + parseAddressId(data.address_id)).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
               </span>

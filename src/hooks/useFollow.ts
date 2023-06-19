@@ -59,7 +59,7 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
     if (!error) {
       setHasFollowed(!hasFollowed)
       router.refresh();
-      toast.success('Thành công');
+      toast.success('Theo dõi thành công');
     } else {
       toast.error('Đã có lỗi xảy ra!');
     }

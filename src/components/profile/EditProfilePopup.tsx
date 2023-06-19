@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CSSTransition } from "react-transition-group";
 import * as Yup from 'yup';
-import Avatar from "../Avatar";
 import Button from "../Button";
 import Input from "../input/Input";
-import PopupInputContainer from "../input/PopupInputContainer";
 import ItemSelect from "../input/ItemSelect";
+import PopupInputContainer from "../input/PopupInputContainer";
+import EditAvatar from "./EditAvatar";
+import { v4 } from "uuid"
 
 export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onBack, onNext, session }: {
   modalRef: React.MutableRefObject<HTMLDialogElement | null>,
@@ -22,6 +23,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isUpdated, setIsUpdated] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<any>()
 
   const handleSubmit = async (values: FormikValues) => {
     if (!isUpdated && session?.user?.user_metadata?.year_of_birth) {
@@ -74,8 +76,17 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
   }
 
   const onSubmit2 = async (values: FormikValues) => {
+    let newAvatarUrl
+
+    if (selectedFile) {
+      const file_path = session.user.id + '/' + v4()
+      await supabase.storage.from('avatars').upload(file_path, selectedFile)
+      const { data } = supabase.storage.from('avatars').getPublicUrl(file_path)
+      newAvatarUrl = data.publicUrl
+    }
+
     const updateInfo = {
-      avatar_url: values.avatar_url,
+      avatar_url: newAvatarUrl || values.avatar_url,
       contact: values.contact,
       description: values.description
     }
@@ -160,6 +171,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     formik2.setFieldValue("contact", session.user.user_metadata?.contact);
     formik2.setFieldValue("description", session.user.user_metadata?.description);
   }, [session, isUpdated])
+
+  useEffect(() => {
+    if (selectedFile) setIsUpdated(true)
+  }, [selectedFile])
 
   return (
     <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-hidden'>
@@ -270,8 +285,12 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       >
         <PopupInputContainer label="Thông tin cá nhân" onBack={onBack}>
           <div className="flex-1 flex flex-col gap-2 items-center pb-4 relative">
-            <Avatar src={session?.user?.user_metadata?.avatar_url} size={60} />
-            <span className="text-neutral-600 text-lg">{session?.user?.user_metadata?.full_name}</span>
+            <EditAvatar
+              avatar_url={session?.user?.user_metadata?.avatar_url}
+              selectedFile={selectedFile}
+              setSelectedFile={setSelectedFile}
+            />
+            <span className="text-neutral-600 text-lg font-semibold">{session?.user?.user_metadata?.full_name}</span>
           </div>
 
           <form onSubmit={formik2.handleSubmit} className="h-full flex flex-col gap-6">

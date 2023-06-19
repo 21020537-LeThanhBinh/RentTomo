@@ -6,8 +6,8 @@ import ToasterProvider from '@/providers/ToasterProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'RentTomo',
-  description: 'Ứng dụng tìm phòng trọ và bạn ở ghép nhanh chóng cho sinh viên',
+  title: 'RentTomo - Lựa chọn môi trường tốt nhất cho bạn',
+  description: 'Ứng dụng tìm phòng trọ và bạn ở ghép',
 }
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 'use client';
 
 import useFollow from "@/hooks/useFollow";
-import { BsBell, BsBellFill, BsBellSlashFill } from "react-icons/bs";
+import { BsBell, BsBellFill } from "react-icons/bs";
 
 interface HeartButtonProps {
   listingId: string

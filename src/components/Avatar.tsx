@@ -10,7 +10,7 @@ interface AvatarProps {
 const Avatar: React.FC<AvatarProps> = ({ src, size = 30 }) => {
   return ( 
     <Image 
-      className="rounded-full" 
+      className="rounded-full aspect-square object-cover" 
       height={size}
       width={size}
       alt="Avatar" 

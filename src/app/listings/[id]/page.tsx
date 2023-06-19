@@ -1,12 +1,14 @@
 import EmptyState from "@/components/EmptyState";
 import { supabase } from "@/supabase/supabase-app";
 import ListingClient from "./ListingClient";
-import ListingHead from "@/components/listings/ListingHead";
-import ListingInfo from "@/components/listings/ListingInfo";
+import ListingInfo from "@/app/listings/[id]/components/ListingInfo";
 import OwnerInfo from "./components/OwnerInfo";
+import { Metadata, ResolvingMetadata } from 'next'
+import ListingHead from "./components/ListingHead";
 
-interface IParams {
-  listingId: string;
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 async function getListingById(id: string) {
@@ -29,12 +31,23 @@ async function getListingById(id: string) {
   }
 }
 
-const ListingPage = async ({ params }: { params: IParams }) => {
-  const listing = (await getListingById(params.listingId)) as any;
+export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const listing = await getListingById(params.id);
+
+  return {
+    title: listing?.title || 'Không tìm thấy',
+    description: listing?.description,
+  }
+}
+
+const ListingPage = async ({ params, searchParams }: Props) => {
+  const listing = (await getListingById(params.id)) as any;
 
   if (!listing) {
     return (
-      <EmptyState />
+      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
+        <EmptyState />
+      </div>
     );
   }
 
@@ -42,7 +55,7 @@ const ListingPage = async ({ params }: { params: IParams }) => {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
       <div className="flex flex-col gap-6">
         <ListingHead
-          imageSrc={listing.image_src[0]}
+          imageSrc={listing.image_src?.[0]}
           id={listing.id}
         />
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
