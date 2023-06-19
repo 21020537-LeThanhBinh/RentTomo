@@ -1,18 +1,16 @@
 import Avatar from "@/components/Avatar";
 import MenuItem from "@/components/MenuItem";
 import PopupInputContainer from "@/components/input/PopupInputContainer";
-import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsThreeDots } from "react-icons/bs";
 import { ListingContext } from "../ListingContext";
-import Button from "@/components/Button";
-import { AiTwotoneSetting } from "react-icons/ai";
+import MembersMenuItem from "./MembersMenuItem";
 
 export default function MembersMenu() {
-  const { userId, listingId, members, host } = useContext(ListingContext);
+  const { userId, members, host, onRemoveMember } = useContext(ListingContext);
   const isHost = userId === host?.id
 
   const menuRef = useRef<any>(null);
@@ -36,15 +34,13 @@ export default function MembersMenu() {
   }, []);
 
   const onLeaveRoom = async () => {
+    if (!userId) return;
+
     if (isHost && members.length > 0) {
       return toast.error('Hãy nhường vị trí trước khi rời phòng!');
     }
 
-    const { data, error } = await supabase
-      .from('rooms')
-      .delete()
-      .eq('user_id', userId)
-      .eq('post_id', listingId)
+    const { data, error } = await onRemoveMember(userId)
 
     if (error) {
       toast.error('Có lỗi xảy ra.');
@@ -88,7 +84,7 @@ export default function MembersMenu() {
         </div>
       </dialog>
 
-      <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-hidden'>
+      <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl pb-[88px]'>
         <PopupInputContainer label="Quản lý thành viên" onBack={() => { !modalRef.current?.close(); }}>
           <div className="flex flex-col gap-2">
             <div className="flex items-center h-full">
@@ -102,16 +98,12 @@ export default function MembersMenu() {
             </div>
 
             {members?.map((member) => (
-              <div key={member.id} className="flex items-center justify-between">
-                <div className="flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-                  <Avatar src={member?.avatar_url} />
-                  <span className="text-neutral-600">{member?.full_name}</span>
-                </div>
-
-                <button className="">
-                  <AiTwotoneSetting size={20} />
-                </button>
-              </div>
+              <MembersMenuItem
+                key={member.id}
+                id={member.id}
+                avatarUrl={member.avatar_url}
+                fullName={member.full_name}
+              />
             ))}
           </div>
         </PopupInputContainer>

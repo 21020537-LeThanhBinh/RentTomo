@@ -71,11 +71,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     const { data, error } = (requests.some((item: any) => item.id === userId)) ? (
       // Cancel reservation
-      await supabase
-        .from('rooms')
-        .delete()
-        .eq('user_id', userId)
-        .eq('post_id', listing.id)
+      await onRemoveMember(userId)
     ) : (
       // Reserve listing
       await supabase
@@ -95,21 +91,35 @@ const ListingClient: React.FC<ListingClientProps> = ({
     router.refresh()
   }
 
+  const onRemoveMember = async (userId: string) => {
+    return supabase
+      .from('rooms')
+      .delete()
+      .eq('user_id', userId)
+      .eq('post_id', listing.id)
+  }
+
+  const onUpdateMember = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select('type')
+      .eq('post_id', listing.id)
+
+    if (error) throw error
+    const hasHost = data?.some((item: any) => item.type === "host")
+
+    return supabase
+      .from('rooms')
+      .update({ type: hasHost ? 'member' : 'host' })
+      .eq('user_id', userId)
+      .eq('post_id', listing.id)
+  }
+
   const onOwnerAction = async (userId: string, action: string) => {
     const { data, error } = (action === "accept") ? (
-      // Accept request
-      await supabase
-        .from('rooms')
-        .update({ type: host ? 'member' : 'host' })
-        .eq('user_id', userId)
-        .eq('post_id', listing.id)
+      await onUpdateMember(userId)
     ) : (
-      // Cancel request
-      await supabase
-        .from('rooms')
-        .delete()
-        .eq('user_id', userId)
-        .eq('post_id', listing.id)
+      await onRemoveMember(userId)
     )
 
     if (error) {
@@ -128,6 +138,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
       listingId={listing.id}
       members={members}
       host={host}
+      onRemoveMember={onRemoveMember}
+      onUpdateMember={onUpdateMember}
     >
       <MembersInfo
         host={host}
