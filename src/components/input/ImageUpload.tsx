@@ -1,9 +1,10 @@
 'use client';
 
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
 import { useCallback } from "react";
-import { TbPhotoPlus } from 'react-icons/tb'
+import { AiFillCloseCircle } from "react-icons/ai";
+import { TbPhotoPlus } from 'react-icons/tb';
 
 declare global {
   var cloudinary: any
@@ -13,68 +14,105 @@ const uploadPreset = "swnb0zrk";
 
 interface ImageUploadProps {
   onChange: (value: string) => void;
-  value: string;
-  small?: boolean;
+  value: string[];
+  onRemove: (value: string) => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   value,
-  small
+  onRemove,
 }) => {
   const handleUpload = useCallback((result: any) => {
     onChange(result.info.secure_url);
   }, [onChange]);
 
+  if (!value?.length) {
+    return (
+      <CldUploadButton
+        onUpload={handleUpload}
+        uploadPreset={uploadPreset}
+        options={{
+          maxFiles: 1,
+        }}
+      >
+        <div
+          className={`
+            relative
+            cursor-pointer
+            hover:opacity-70
+            transition
+            border-dashed 
+            border-2 
+            border-neutral-300
+            flex
+            flex-col
+            justify-center
+            items-center
+            gap-4
+            text-neutral-600
+            aspect-4/3
+          `}
+        >
+          <TbPhotoPlus
+            size={50}
+          />
+          <div className={`font-semibold text-lg`}>
+            Thêm hình ảnh
+          </div>
+        </div>
+      </CldUploadButton>
+    )
+  }
+
   return (
-    <CldUploadWidget
-      onUpload={handleUpload}
-      uploadPreset={uploadPreset}
-      options={{
-        maxFiles: 1
-      }}
-    >
-      {({ open }) => {
+    <div className="flex flex-wrap gap-3">
+      {value?.map((item: string, index: number) => {
         return (
-          <div
-            onClick={() => open?.()}
-            className={`
-              relative
-              cursor-pointer
-              hover:opacity-70
-              transition
-              border-dashed 
-              border-2 
-              ${small ? 'p-8' : 'p-20'}
-              border-neutral-300
-              flex
-              flex-col
-              justify-center
-              items-center
-              gap-4
-              text-neutral-600
-            `}
-          >
-            <TbPhotoPlus
-              size={small ? 35 : 50}
+          <div key={index} className="flex-shrink-0 w-[120px] h-[90px] relative">
+            <Image
+              fill
+              style={{ objectFit: 'cover' }}
+              src={item}
+              alt="House"
             />
-            <div className={`font-semibold ${small ? 'text-md' : 'text-lg'}`}>
-              Thêm hình ảnh
-            </div>
-            {value && (
-              <div className="absolute inset-0 w-full h-full ">
-                <Image
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  src={value}
-                  alt="House"
-                />
-              </div>
-            )}
+
+            <button onClick={() => onRemove(item)} className="absolute right-1 top-1">
+              <AiFillCloseCircle size={20} />
+            </button>
           </div>
         )
-      }}
-    </CldUploadWidget>
+      })}
+
+      <CldUploadButton
+        onUpload={handleUpload}
+        uploadPreset={uploadPreset}
+        options={{
+          maxFiles: 1,
+        }}
+      >
+        <div
+          className={`
+            relative
+            cursor-pointer
+            hover:opacity-70
+            transition
+            border-dashed 
+            border-2 
+            border-neutral-300
+            flex
+            flex-col
+            justify-center
+            items-center
+            gap-4
+            text-neutral-600
+            w-[120px] h-[90px]
+          `}
+        >
+          <TbPhotoPlus size={32} />
+        </div>
+      </CldUploadButton>
+    </div>
   );
 }
 

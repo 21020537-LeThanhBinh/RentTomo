@@ -111,14 +111,15 @@ export default function SearchPage() {
   return (
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
       <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6">
-        <div className="flex flex-col gap-4 md:w-1/3 w-full">
+        <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
           <div className='font-semibold text-lg text-neutral-600'>
             Hình ảnh và Video
           </div>
 
           <ImageUpload
-            onChange={(value) => formik.setFieldValue("image_src", [value])}
-            value={formik.values.image_src[0]}
+            onChange={(value) => formik.setFieldValue("image_src", [...formik.values.image_src, value])}
+            value={formik.values.image_src}
+            onRemove={(value) => formik.setFieldValue("image_src", formik.values.image_src.filter((item) => item !== value))}
           />
 
           {/* Video upload */}

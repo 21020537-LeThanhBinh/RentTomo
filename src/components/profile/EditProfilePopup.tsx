@@ -11,6 +11,7 @@ import ItemSelect from "../input/ItemSelect";
 import PopupInputContainer from "../input/PopupInputContainer";
 import EditAvatar from "./EditAvatar";
 import { v4 } from "uuid"
+import Compressor from "compressorjs";
 
 export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onBack, onNext, session }: {
   modalRef: React.MutableRefObject<HTMLDialogElement | null>,
@@ -25,7 +26,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
   const [isUpdated, setIsUpdated] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>()
 
-  const handleSubmit = async (values: FormikValues) => {
+  const handleSubmit1 = async (values: FormikValues) => {
     if (!isUpdated && session?.user?.user_metadata?.year_of_birth) {
       onNext();
       return;
@@ -33,13 +34,10 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     setLoading(true);
 
     const { data, error } = (activeTab === 'edit-profile-1') ?
-      await onSubmit1(values) : (activeTab === 'edit-profile-2') ?
-        await onSubmit2(values) : { data: null, error: null };
+      await onSubmit1(values) : { data: null, error: null };
 
     if (!error) {
       toast.success("Đã lưu cập nhật.");
-      // edit-profile-1 complete will auto go to edit-profile-2
-      (activeTab != 'edit-profile-1') && onNext();
     } else {
       toast.error("Đã có lỗi xảy ra.")
       console.log(error)
@@ -75,16 +73,38 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     })
   }
 
-  const onSubmit2 = async (values: FormikValues) => {
-    let newAvatarUrl
+  const handleSubmit2 = async (values: FormikValues) => {
+    if (!isUpdated && session?.user?.user_metadata?.year_of_birth) {
+      onNext();
+      return;
+    }
+    setLoading(true);
 
-    if (selectedFile) {
-      const file_path = session.user.id + '/' + v4()
-      await supabase.storage.from('avatars').upload(file_path, selectedFile)
-      const { data } = supabase.storage.from('avatars').getPublicUrl(file_path)
-      newAvatarUrl = data.publicUrl
+    if (!selectedFile) {
+      return onSubmit2(values)
     }
 
+    // Compress image => upload => submit 
+    new Compressor(selectedFile, {
+      quality: 0.9,
+      maxWidth: 100,
+      async success(compressedImage) {
+        const file_path = session.user.id + '/' + v4()
+        await supabase.storage.from('avatars').upload(file_path, compressedImage)
+        const { data } = supabase.storage.from('avatars').getPublicUrl(file_path)
+        await onSubmit2(values, data.publicUrl)
+      },
+      error(error) {
+        console.log(error.message);
+        toast.error("Đã có lỗi xảy ra.")
+
+        setLoading(false);
+        setIsUpdated(false);
+      },
+    })
+  }
+
+  const onSubmit2 = async (values: FormikValues, newAvatarUrl?: string) => {
     const updateInfo = {
       avatar_url: newAvatarUrl || values.avatar_url,
       contact: values.contact,
@@ -100,9 +120,21 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     if (res.error) return res;
 
     // Metadata
-    return await supabase.auth.updateUser({
+    const { data, error } = await supabase.auth.updateUser({
       data: updateInfo
     })
+
+    if (!error) {
+      toast.success("Đã lưu cập nhật.");
+      onNext();
+    } else {
+      toast.error("Đã có lỗi xảy ra.")
+      console.log(error)
+      setMessage(error.message);
+    }
+
+    setLoading(false);
+    setIsUpdated(false);
   }
 
   const formik = useFormik({
@@ -132,7 +164,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       is_male: Yup.boolean()
         .required("Hãy nhập đủ thông tin"),
     }),
-    onSubmit: handleSubmit,
+    onSubmit: handleSubmit1,
   } as FormikConfig<{
     phone: string;
     email: string;
@@ -148,7 +180,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       contact: "",
       description: "",
     },
-    onSubmit: handleSubmit,
+    onSubmit: handleSubmit2,
   } as FormikConfig<{
     avatar_url: string;
     contact: string;
@@ -156,6 +188,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
   }>
   );
 
+  // Set default values
   useEffect(() => {
     if (!session || isUpdated) return
 
@@ -172,6 +205,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     formik2.setFieldValue("description", session.user.user_metadata?.description);
   }, [session, isUpdated])
 
+  // On file change
   useEffect(() => {
     if (selectedFile) setIsUpdated(true)
   }, [selectedFile])

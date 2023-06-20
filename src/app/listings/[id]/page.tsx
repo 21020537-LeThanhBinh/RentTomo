@@ -4,7 +4,7 @@ import ListingClient from "./ListingClient";
 import ListingInfo from "@/app/listings/[id]/components/ListingInfo";
 import OwnerInfo from "./components/OwnerInfo";
 import { Metadata, ResolvingMetadata } from 'next'
-import ListingHead from "./components/ListingHead";
+import ListingHead from "./ListingHead";
 
 type Props = {
   params: { id: string }
@@ -55,7 +55,7 @@ const ListingPage = async ({ params, searchParams }: Props) => {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
       <div className="flex flex-col gap-6">
         <ListingHead
-          imageSrc={listing.image_src?.[0]}
+          imageSrc={listing.image_src}
           id={listing.id}
         />
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
