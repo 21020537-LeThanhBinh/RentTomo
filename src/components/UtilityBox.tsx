@@ -12,7 +12,8 @@ const UtilityBox: React.FC<UtilityBoxProps> = ({
   label,
   selected,
 }) => {
-  const Icon = utilities.find((u) => u.label === label)?.icon as IconType
+  const utility = utilities.find((u) => u.label === label)
+  const Icon = utility?.icon as IconType
 
   return ( 
     <div
@@ -27,6 +28,7 @@ const UtilityBox: React.FC<UtilityBoxProps> = ({
         ${selected ? 'border-b-neutral-800' : 'border-transparent'}
         ${selected ? 'text-neutral-800' : 'text-neutral-600'}
       `}
+      title={utility?.description}
     >
       {Icon && <Icon size={26} className="flex-shrink-0" />}
       <div className="whitespace-nowrap truncate">

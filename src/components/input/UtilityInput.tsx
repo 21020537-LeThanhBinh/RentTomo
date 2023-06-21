@@ -3,18 +3,11 @@
 import { IconType } from "react-icons";
 import { CgScreenWide } from 'react-icons/cg';
 import { FaToilet } from 'react-icons/fa';
-import {
-  GiCctvCamera,
-  GiCookingPot,
-  GiHouseKeys,
-  GiWashingMachine,
-  GiWindow
-} from 'react-icons/gi';
+import { GiCctvCamera, GiCookingPot, GiHouseKeys, GiWashingMachine, GiWindow } from 'react-icons/gi';
 import { IoBed } from 'react-icons/io5';
-import { MdHeatPump, MdOutlinePets } from 'react-icons/md';
+import { MdElevator, MdHeatPump, MdOutlinePets } from 'react-icons/md';
 import { RiEBikeFill, RiFridgeFill } from 'react-icons/ri';
 import { TbAirConditioning } from 'react-icons/tb';
-
 import { AiFillClockCircle, AiOutlineWifi } from 'react-icons/ai';
 import { BiCloset } from 'react-icons/bi';
 
@@ -22,82 +15,87 @@ export const utilities = [
   {
     label: 'WC riêng',
     icon: FaToilet,
-    description: '',
+    description: 'Tưởng tượng cảnh phải xếp hàng để đi vệ sinh xem',
   },
   {
     label: 'Chỗ để xe',
     icon: RiEBikeFill,
-    description: '',
+    description: 'Nên chọn những nơi có chỗ để xe rộng rãi, có bảo vệ',
+  },
+  {
+    label: 'Thang máy',
+    icon: MdElevator,
+    description: 'Cần thiết cho những phòng ở tầng 4 trở lên',
   },
   {
     label: 'Cửa sổ',
     icon: GiWindow,
-    description: ''
+    description: 'Thoáng khí và có ánh sáng tự nhiên',
   },
   {
     label: 'An ninh',
     icon: GiCctvCamera,
-    description: ''
+    description: 'Bảo vệ, camera an ninh, ... có thể giúp bạn yên tâm hơn',
   },
   {
     label: 'Wifi',
     icon: AiOutlineWifi,
-    description: ''
+    description: 'Giúp bạn kết nối với thế giới'
   },
   {
     label: 'Tự do',
     icon: AiFillClockCircle,
-    description: ''
+    description: 'Thoải mái về thời gian ra vào phòng'
   },
   {
     label: 'Máy lạnh',
     icon: TbAirConditioning,
-    description: ''
+    description: 'Giúp cuộc sống dễ chịu hơn trong những ngày nắng nóng'
   },
   {
     label: 'Máy nước nóng',
     icon: MdHeatPump,
-    description: ''
+    description: 'Giúp cuộc sống dễ chịu hơn trong những ngày lạnh giá'
   },
   {
     label: 'Nhà bếp',
     icon: GiCookingPot,
-    description: ''
+    description: 'Tự nấu ăn, vừa tiết kiệm vừa healthy'
   },
   {
     label: 'Tủ lạnh',
     icon: RiFridgeFill,
-    description: ''
+    description: 'Mọi thứ đều tươi mới'
   },
   {
     label: 'Máy giặt',
     icon: GiWashingMachine,
-    description: ''
+    description: 'Tiết kiệm thời gian cho việc giặt quần áo'
   },
   {
     label: 'Giường',
     icon: IoBed,
-    description: ''
+    description: 'Không quá quan trọng vì có thể ngủ trên nền nhà'
   },
   {
     label: 'Tủ đồ',
     icon: BiCloset,
-    description: ''
+    description: 'Giúp mọi thứ ngăn nắp gọn gàng hơn'
   },
   {
     label: 'Tivi',
     icon: CgScreenWide,
-    description: ''
+    description: 'Ai còn xem tivi nữa chứ?'
   },
   {
     label: 'Thú cưng',
     icon: MdOutlinePets,
-    description: ''
+    description: 'Wow, bạn có thể có những người bạn nhỏ trong phòng!'
   },
   {
     label: 'Không chung chủ',
     icon: GiHouseKeys,
-    description: ''
+    description: 'Tự do hơn nhưng nên cân nhắc về an ninh'
   }
 ]
 

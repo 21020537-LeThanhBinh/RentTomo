@@ -161,7 +161,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         onSubmit={onReservation}
         disabled={isLoading || (userId === listing?.author?.id) || host?.id === userId}
         requesting={requests.some((request) => userId === request.id)}
-        deposit={listing.deposit}
+        fees={listing.fees}
       />
     </ContextProvider>
   )

@@ -4,13 +4,19 @@ import Button from "@/components/Button";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { useContext } from "react";
 import { ListingContext } from "../ListingContext";
+import { AiFillQuestionCircle } from "react-icons/ai";
 
 interface ListingReservationProps {
   price: number;
   onSubmit: () => void;
   disabled?: boolean;
   requesting: boolean;
-  deposit: number;
+  fees: {
+    deposit: number;
+    electricity: number;
+    water: number;
+    internet: number;
+  };
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -18,7 +24,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   onSubmit,
   disabled,
   requesting,
-  deposit,
+  fees,
 }) => {
   const { userId, members, host } = useContext(ListingContext);
 
@@ -49,29 +55,30 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         <div className="w-full text-center">Các phí khác</div>
         <div className="w-full flex justify-between">
           <span>Tiền cọc</span>
-          <span>đ {formatBigNumber(deposit)}</span>
+          <span>đ {formatBigNumber(fees.deposit)}</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Điện</span>
-          <span>đ 0 / kWh</span>
+          <span>đ {formatBigNumber(fees.electricity)} / kWh</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Nước</span>
-          <span>đ 0 / khối</span>
+          <span>đ {formatBigNumber(fees.water)} / m³</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Wifi</span>
-          <span>đ 0 / tháng</span>
+          <span>đ {formatBigNumber(fees.internet)} / tháng</span>
         </div>
       </div>
       <hr />
 
       <div className="p-4 flex items-center justify-between font-semibold text-lg">
-        <div>
-          Tổng cộng
+        <div className="flex items-center gap-2">
+          <span>Tổng cộng</span>
+          <AiFillQuestionCircle size={16} title={"Tiền thuê tháng đầu + cọc"} className="cursor-pointer"/>
         </div>
         <div>
-          đ {formatBigNumber((price + deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>
+          đ {formatBigNumber((price + fees.deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>
         </div>
       </div>
     </div>

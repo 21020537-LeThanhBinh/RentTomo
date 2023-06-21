@@ -87,7 +87,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     // Compress image => upload => submit 
     new Compressor(selectedFile, {
       quality: 0.9,
-      maxWidth: 100,
+      maxWidth: 300,
       async success(compressedImage) {
         const file_path = session.user.id + '/' + v4()
         await supabase.storage.from('avatars').upload(file_path, compressedImage)
