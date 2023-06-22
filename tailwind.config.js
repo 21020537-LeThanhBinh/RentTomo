@@ -17,6 +17,7 @@ module.exports = {
       },
       aspectRatio: {
         '4/3': '4 / 3',
+        'golden': '1.618'
       },
     },
   },
