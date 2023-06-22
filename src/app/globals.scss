@@ -102,3 +102,10 @@ dialog[open].popup {
   background-color: #ddd; 
   height: 2px;
 }
+
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-pane,
+.leaflet-top {
+  z-index: 0 !important;
+}

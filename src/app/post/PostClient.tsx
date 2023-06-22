@@ -12,10 +12,13 @@ import { supabase } from '@/supabase/supabase-app';
 import formatBigNumber from '@/utils/formatBigNumber';
 import handleCloseDialog from '@/utils/handleCloseDialog';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
+const provider = new OpenStreetMapProvider();
 export default function PostClient() {
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
@@ -43,7 +46,7 @@ export default function PostClient() {
       return;
     }
 
-    if (Object.keys(values).filter((key) => key != 'is_male').some((key) => !values[key])) {
+    if (Object.keys(values).some((key) => !values[key])) {
       toast.error('Vui lòng điền đầy đủ thông tin!');
       return;
     }
@@ -63,7 +66,8 @@ export default function PostClient() {
         ward_id: values.address.ward_id
       },
       image_src: image_src,
-    } as any
+      location: `POINT(${selectedPoint.lng} ${selectedPoint.lat})`
+    } 
 
     const { data, error } = await supabase
       .from('posts')
@@ -105,6 +109,7 @@ export default function PostClient() {
         city_id: "",
         district_id: "",
         ward_id: "",
+        street: "",
         number: "",
       },
       area: 0,
@@ -118,7 +123,6 @@ export default function PostClient() {
         water: 0,
         internet: 0,
       },
-      is_male: null,
     },
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -127,6 +131,7 @@ export default function PostClient() {
       city_id: string;
       district_id: string;
       ward_id: string;
+      street: string;
       number: string;
     },
     area: number;
@@ -140,34 +145,39 @@ export default function PostClient() {
       water: number;
       internet: number;
     }
-    is_male: boolean | null;
   }>
   );
+
+  const Map = useMemo(() => dynamic(() => import("@/components/map/Map"), {
+    ssr: false
+  }), [formik.values.address.city_id])
+  const [mapCenter, setMapCenter] = useState<any>([21.0283207, 105.8540217])
+  const [selectedPoint, setSelectedPoint] = useState<any>([21.0283207, 105.8540217])
+
+  useEffect(() => {
+    if ((addressLabel.match(/,/g) || [])?.length >= 4) return
+
+    provider
+      .search({ query: addressLabel.replace(/Phường|Quận|Tỉnh|Thành phố/g, '') })
+      .then((results: any) => {
+        console.log(results)
+        if (results.length > 0) {
+          setMapCenter([results[0].y, results[0].x])
+          setSelectedPoint([results[0].y, results[0].x])
+        }
+      })
+  }, [addressLabel])
+
+  useEffect(() => {
+    console.log(selectedPoint)
+  }, [selectedPoint])
 
   return (
     <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
       <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
         <div className='font-semibold text-lg text-neutral-600'>
-          Hình ảnh và Video
+          Địa chỉ
         </div>
-
-        <ImageUpload
-          files={files}
-          setFiles={setFiles}
-        />
-
-        {/* Video upload */}
-      </div>
-
-      <div className="flex-1 flex flex-col gap-4">
-        <div className='font-semibold text-lg text-neutral-600'>
-          Thông tin chung
-        </div>
-
-        <CategoryInput
-          onChange={(value) => formik.setFieldValue("category", value)}
-          value={formik.values.category}
-        />
 
         <div>
           <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
@@ -188,8 +198,40 @@ export default function PostClient() {
             isLoading={isLoading}
             addressRef={addressRef}
             setAddressLabel={setAddressLabel}
+            addressLabel={addressLabel}
           />
         </div>
+
+        <div className="h-[35vh]">
+          <Map
+            center={mapCenter}
+            zoom={formik.values.address.ward_id ? 15 : formik.values.address.district_id ? 13 : formik.values.address.city_id ? 9 : 5}
+            selectedPoint={selectedPoint}
+            setSelectedPoint={setSelectedPoint}
+          />
+        </div>
+
+        <div className='font-semibold text-lg text-neutral-600 mt-2'>
+          Hình ảnh (3 đến 12 tệp)
+        </div>
+
+        <ImageUpload
+          files={files}
+          setFiles={setFiles}
+        />
+
+        {/* Video upload */}
+      </div>
+
+      <div className="flex-1 flex flex-col gap-4">
+        <div className='font-semibold text-lg text-neutral-600'>
+          Thông tin chung
+        </div>
+
+        <CategoryInput
+          onChange={(value) => formik.setFieldValue("category", value)}
+          value={formik.values.category}
+        />
 
         <MultiItemSelect
           placeholder="Thêm tiện ích"
@@ -200,16 +242,6 @@ export default function PostClient() {
           onChange={(utility: any) => {
             formik.setFieldValue("utility", utility.map((item: any) => item.value))
           }}
-        />
-
-        <ItemSelect
-          onChange={(value) => {
-            formik.setFieldValue('is_male', value.label === 'Giới tính bất kỳ' ? null : (value.label === 'Nam'))
-          }}
-          value={(formik.values.is_male === null) ? { label: 'Giới tính bất kỳ' } : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
-          options={[{ label: 'Giới tính bất kỳ', value: 'Giới tính bất kỳ' }, { label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
-          placeholder="Giới tính"
-          isClearable={false}
         />
 
         <Input

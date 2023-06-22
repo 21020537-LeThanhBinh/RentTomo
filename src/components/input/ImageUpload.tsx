@@ -10,7 +10,7 @@ interface ImageUploadProps {
   setFiles: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({files, setFiles}) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ files, setFiles }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [previews, setPreviews] = useState<any[]>([])
@@ -24,6 +24,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({files, setFiles}) => {
       setPreviews([])
       return
     }
+
+    console.log(files)
 
     const objectUrls = files.map((file) => URL.createObjectURL(file))
     setPreviews(objectUrls)
@@ -44,7 +46,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({files, setFiles}) => {
               alt="Listing picture"
             />
 
-            <button onClick={() => setFiles(files.filter((file) => file != item))} type="button" className="absolute right-1 top-1">
+            <button onClick={() => setFiles(files.filter((_, i) => i != index))} type="button" className="absolute right-1 top-1">
               <AiFillCloseCircle size={20} />
             </button>
           </div>
@@ -60,7 +62,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({files, setFiles}) => {
           flex flex-col justify-center items-center gap-4
           text-neutral-600
           ${!isLoading && 'cursor-pointer hover:opacity-70'}
-          ${files.length ? 'w-[120px] h-[90px]' : 'aspect-4/3 w-full'}
+          ${files.length ? 'w-[120px] h-[90px]' : 'w-full h-[35vh]'}
         `}
       >
         <TbPhotoPlus size={files.length ? 32 : 50} />

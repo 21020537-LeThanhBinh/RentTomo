@@ -19,7 +19,6 @@ interface ListingInfoProps {
     district_id: string,
     ward_id: string,
   };
-  isMale: boolean | null;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -31,7 +30,6 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   address,
   price,
   address_id,
-  isMale,
 }) => {
   return (
     <div className="col-span-4 flex flex-col gap-8">
@@ -46,7 +44,6 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         <span>Loại phòng: {category}</span>
         <span>Địa chỉ: {address + ', ' + parseAddressId(address_id)}</span>
         <span>Diện tích: {area} m²</span>
-        <span>Giới tính: {isMale === null ? 'Bất kỳ' : isMale ? 'Nam' : 'Nữ'}</span>
         <span>Giá gốc: {formatBigNumber(price)} đ / tháng</span>
       </div>
       <hr />

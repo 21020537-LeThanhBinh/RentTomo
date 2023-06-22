@@ -304,6 +304,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                   onClick={() => { }}
                   disabled={isLoading}
                   outline={!isUpdated}
+                  type="submit"
                 />
               </div>
             </div>
@@ -362,6 +363,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                   onClick={() => { }}
                   disabled={isLoading}
                   outline={!isUpdated}
+                  type="submit"
                 />
               </div>
             </div>

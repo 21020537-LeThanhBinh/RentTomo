@@ -15,7 +15,7 @@ async function getListingById(id: string) {
   let { data, error } = await supabase
     .from('posts')
     .select(`
-      id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description, is_male,
+      id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description,
       author: profiles!posts_author_id_fkey (id, full_name, avatar_url, contact),
       followers: profiles!follows (id, full_name, avatar_url)
     `)
@@ -68,7 +68,6 @@ const ListingPage = async ({ params, searchParams }: Props) => {
             address={listing.address}
             price={listing.price}
             address_id={listing.address_id}
-            isMale={listing.is_male}
           />
 
           <div className="order-first mb-10 md:order-last md:col-span-3 flex flex-col gap-4">

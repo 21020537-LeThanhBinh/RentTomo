@@ -39,6 +39,8 @@ const ItemSelect: React.FC<SelectProps> = ({
         options={options}
         value={value?.label && value}
         onChange={onChange}
+        menuIsOpen={alwaysClosed ? false : undefined}
+        isDisabled={alwaysClosed}
         formatOptionLabel={(option: any) => (
           <div className="flex flex-row items-center gap-3">
             {option?.icon && option?.icon()}
@@ -61,8 +63,14 @@ const ItemSelect: React.FC<SelectProps> = ({
             primary25: '#ffe4e6'
           }
         })}
-        menuIsOpen={alwaysClosed ? false : undefined}
         required={required}
+        styles={{
+          control: (baseStyles, { isDisabled }) => ({
+            ...baseStyles,
+            backgroundColor: isDisabled ? 'white' : 'white',
+            border: isDisabled ? '1px solid hsl(0, 0%, 80%)' : '',
+          }),
+        }}
       />
     </div>
   );

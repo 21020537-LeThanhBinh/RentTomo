@@ -9,6 +9,7 @@ export type AddressValue = {
   city_id: string;
   district_id: string;
   ward_id: string;
+  street: string;
   number: string;
 }
 
@@ -18,9 +19,10 @@ interface AddressProps {
   isLoading: boolean;
   addressRef: React.RefObject<HTMLDialogElement>;
   setAddressLabel: (label: string) => void;
+  addressLabel: string;
 }
 
-export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel }: AddressProps) {
+export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel, addressLabel }: AddressProps) {
   const [city, setCity] = useState<any>()
   const [district, setDistrict] = useState<any>()
   const [ward, setWard] = useState<any>()
@@ -50,12 +52,13 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
   useEffect(() => {
     const newAddress = []
     if (value?.number) newAddress.push(value.number)
+    if (value?.street) newAddress.push(value.street)
     if (ward) newAddress.push(ward.Name)
     if (district) newAddress.push(district.Name)
     if (city) newAddress.push(city.Name)
 
     setAddressLabel(newAddress.join(", "))
-  }, [value?.number, ward, district, city])
+  }, [value?.number, value?.street, ward, district, city])
 
   return (
     <dialog ref={addressRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden'>
@@ -96,16 +99,32 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
             />
 
             <Input
+              onChange={(value) => setFieldValue("address.street", value)}
+              value={value?.street || ""}
+              id="address.street"
+              label="Nhập tên đường"
+              disabled={isLoading}
+            />
+
+            <Input
               onChange={(value) => setFieldValue("address.number", value)}
               value={value?.number || ""}
               id="address.number"
-              label="Nhập số nhà, tên đường"
+              label="Nhập số nhà, ngõ,..."
               disabled={isLoading}
             />
           </div>
 
-          <div className="flex justify-end">
-            <div className='w-1/3'>
+          <div className="flex justify-end gap-4">
+            <div className='w-1/2 sm:w-1/4'>
+              <Button
+                label='Hủy'
+                onClick={(e) => { e.preventDefault(); setFieldValue("address.city_id", ''); addressRef.current?.close() }}
+                disabled={isLoading}
+                outline
+              />
+            </div>
+            <div className='w-1/2 sm:w-1/4'>
               <Button
                 label='Xong'
                 onClick={(e) => { e.preventDefault(); addressRef.current?.close() }}
