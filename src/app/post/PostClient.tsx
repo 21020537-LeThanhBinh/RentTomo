@@ -21,6 +21,7 @@ export default function PostClient() {
   const addressRef = useRef<HTMLDialogElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [addressLabel, setAddressLabel] = useState<string>('')
+  const [files, setFiles] = useState<any[]>([])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -34,42 +35,67 @@ export default function PostClient() {
   }, []);
 
   const handleSubmit = async (values: FormikValues) => {
-    setIsLoading(true);
-
     const uid = (await supabase.auth.getUser())?.data?.user?.id
-
     if (!uid) return toast.error('Bạn chưa đăng nhập!')
+
+    if (files.length < 3) {
+      toast.error('Hãy thêm từ 3 đến 12 ảnh.');
+      return;
+    }
+
     if (Object.keys(values).filter((key) => key != 'is_male').some((key) => !values[key])) {
       toast.error('Vui lòng điền đầy đủ thông tin!');
-      return setIsLoading(false);
+      return;
     }
+
+    setIsLoading(true);
+
+    const multiUpload = await Promise.all(files.map((file) => handleUploadImages(file)));
+    const image_src = multiUpload.map((item) => item.secure_url)
+
+    const listingValues = {
+      ...values,
+      author_id: uid,
+      address: values.address.number,
+      address_id: {
+        city_id: values.address.city_id,
+        district_id: values.address.district_id,
+        ward_id: values.address.ward_id
+      },
+      image_src: image_src,
+    } as any
 
     const { data, error } = await supabase
       .from('posts')
-      .insert([{
-        ...values,
-        author_id: uid,
-        address: values.address.number,
-        address_id: {
-          city_id: values.address.city_id,
-          district_id: values.address.district_id,
-          ward_id: values.address.ward_id
-        },
-      }])
+      .insert([listingValues])
 
     if (!error) {
       toast.success('Đăng tin thành công!');
       router.refresh()
       formik.resetForm()
-
-      console.log(data, error)
+      setFiles([])
     } else {
       toast.error('Đã có lỗi xảy ra!');
-
       console.log(data, error)
     }
 
     setIsLoading(false);
+  }
+
+  const handleUploadImages = async (file: any) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'swnb0zrk');
+
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dhfrxvhb2/image/upload', {
+        method: 'POST',
+        body: formData
+      })
+      return response.json();
+    } catch (error) {
+      return error;
+    }
   }
 
   const formik = useFormik({
@@ -82,7 +108,6 @@ export default function PostClient() {
         number: "",
       },
       area: 0,
-      image_src: [],
       utility: [],
       title: "",
       description: "",
@@ -105,7 +130,6 @@ export default function PostClient() {
       number: string;
     },
     area: number;
-    image_src: string[];
     utility: string[];
     title: string;
     description: string;
@@ -121,92 +145,114 @@ export default function PostClient() {
   );
 
   return (
-    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-      <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6">
-        <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
-          <div className='font-semibold text-lg text-neutral-600'>
-            Hình ảnh và Video
-          </div>
-
-          <ImageUpload
-            onChange={(value) => formik.setFieldValue("image_src", [...formik.values.image_src, value])}
-            value={formik.values.image_src}
-            onRemove={(value) => formik.setFieldValue("image_src", formik.values.image_src.filter((item) => item !== value))}
-          />
-
-          {/* Video upload */}
+    <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
+      <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
+        <div className='font-semibold text-lg text-neutral-600'>
+          Hình ảnh và Video
         </div>
 
-        <div className="flex-1 flex flex-col gap-4">
-          <div className='font-semibold text-lg text-neutral-600'>
-            Thông tin chung
-          </div>
+        <ImageUpload
+          files={files}
+          setFiles={setFiles}
+        />
 
-          <CategoryInput
-            onChange={(value) => formik.setFieldValue("category", value)}
-            value={formik.values.category}
-          />
+        {/* Video upload */}
+      </div>
 
-          <div>
-            <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
-              <ItemSelect
-                onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
-                value={{ label: addressLabel }}
-                placeholder="Địa chỉ"
-                isClearable={false}
-                alwaysClosed={true}
-                tabIndex={-1}
-              />
-            </div>
+      <div className="flex-1 flex flex-col gap-4">
+        <div className='font-semibold text-lg text-neutral-600'>
+          Thông tin chung
+        </div>
 
-            <AddressInputPopup
-              value={formik.values.address}
-              setFieldValue={(name, value) => formik.setFieldValue(name, value)}
-              isLoading={isLoading}
-              addressRef={addressRef}
-              setAddressLabel={setAddressLabel}
+        <CategoryInput
+          onChange={(value) => formik.setFieldValue("category", value)}
+          value={formik.values.category}
+        />
+
+        <div>
+          <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
+            <ItemSelect
+              onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
+              value={{ label: addressLabel }}
+              placeholder="Địa chỉ"
+              isClearable={false}
+              alwaysClosed={true}
+              tabIndex={-1}
+              required
             />
           </div>
 
-          <MultiItemSelect
-            placeholder="Thêm tiện ích"
-            options={utilities.map((utility: any) => {
-              return { value: utility.label, label: utility.label, icon: utility.icon }
-            })}
-            value={formik.values.utility.map((utility: string) => { return { value: utility, label: utility, icon: undefined } })}
-            onChange={(utility: any) => {
-              formik.setFieldValue("utility", utility.map((item: any) => item.value))
-            }}
+          <AddressInputPopup
+            value={formik.values.address}
+            setFieldValue={(name, value) => formik.setFieldValue(name, value)}
+            isLoading={isLoading}
+            addressRef={addressRef}
+            setAddressLabel={setAddressLabel}
           />
+        </div>
 
-          <ItemSelect
-            onChange={(value) => {
-              formik.setFieldValue('is_male', value.label === 'Giới tính bất kỳ' ? null : (value.label === 'Nam'))
-            }}
-            value={(formik.values.is_male === null) ? { label: 'Giới tính bất kỳ' } : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
-            options={[{ label: 'Giới tính bất kỳ', value: 'Giới tính bất kỳ' }, { label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
-            placeholder="Giới tính"
-            isClearable={false}
-          />
+        <MultiItemSelect
+          placeholder="Thêm tiện ích"
+          options={utilities.map((utility: any) => {
+            return { value: utility.label, label: utility.label, icon: utility.icon }
+          })}
+          value={formik.values.utility.map((utility: string) => { return { value: utility, label: utility, icon: undefined } })}
+          onChange={(utility: any) => {
+            formik.setFieldValue("utility", utility.map((item: any) => item.value))
+          }}
+        />
 
+        <ItemSelect
+          onChange={(value) => {
+            formik.setFieldValue('is_male', value.label === 'Giới tính bất kỳ' ? null : (value.label === 'Nam'))
+          }}
+          value={(formik.values.is_male === null) ? { label: 'Giới tính bất kỳ' } : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
+          options={[{ label: 'Giới tính bất kỳ', value: 'Giới tính bất kỳ' }, { label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
+          placeholder="Giới tính"
+          isClearable={false}
+        />
+
+        <Input
+          onChange={(value) => formik.setFieldValue("area", value)}
+          value={formik.values.area ? formik.values.area.toString() : ""}
+          id="area"
+          label="Diện tích (m²)"
+          disabled={isLoading}
+          required
+        />
+
+        <div className='font-semibold text-lg text-neutral-600 mt-2'>
+          Giá thuê và các khoản phí
+        </div>
+
+        <Input
+          onChange={(value) => formik.setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
+          value={formatBigNumber(formik.values.price)}
+          id="price"
+          label="Giá thuê (/tháng)"
+          formatPrice
+          type="string"
+          disabled={isLoading}
+          required
+        />
+
+        <Input
+          onChange={(value) => formik.setFieldValue("fees.deposit", parseInt(value.replace(/\D/g, "")))}
+          value={formatBigNumber(formik.values.fees.deposit)}
+          id="deposit"
+          label="Tiền cọc"
+          formatPrice
+          type="string"
+          disabled={isLoading}
+          required
+        />
+
+        <div className='flex gap-2'>
           <Input
-            onChange={(value) => formik.setFieldValue("area", value)}
-            value={formik.values.area ? formik.values.area.toString() : ""}
-            id="area"
-            label="Diện tích (m²)"
-            disabled={isLoading}
-            required
-          />
-
-          <div className='font-semibold text-lg text-neutral-600 mt-2'>
-            Giá thuê và các khoản phí
-          </div>
-
-          <Input
-            onChange={(value) => formik.setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(formik.values.price)}
-            id="price"
-            label="Giá thuê (/tháng)"
+            onChange={(value) => formik.setFieldValue("fees.electricity", parseInt(value.replace(/\D/g, "")))}
+            value={formatBigNumber(formik.values.fees.electricity)}
+            id="electricity"
+            label="Điện (/kWh)"
             formatPrice
             type="string"
             disabled={isLoading}
@@ -214,91 +260,68 @@ export default function PostClient() {
           />
 
           <Input
-            onChange={(value) => formik.setFieldValue("fees.deposit", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(formik.values.fees.deposit)}
-            id="deposit"
-            label="Tiền cọc"
+            onChange={(value) => formik.setFieldValue("fees.water", parseInt(value.replace(/\D/g, "")))}
+            value={formatBigNumber(formik.values.fees.water)}
+            id="water"
+            label="Nước (/m³)"
             formatPrice
             type="string"
             disabled={isLoading}
             required
           />
 
-          <div className='flex gap-2'>
-            <Input
-              onChange={(value) => formik.setFieldValue("fees.electricity", parseInt(value.replace(/\D/g, "")))}
-              value={formatBigNumber(formik.values.fees.electricity)}
-              id="electricity"
-              label="Điện (/kWh)"
-              formatPrice
-              type="string"
-              disabled={isLoading}
-              required
-            />
-
-            <Input
-              onChange={(value) => formik.setFieldValue("fees.water", parseInt(value.replace(/\D/g, "")))}
-              value={formatBigNumber(formik.values.fees.water)}
-              id="water"
-              label="Nước (/m³)"
-              formatPrice
-              type="string"
-              disabled={isLoading}
-              required
-            />
-
-            <Input
-              onChange={(value) => formik.setFieldValue("fees.internet", parseInt(value.replace(/\D/g, "")))}
-              value={formatBigNumber(formik.values.fees.internet)}
-              id="internet"
-              label="Wifi (/tháng)"
-              formatPrice
-              type="string"
-              disabled={isLoading}
-              required
-            />
-          </div>
-
-          <div className='font-semibold text-lg text-neutral-600 mt-2'>
-            Nội dung tin đăng
-          </div>
-
           <Input
-            onChange={(value) => formik.setFieldValue("title", value)}
-            value={formik.values.title}
-            id="title"
-            label="Tiêu đề"
+            onChange={(value) => formik.setFieldValue("fees.internet", parseInt(value.replace(/\D/g, "")))}
+            value={formatBigNumber(formik.values.fees.internet)}
+            id="internet"
+            label="Wifi (/tháng)"
+            formatPrice
+            type="string"
             disabled={isLoading}
             required
           />
+        </div>
 
-          <Input
-            onChange={(value) => formik.setFieldValue("description", value)}
-            value={formik.values.description}
-            id="description"
-            label="Mô tả chi tiết"
-            disabled={isLoading}
-            required
-            multiline
-          />
+        <div className='font-semibold text-lg text-neutral-600 mt-2'>
+          Nội dung tin đăng
+        </div>
 
-          <div className="flex justify-end mt-2">
-            <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
-              <Button
-                label='Hủy'
-                onClick={() => router.back()}
-                disabled={isLoading}
-                outline
-              />
-              <Button
-                label='Đăng tin'
-                onClick={() => formik.handleSubmit()}
-                disabled={isLoading}
-              />
-            </div>
+        <Input
+          onChange={(value) => formik.setFieldValue("title", value)}
+          value={formik.values.title}
+          id="title"
+          label="Tiêu đề"
+          disabled={isLoading}
+          required
+        />
+
+        <Input
+          onChange={(value) => formik.setFieldValue("description", value)}
+          value={formik.values.description}
+          id="description"
+          label="Mô tả chi tiết"
+          disabled={isLoading}
+          required
+          multiline
+        />
+
+        <div className="flex justify-end mt-2">
+          <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
+            <Button
+              label='Hủy'
+              onClick={() => router.back()}
+              disabled={isLoading}
+              outline
+            />
+            <Button
+              label='Đăng tin'
+              onClick={() => { }}
+              disabled={isLoading}
+              type='submit'
+            />
           </div>
         </div>
-      </form >
-    </div >
+      </div>
+    </form >
   )
 }

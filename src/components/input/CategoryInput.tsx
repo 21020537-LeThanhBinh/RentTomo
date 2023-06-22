@@ -24,6 +24,7 @@ const CategoryInput: React.FC<CategoryInputProps> = ({
       value={{ label: value }}
       options={categoryOptions}
       placeholder="Chọn loại phòng"
+      required
     />
   );
 }

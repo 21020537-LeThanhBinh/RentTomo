@@ -9,6 +9,7 @@ interface ButtonProps {
   outline?: boolean;
   small?: boolean;
   icon?: IconType;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const Button: React.FC<ButtonProps> = ({ 
@@ -18,11 +19,13 @@ const Button: React.FC<ButtonProps> = ({
   outline,
   small,
   icon: Icon,
+  type = 'button'
 }) => {
   return ( 
     <button
       disabled={disabled}
       onClick={onClick}
+      type={type}
       className={`
         relative
         disabled:opacity-70

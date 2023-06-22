@@ -17,6 +17,7 @@ interface SelectProps {
   isClearable?: boolean;
   alwaysClosed?: boolean;
   tabIndex?: number;
+  required?: boolean;
 }
 
 const ItemSelect: React.FC<SelectProps> = ({
@@ -26,7 +27,8 @@ const ItemSelect: React.FC<SelectProps> = ({
   placeholder,
   isClearable = true,
   alwaysClosed = false,
-  tabIndex
+  tabIndex,
+  required = false
 }) => {
   return (
     <div>
@@ -60,6 +62,7 @@ const ItemSelect: React.FC<SelectProps> = ({
           }
         })}
         menuIsOpen={alwaysClosed ? false : undefined}
+        required={required}
       />
     </div>
   );
