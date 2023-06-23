@@ -59,7 +59,7 @@ export default function PostClient() {
     const listingValues = {
       ...values,
       author_id: uid,
-      address: values.address.number,
+      address: values.address.number + ', ' + values.address.street,
       address_id: {
         city_id: values.address.city_id,
         district_id: values.address.district_id,
@@ -67,7 +67,7 @@ export default function PostClient() {
       },
       image_src: image_src,
       location: `POINT(${selectedPoint.lng} ${selectedPoint.lat})`
-    } 
+    }
 
     const { data, error } = await supabase
       .from('posts')
@@ -148,11 +148,11 @@ export default function PostClient() {
   }>
   );
 
-  const Map = useMemo(() => dynamic(() => import("@/components/map/Map"), {
+  const Map = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
     ssr: false
   }), [formik.values.address.city_id])
   const [mapCenter, setMapCenter] = useState<any>([21.0283207, 105.8540217])
-  const [selectedPoint, setSelectedPoint] = useState<any>([21.0283207, 105.8540217])
+  const [selectedPoint, setSelectedPoint] = useState<any>({lng: 105.8540217, lat: 21.0283207})
 
   useEffect(() => {
     if ((addressLabel.match(/,/g) || [])?.length >= 4) return
@@ -163,7 +163,7 @@ export default function PostClient() {
         console.log(results)
         if (results.length > 0) {
           setMapCenter([results[0].y, results[0].x])
-          setSelectedPoint([results[0].y, results[0].x])
+          setSelectedPoint({lng: results[0].x, lat: results[0].y})
         }
       })
   }, [addressLabel])
@@ -210,6 +210,9 @@ export default function PostClient() {
             setSelectedPoint={setSelectedPoint}
           />
         </div>
+        {formik.values.address.number && (
+          <span className='text-neutral-600'>*Vui lòng chọn vị trí thủ công trên bản đồ</span>
+        )}
 
         <div className='font-semibold text-lg text-neutral-600 mt-2'>
           Hình ảnh (3 đến 12 tệp)

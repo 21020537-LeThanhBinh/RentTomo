@@ -30,7 +30,8 @@ export default function SearchBar() {
       params.set('level', level.toString())
     }
     
-    router.push('/search?' + params.toString())
+    if (pathname === '/search') router.push('/search?' + params.toString())
+    router.push('/map?' + params.toString())
   }
 
   useEffect(() => {

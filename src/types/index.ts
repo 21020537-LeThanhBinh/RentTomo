@@ -16,4 +16,5 @@ export interface ISearchParams {
   maxArea?: string
   utility?: string
   isMale?: string
+  popup?: string
 }

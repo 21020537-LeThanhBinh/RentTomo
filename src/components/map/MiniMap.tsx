@@ -31,7 +31,7 @@ interface MapProps {
 const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-const Map: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint }) => {
+const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint }) => {
   const mapRef = useRef<any>()
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Map: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint
       //@ts-ignore
       fullscreenControl={true}
       style={{ cursor: 'crosshair' }}
-      className="h-[35vh] rounded-lg cursor-crosshair"
+      className="h-[35vh] rounded-lg"
     >
       <SearchField />
       <ZoomControl position='topright' />
@@ -63,9 +63,9 @@ const Map: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint
       {center && (
         <Marker position={selectedPoint as L.LatLngExpression} />
       )}
-      <SetViewOnClick setSelectedPoint={setSelectedPoint} />
+      <SetViewOnClick selectPoint={setSelectedPoint} />
     </MapContainer>
   )
 }
 
-export default Map
+export default MiniMap

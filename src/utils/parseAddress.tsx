@@ -12,6 +12,6 @@ export function parseAddressId(address_id: {
 }
 
 export function parseAddressIdSingle(id?: string) {
-  if (id) return map.find((item) => item.id === id)?.label
-  return ''
+  if (!id) return ''
+  return map.find((item) => item.id === id)?.label || ''
 }

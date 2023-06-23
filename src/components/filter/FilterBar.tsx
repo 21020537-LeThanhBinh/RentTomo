@@ -14,6 +14,7 @@ import MultiItemSelect from "../input/MultiItemSelect"
 import PopupInputContainer from "../input/PopupInputContainer"
 import { utilities } from "../input/UtilityInput"
 import CategorySelect from "./CategorySelect"
+import { createQueryString, deleteQueryString } from "@/utils/queryString"
 
 export default function FilterBar({ searchParams, children }: { searchParams: ISearchParams, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -33,7 +34,9 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
     setIsLoading(false)
 
     const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, dialogRef.current!, () => dialogRef.current?.close())
+      handleCloseDialog(e, dialogRef.current!, () => {
+        dialogRef.current?.open && router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'))
+      })
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -43,6 +46,12 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
   }, []);
 
   useEffect(() => {
+    if (!searchParams.popup) {
+      dialogRef.current?.close();
+    } else if (searchParams.popup === "filter") {
+      !dialogRef.current?.open && dialogRef.current?.showModal();
+    }
+
     setCategory(searchParams.category ? searchParams.category?.split(',') : categoryOptions.map((option) => option.value))
     setMinPrice(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
     setMaxPrice(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
@@ -63,22 +72,30 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
     params.set('maxArea', maxArea.toString())
     params.set('utility', utility.toString())
     params.set('isMale', isMale?.toString() || 'undefined')
-    router.push('/search?' + params.toString())
+    params.delete('popup')
+    router.push(pathname + '?' + params.toString())
 
     setIsLoading(false)
-    dialogRef.current?.close()
+    // dialogRef.current?.close()
   }
 
   return (
     <>
-      <div onClick={() => !dialogRef.current?.open && dialogRef.current?.showModal()} className={`p-6 border-[1px] rounded-xl relative ${!isLoading && 'cursor-pointer hover:shadow-md'}`}>
+      <div
+        onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'filter'))}
+        className={`
+          p-6 border-2 border-black border-opacity-20 rounded-xl relative z-[10000] bg-white 
+          ${!isLoading && 'cursor-pointer'}
+          hidden sm:block 
+        `}
+      >
         {children}
       </div>
 
       <dialog ref={dialogRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-x-hidden h-[90%]'>
         <PopupInputContainer
           label="Bộ lọc"
-          onBack={() => dialogRef.current?.close()}
+          onBack={() => router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'))}
           className="flex flex-col gap-4"
         >
           <div className="text-lg text-neutral-600">
@@ -188,7 +205,7 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
 
           <div className="flex justify-between items-center mt-6">
             <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
-              <Link href='/search' onClick={() => dialogRef.current?.close()} className="underline whitespace-nowrap text-neutral-600 font-semibold">
+              <Link href={pathname} className="underline whitespace-nowrap text-neutral-600 font-semibold">
                 Cài lại
               </Link>
             </div>

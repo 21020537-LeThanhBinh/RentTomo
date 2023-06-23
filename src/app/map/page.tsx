@@ -8,7 +8,7 @@ export const revalidate = 60 // revalidate this page every 60 seconds
 async function getListings(searchParams: ISearchParams) {
   let query = supabase
     .from('posts_members')
-    .select(`id, title, address, address_id, area, category, created_at, image_src, price, utility, members`)
+    .select(`id, title, address, address_id, area, category, created_at, image_src, price, utility, location, members`)
 
   if (searchParams.location_id && searchParams.level) {
     if (searchParams.level === '0') {
@@ -57,10 +57,7 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
 
   return (
     <>
-      <div className="absolute top-[30vh] left-[40vw] w-10 h-16 border-2">
-
-      </div>
-      <div className="absolute left-8 top-[30vh] w-1/4">
+      <div className="absolute left-[3.4rem] top-[19vh] w-1/4">
         <FilterBar searchParams={searchParams}>
           <div className="absolute top-6 left-0 text-xl font-semibold text-center w-full">
             <span>Bộ lọc</span>
@@ -123,7 +120,12 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
         </FilterBar>
       </div>
 
-      <MapClient />
+      <div className="pt-2">
+        <MapClient
+          listings={listings}
+          searchParams={searchParams}
+        />
+      </div>
     </>
   )
 }
