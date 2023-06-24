@@ -1,21 +1,28 @@
 'use client';
 
 import useFollow from "@/hooks/useFollow";
-import { BsBell, BsBellFill } from "react-icons/bs";
+import { useEffect } from "react";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
 interface HeartButtonProps {
   listingId: string
   userId?: string | null
+  setHasFollowed?: (hasFollowed: boolean) => void
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({
   listingId,
-  userId
+  userId,
+  setHasFollowed
 }) => {
   const { hasFollowed, toggleFavorite } = useFollow({
     listingId,
     userId
   });
+
+  useEffect(() => {
+    setHasFollowed?.(hasFollowed);
+  }, [hasFollowed]);
 
   return (
     <div
@@ -27,7 +34,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         cursor-pointer
       "
     >
-      <BsBell
+      <BsBookmark
         size={28}
         className="
           fill-white
@@ -36,10 +43,10 @@ const HeartButton: React.FC<HeartButtonProps> = ({
           -right-[2px]
         "
       />
-      <BsBellFill
+      <BsBookmarkFill
         size={24}
         className={
-          hasFollowed ? 'fill-yellow-400' : 'fill-neutral-500/70'
+          hasFollowed ? 'fill-sky-500' : 'fill-neutral-500/70'
         }
       />
     </div>

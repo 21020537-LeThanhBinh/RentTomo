@@ -2,7 +2,9 @@
 
 import RangeMarker from "@/components/map/RangeMarker";
 import SetViewOnClick from "@/components/map/SetViewOnClick";
+import { supabase } from "@/supabase/supabase-app";
 import { parseAddressIdSingle } from "@/utils/parseAddress";
+import { createQueryString } from "@/utils/queryString";
 import L from 'leaflet';
 import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
@@ -11,14 +13,14 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
+import { useRouter } from "next/navigation";
 import 'node_modules/leaflet-geosearch/dist/geosearch.css';
 import { useEffect, useRef, useState } from 'react';
-import { BiFilterAlt } from "react-icons/bi";
-import { CircleMarker, MapContainer, Popup, TileLayer, Tooltip, ZoomControl } from 'react-leaflet';
+import { BiFilterAlt, BiNavigation } from "react-icons/bi";
+import { LayerGroup, LayersControl, MapContainer, Marker, TileLayer, Tooltip, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json' };
-import { useRouter } from "next/navigation";
-import { createQueryString } from "@/utils/queryString";
+import ListingMarker from "./components/ListingMarker";
 
 const provider = new OpenStreetMapProvider();
 
@@ -30,54 +32,67 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow.src,
 });
 
+const iconPerson = new L.Icon({
+  iconUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Person_icon_BLACK-01.svg",
+  iconRetinaUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Person_icon_BLACK-01.svg",
+  iconSize: [30, 30],
+});
+
 interface MapProps {
   listings?: any[]
   searchParams: any
 }
 
-const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
 const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   const mapRef = useRef<any>()
-  const [center, setCenter] = useState<any>([21.0283207, 105.8540217])
-  const [zoom, setZoom] = useState<number>(5)
   const router = useRouter()
+  const [session, setSession] = useState<any>(null);
+  const [sessionEvent, setSessionEvent] = useState<any>(null);
+  const [following, setFollowing] = useState<any[]>([])
+  const [yourPosition, setYourPosition] = useState<any>(null)
 
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session)
+      setSessionEvent(event)
+    })
+  }, []);
+
+  useEffect(() => {
+    if (!session) return setFollowing([])
+    console.log("session changed, fetching follows")
+
+    supabase
+      .from('follows')
+      .select("*")
+      .eq('follower_id', session.user.id)
+      .then(({ data, error }) => {
+        setFollowing(data?.map((value) => value.post_id) || [])
+        console.log(data?.map((value) => value.post_id))
+      })
+  }, [sessionEvent])
+
+  // Search by searchParams then center the map
   useEffect(() => {
     const addressLabel = parseAddressIdSingle(searchParams.location_id)
     if (!addressLabel) return
     provider
-      .search({ query: addressLabel.replace(/Phường|Quận|Tỉnh|Thành phố/g, '') })
+      .search({ query: addressLabel.replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
       .then((results) => {
+        console.log(results)
         if (results.length > 0) {
-          setCenter([results[0].y, results[0].x])
-          setZoom(searchParams.level === '2' ? 16 : searchParams.level === '1' ? 14 : searchParams.level === '0' ? 10 : 6)
+          const center = [results[0].y, results[0].x]
+          const zoom = (searchParams.level === '2' ? 16 : searchParams.level === '1' ? 14 : searchParams.level === '0' ? 10 : 6)
+
+          mapRef.current?.setView(center as L.LatLngExpression, zoom, { animate: true })
         }
       })
   }, [searchParams.location_id, searchParams.level])
 
-  useEffect(() => {
-    if (!center || !zoom) return
-
-    mapRef.current?.setView(center as L.LatLngExpression, zoom, {
-      animate: true,
-    })
-  }, [zoom, center])
-
-  useEffect(() => {
-    mapRef.current?._onZoomTransitionEnd(() => {
-      console.log(mapRef.current)
-    })
-
-    //console.log(1000 / (40075016.686 * Math.abs(Math.cos(mapRef.current?.getCenter().lat * Math.PI / 180)) / Math.pow(2, mapRef.current?.getZoom() + 8)))
-  }, [mapRef.current])
-
   return (
     <MapContainer
-      center={center as L.LatLngExpression || [21.0283207, 105.8540217]}
-      zoom={zoom}
-      scrollWheelZoom={false}
+      center={[21.0283207, 105.8540217]}
+      zoom={10}
       zoomControl={false}
       ref={mapRef}
       //@ts-ignore
@@ -90,61 +105,98 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
           <noscript>Hãy cho phép JavaScript để hiển thị bản đồ.</noscript>
         </p>
       }
-      maxZoom={18}
+      minZoom={6}
       className='h-[88vh]'
     >
       <ZoomControl position='topright' />
+      <Control position='topright'>
+        <button className='leaflet-bar'>
+          <a
+            href=""
+            title="Định vị"
+            onClick={(e) => {
+              e.preventDefault()
+              mapRef.current?.locate().on("locationfound", function (e: any) {
+                mapRef.current.flyTo(e.latlng, 16);
+                setYourPosition(e.latlng)
+              });
+            }}
+          >
+            <BiNavigation size={20} className='absolute top-[6px] left-[6px]' />
+          </a>
+        </button>
+      </Control>
 
       <Control position='topleft'>
         <button className='leaflet-bar'>
-          <a href="" onClick={(e) => {
-            e.preventDefault()
-            router.push('/map?' + createQueryString(searchParams, 'popup', 'filter'))
-          }} className=''>
+          <a
+            href=""
+            title="Filter Popup"
+            onClick={(e) => {
+              e.preventDefault()
+              router.push('/map?' + createQueryString(searchParams, 'popup', 'filter'))
+            }}
+          >
             <BiFilterAlt size={20} className='absolute top-[6px] left-[6px]' />
           </a>
         </button>
       </Control>
 
-      <TileLayer
-        url={url}
-        attribution={attribution}
-      />
+      <LayersControl position="bottomright">
+        <LayersControl.BaseLayer checked name="OpenStreetMap">
+          <TileLayer
+            url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+            attribution={"© OpenStreetMap"}
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer name="ESRI satellite">
+          <TileLayer
+            url={"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"}
+            attribution={"Tiles &copy; Esri &mdash"}
+          />
+        </LayersControl.BaseLayer>
 
+        <LayersControl.Overlay checked name="Các trường đại học">
+          <LayerGroup>
+            {schools.map((school) => {
+              return (
+                <RangeMarker
+                  coordinates={{ lat: school.lat, lng: school.lng }}
+                  range={school.range}
+                  label={school.Name}
+                  key={school.Id}
+                />
+              )
+            })}
+          </LayerGroup>
+        </LayersControl.Overlay>
+      </LayersControl>
+
+      {/* Delete later */}
       <SetViewOnClick
         selectPoint={(point) => {
           console.log(JSON.stringify(point))
         }}
       />
 
-      {schools.map((school) => {
-        return (
-          <RangeMarker
-            coordinates={{ lat: school.lat, lng: school.lng }}
-            range={school.range}
-            label={school.Name}
-          />
-        )
-      })}
+      {yourPosition && (
+        <Marker position={yourPosition} icon={iconPerson}>
+          <Tooltip direction="top">Bạn đang ở đây!</Tooltip>
+        </Marker>
+      )}
 
       {listings?.map((listing) => {
         const coordinates = listing.location?.match(/POINT\(([^)]+)\)/)?.[1].split(" ");
         if (!coordinates) return null
 
         return (
-          <CircleMarker
-            center={[parseFloat(coordinates[1]), parseFloat(coordinates[0])]}
-            pathOptions={{ color: 'transparent' }}
-            radius={20}
+          <ListingMarker
+            coordinates={[parseFloat(coordinates[1]), parseFloat(coordinates[0])]}
+            listing={listing}
+            initHasFollowed={following.includes(listing.id)}
+            userId={session?.user?.id || null}
             key={listing.id}
-          >
-            <Tooltip direction="center" opacity={1} permanent>
-              {(parseInt(listing.price) / 1000000).toFixed(1) + 'tr'}
-            </Tooltip>
-            <Popup>
-              {listing.title}
-            </Popup>
-          </CircleMarker>
+          />
         )
       })}
     </MapContainer>

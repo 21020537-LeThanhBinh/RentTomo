@@ -21,7 +21,9 @@ export default function RangeMarker({ coordinates, range, label }: { coordinates
   });
 
   useEffect(() => {
-    setRadius(range / (40075016.686 * Math.abs(Math.cos(center.lat * Math.PI / 180)) / Math.pow(2, zoom + 8)))
+    const newRadius = range / (40075016.686 * Math.abs(Math.cos(center.lat * Math.PI / 180)) / Math.pow(2, zoom + 8))
+
+    newRadius && setRadius(newRadius)
   }, [zoom])
 
   return !zooming && (

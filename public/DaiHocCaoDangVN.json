@@ -7,13 +7,6 @@
     "range": 3000
   },
   {
-    "Id": "QHI",
-    "Name": "Giảng đường 3 - ĐẠI HỌC CÔNG NGHỆ - ĐHQGHN",
-    "lat": 21.02870088612528, 
-    "lng": 105.78219460240413,
-    "range": 1000
-  },
-  {
     "Id": "BKA",
     "Name": "TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI",
     "lat": 21.007213855800156,
@@ -63,7 +56,7 @@
     "range": 2000
   },
   {
-    "Id": "SPH",
+    "Id": "SPH2",
     "Name": "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI 2",
     "lat": 21.28128649907875, 
     "lng": 105.72574150135134,
@@ -91,7 +84,7 @@
     "range": 2000
   },
   {
-    "Id": "DCN",
+    "Id": "DCN2",
     "Name": "TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI - CS2",
     "lat": 21.07592581745951,
     "lng": 105.7296051731449,

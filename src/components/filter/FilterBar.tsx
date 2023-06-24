@@ -87,6 +87,7 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
           p-6 border-2 border-black border-opacity-20 rounded-xl relative z-[10000] bg-white 
           ${!isLoading && 'cursor-pointer'}
           hidden sm:block 
+          w-[320px] max-h-[518px]
         `}
       >
         {children}

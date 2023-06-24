@@ -1,7 +1,10 @@
 import { supabase } from "@/supabase/supabase-app";
 import { ISearchParams } from "@/types";
-import MapClient from "./MapClient";
 import FilterBar from "@/components/filter/FilterBar";
+import dynamic from "next/dynamic";
+const MapClient = dynamic(() => import('./MapClient'), { 
+  ssr: false 
+});
 
 export const revalidate = 60 // revalidate this page every 60 seconds
 
@@ -57,7 +60,7 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
 
   return (
     <>
-      <div className="absolute left-[3.4rem] top-[19vh] w-1/4">
+      <div className="absolute left-[3.4rem] top-[19vh]">
         <FilterBar searchParams={searchParams}>
           <div className="absolute top-6 left-0 text-xl font-semibold text-center w-full">
             <span>Bộ lọc</span>
