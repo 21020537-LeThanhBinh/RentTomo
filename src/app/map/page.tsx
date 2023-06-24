@@ -60,7 +60,7 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
 
   return (
     <>
-      <div className="absolute left-[3.4rem] top-[19vh]">
+      <div className="absolute left-[3.4rem] top-[18vh]">
         <FilterBar searchParams={searchParams}>
           <div className="absolute top-6 left-0 text-xl font-semibold text-center w-full">
             <span>Bộ lọc</span>
@@ -123,7 +123,7 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
         </FilterBar>
       </div>
 
-      <div className="pt-2">
+      <div className="">
         <MapClient
           listings={listings}
           searchParams={searchParams}

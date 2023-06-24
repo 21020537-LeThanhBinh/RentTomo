@@ -45,14 +45,14 @@ const ListingPage = async ({ params, searchParams }: Props) => {
 
   if (!listing) {
     return (
-      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
+      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-6">
         <EmptyState />
       </div>
     );
   }
 
   return (
-    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-8">
+    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 my-6">
       <div className="flex flex-col gap-6">
         <ListingHead
           imageSrc={listing.image_src}

@@ -1,13 +1,12 @@
-import NavBar from '@/components/nav/NavBar'
-import './globals.scss'
-import { Inter } from 'next/font/google'
 import ToasterProvider from '@/providers/ToasterProvider'
+import { Inter } from 'next/font/google'
+import './globals.scss'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'RentTomo - Lựa chọn môi trường tốt nhất cho bạn',
-  description: 'Ứng dụng tìm phòng trọ và bạn ở ghép',
+  title: 'RentTomo - Ứng dụng tìm nơi ở, bạn cùng phòng lý tưởng',
+  description: 'Ứng dụng tìm nơi ở, bạn cùng phòng lý tưởng',
 }
 
 export default function RootLayout({
@@ -19,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToasterProvider />
-        <NavBar />
+        
         {children}
       </body>
     </html>

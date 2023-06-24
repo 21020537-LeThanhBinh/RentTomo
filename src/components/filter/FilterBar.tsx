@@ -84,9 +84,9 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
       <div
         onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'filter'))}
         className={`
-          p-6 border-2 border-black border-opacity-20 rounded-xl relative z-[10000] bg-white 
+          p-6 border-[1px] border-black border-opacity-20 rounded-xl relative z-[10000] bg-white 
           ${!isLoading && 'cursor-pointer'}
-          hidden sm:block 
+          hidden md:block sticky top-[104px]
           w-[320px] max-h-[518px]
         `}
       >

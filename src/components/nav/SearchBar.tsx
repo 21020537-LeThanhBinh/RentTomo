@@ -41,7 +41,7 @@ export default function SearchBar() {
   }, [locationId]);
 
   return (
-    <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[367px] relative py-2 rounded-full">
+    <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[500px] relative py-1 rounded-full bg-white">
       <div className="flex items-center justify-between">
         <Select
           options={[

@@ -77,7 +77,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
     const addressLabel = parseAddressIdSingle(searchParams.location_id)
     if (!addressLabel) return
     provider
-      .search({ query: addressLabel.replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
+      .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
       .then((results) => {
         console.log(results)
         if (results.length > 0) {
@@ -106,7 +106,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
         </p>
       }
       minZoom={6}
-      className='h-[88vh]'
+      className='h-[89vh]'
     >
       <ZoomControl position='topright' />
       <Control position='topright'>

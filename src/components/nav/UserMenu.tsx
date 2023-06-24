@@ -11,7 +11,7 @@ import SetUserInfoPopup from '../profile/EditProfilePopup';
 import AuthPopup from './AuthPopup';
 import MenuItem from '../MenuItem';
 
-export default function UserMenu() {
+export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   const menuRef = useRef<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -126,7 +126,7 @@ export default function UserMenu() {
   }, [pathname]);
 
   return (
-    <div className='flex justify-end flex-shrink-0 relative'>
+    <div className={`flex justify-end flex-shrink-0 relative ${isWhite && 'text-white'}`} >
       <div ref={menuRef} className="flex flex-row items-center gap-3">
         <button onClick={() => setMenuOpen(!menuOpen)} className="p-4 md:py-2 md:pl-4 md:pr-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
           <AiOutlineMenu className='block lg:hidden' />
@@ -138,7 +138,7 @@ export default function UserMenu() {
           </div>
         </button>
 
-        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0">
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0 z-10">
           <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
             {session ? (
               <>

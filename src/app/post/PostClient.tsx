@@ -59,7 +59,7 @@ export default function PostClient() {
     const listingValues = {
       ...values,
       author_id: uid,
-      address: values.address.number + ', ' + values.address.street,
+      address: values.address.number + (values.address.number ? ', ' : '') + values.address.street,
       address_id: {
         city_id: values.address.city_id,
         district_id: values.address.district_id,
@@ -158,7 +158,7 @@ export default function PostClient() {
     if ((addressLabel.match(/,/g) || [])?.length >= 4) return
 
     provider
-      .search({ query: addressLabel.replace(/Phường|Quận|Tỉnh|Thành phố/g, '') })
+      .search({ query: (addressLabel + ", Việt Nam").replace(/Phường|Quận|Tỉnh|Thành phố/g, '') })
       .then((results: any) => {
         console.log(results)
         if (results.length > 0) {
@@ -173,7 +173,7 @@ export default function PostClient() {
   }, [selectedPoint])
 
   return (
-    <form className="my-8 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
+    <form className="my-6 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
       <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
         <div className='font-semibold text-lg text-neutral-600'>
           Địa chỉ
