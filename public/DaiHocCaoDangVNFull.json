@@ -1,161 +1,161 @@
 [
   {
     "Id": "A",
-    "Name": "TRƯỜNG ĐẠI HỌC QUỐC GIA HÀ NỘI",
+    "Name": "Trường Đại học Quốc Gia Hà Nội",
     "lat": 21.03687756626357,
     "lng": 105.78208029270174,
     "range": 3000
   },
   {
     "Id": "QHI",
-    "Name": "Giảng đường 3 - ĐẠI HỌC CÔNG NGHỆ - ĐHQGHN",
+    "Name": "Giảng đường 3 - Đại học Công Nghệ - ĐHQGHN",
     "lat": 21.02870088612528, 
     "lng": 105.78219460240413,
     "range": 1000
   },
   {
     "Id": "BKA",
-    "Name": "TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI",
+    "Name": "Trường Đại học Bách Khoa Hà Nội",
     "lat": 21.007213855800156,
     "lng": 105.84269821643831,
     "range": 2000
   },
   {
     "Id": "YHB",
-    "Name": "TRƯỜNG ĐẠI HỌC Y HÀ NỘI",
+    "Name": "Trường Đại học Y Hà Nội",
     "lat": 21.003326885615127,
     "lng": 105.83062123378467,
     "range": 1000
   },
   {
     "Id": "ANH",
-    "Name": "HỌC VIỆN AN NINH NHÂN DÂN",
+    "Name": "Học viện An Ninh Nhân Dân",
     "lat": 20.981465755846344,
     "lng": 105.79188541781522,
     "range": 1000
   },
   {
     "Id": "NTH",
-    "Name": "TRƯỜNG ĐẠI HỌC NGOẠI THƯƠNG",
+    "Name": "Trường Đại học Ngoại Thương",
     "lat": 21.023076341963545,
     "lng": 105.80545420364655,
     "range": 2000
   },
   {
     "Id": "DKH",
-    "Name": "TRƯỜNG ĐẠI HỌC DƯỢC HÀ NỘI",
+    "Name": "Trường Đại học Dược Hà Nội",
     "lat": 21.021790258868588,
     "lng": 105.85805093762369,
     "range": 1000
   },
   {
     "Id": "KHA",
-    "Name": "TRƯỜNG ĐẠI HỌC KINH TẾ QUỐC DÂN",
+    "Name": "Trường Đại học Kinh Tế Quốc Dân",
     "lat": 21.00025442096578,
     "lng": 105.84250993127549,
     "range": 2000
   },
   {
     "Id": "NHH",
-    "Name": "HỌC VIỆN NGÂN HÀNG",
+    "Name": "Học viện Ngân Hàng",
     "lat": 21.009260705012764,
     "lng": 105.82881151028236,
     "range": 2000
   },
   {
     "Id": "SPH",
-    "Name": "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI",
+    "Name": "Trường Đại học Sư Phạm Hà Nội",
     "lat": 21.0367974134,
     "lng": 105.78330338001253,
     "range": 2000
   },
   {
-    "Id": "SPH",
-    "Name": "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI 2",
+    "Id": "SPH2",
+    "Name": "Trường Đại học Sư Phạm Hà Nội 2",
     "lat": 21.28128649907875, 
     "lng": 105.72574150135134,
     "range": 2000
   },
   {
     "Id": "FPT",
-    "Name": "TRƯỜNG ĐẠI HỌC FPT",
+    "Name": "Trường Đại học FPT",
     "lat": 21.013408241677038,
     "lng": 105.52707612733809,
     "range": 3000
   },
   {
     "Id": "XDA",
-    "Name": "TRƯỜNG ĐẠI HỌC XÂY DỰNG HÀ NỘI",
+    "Name": "Trường Đại học Xây Dựng Hà Nội",
     "lat": 21.003523797305395,
     "lng": 105.84335288996844,
     "range": 2000
   },
   {
     "Id": "DCN",
-    "Name": "TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI",
+    "Name": "Trường Đại học Công Nghiệp Hà Nội",
     "lat": 21.053941129462338,
     "lng": 105.73503170190845,
     "range": 2000
   },
   {
-    "Id": "DCN",
-    "Name": "TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI - CS2",
+    "Id": "DCN2",
+    "Name": "Trường Đại học Công Nghiệp Hà Nội - CS2",
     "lat": 21.07592581745951,
     "lng": 105.7296051731449,
     "range": 2000
   },
   {
     "Id": "GHA",
-    "Name": "TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI",
+    "Name": "Trường Đại học Giao Thông Vận Tải",
     "lat": 21.028404837072134, 
     "lng": 105.80344195542787,
     "range": 2000
   },
   {
     "Id": "HVN",
-    "Name": "HỌC VIỆN NÔNG NGHIỆP VIỆT NAM",
+    "Name": "Học viện Nông Nghiệp Việt Nam",
     "lat": 21.00521849563618, 
     "lng": 105.93180724655505,
     "range": 2000
   },
   {
     "Id": "NHF",
-    "Name": "TRƯỜNG ĐẠI HỌC HÀ NỘI",
+    "Name": "Trường Đại học Hà Nội",
     "lat": 20.989107782041444, 
     "lng": 105.79471038093766, 
     "range": 2000
   },
   {
     "Id": "BVH",
-    "Name": "HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG",
+    "Name": "Học viện Công Nghệ Bưu Chính Viễn Thông",
     "lat": 20.981599849748484, 
     "lng": 105.7875497109451, 
     "range": 2000
   },
   {
     "Id": "QHT",
-    "Name": "TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN - ĐHQGHN",
+    "Name": "Trường Đại học Khoa Học Tự Nhiên - ĐHQGHN",
     "lat": 20.996122475862382, 
     "lng": 105.80796647737296, 
     "range": 1000
   },
   {
     "Id": "MHN",
-    "Name": "TRƯỜNG ĐẠI HỌC MỞ HÀ NỘI",
+    "Name": "Trường Đại học Mở Hà Nội",
     "lat": 21.00137156555723, 
     "lng": 105.84788420395935, 
     "range": 2000
   },
   {
     "Id": "HBT",
-    "Name": "HỌC VIỆN BÁO CHÍ VÀ TUYÊN TRUYỀN",
+    "Name": "Học viện Báo Chí Và Tuyên Truyền",
     "lat": 21.03727336769519, 
     "lng": 105.78890317331722, 
     "range": 1000
   },
   {
     "Id": "TMA",
-    "Name": "TRƯỜNG ĐẠI HỌC THƯƠNG MẠI",
+    "Name": "Trường Đại học Thương Mại",
     "lat": 21.03675805402939, 
     "lng": 105.77502878349131, 
     "range": 2000

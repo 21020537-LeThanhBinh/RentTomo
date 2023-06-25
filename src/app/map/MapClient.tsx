@@ -1,8 +1,8 @@
 'use client'
 
 import RangeMarker from "@/components/map/RangeMarker";
-import SetViewOnClick from "@/components/map/SetViewOnClick";
 import { supabase } from "@/supabase/supabase-app";
+import { School } from "@/types";
 import { parseAddressIdSingle } from "@/utils/parseAddress";
 import { createQueryString } from "@/utils/queryString";
 import L from 'leaflet';
@@ -20,7 +20,9 @@ import { BiFilterAlt, BiNavigation } from "react-icons/bi";
 import { LayerGroup, LayersControl, MapContainer, Marker, TileLayer, Tooltip, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json' };
+import schoolsFull from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import ListingMarker from "./components/ListingMarker";
+import SetViewOnClick from "@/components/map/SetViewOnClick";
 
 const provider = new OpenStreetMapProvider();
 
@@ -46,10 +48,13 @@ interface MapProps {
 const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   const mapRef = useRef<any>()
   const router = useRouter()
+
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
+
   const [following, setFollowing] = useState<any[]>([])
   const [yourPosition, setYourPosition] = useState<any>(null)
+  const [selectedSchool, setSelectedSchool] = useState<School | null>(null)
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -76,6 +81,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   useEffect(() => {
     const addressLabel = parseAddressIdSingle(searchParams.location_id)
     if (!addressLabel) return
+
     provider
       .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
       .then((results) => {
@@ -88,6 +94,15 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
         }
       })
   }, [searchParams.location_id, searchParams.level])
+
+  useEffect(() => {
+    if (!searchParams.lng || !searchParams.lat) return setSelectedSchool(null)
+
+    const selectingSchool = schoolsFull?.find((school) => school.lng == searchParams.lng && school.lat == searchParams.lat) || null
+    setSelectedSchool(selectingSchool)
+
+    mapRef.current?.setView([searchParams.lat, searchParams.lng], 14, { animate: true })
+  }, [searchParams.lng, searchParams.lat])
 
   return (
     <MapContainer
@@ -156,7 +171,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
           />
         </LayersControl.BaseLayer>
 
-        <LayersControl.Overlay checked name="Các trường đại học">
+        <LayersControl.Overlay checked={!selectedSchool} name="Mật độ sinh viên ước tính các trường đại học">
           <LayerGroup>
             {schools.map((school) => {
               return (
@@ -165,19 +180,31 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
                   range={school.range}
                   label={school.Name}
                   key={school.Id}
+                  color={(school.Id === selectedSchool?.Id) ? "transparent" : "red"}
                 />
               )
             })}
           </LayerGroup>
         </LayersControl.Overlay>
+
+        <LayersControl.Overlay checked={!!selectedSchool} name="Khu vực gần nơi đã chọn">
+          <LayerGroup>
+            <RangeMarker
+              coordinates={(searchParams.lat && searchParams.lng) ? { lat: searchParams.lat, lng: searchParams.lng } : { lat: 21.01340, lng: 105.52707 }}
+              range={searchParams.range || Math.max(selectedSchool?.range || 0, 2000)}
+              label={selectedSchool?.Name || "Khu vực đã chọn"}
+              color="green"
+            />
+          </LayerGroup>
+        </LayersControl.Overlay>
       </LayersControl>
 
-      {/* Delete later */}
-      <SetViewOnClick
+      {/* Console log clicked location */}
+      {/* <SetViewOnClick
         selectPoint={(point) => {
           console.log(JSON.stringify(point))
         }}
-      />
+      /> */}
 
       {yourPosition && (
         <Marker position={yourPosition} icon={iconPerson}>
@@ -186,7 +213,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
       )}
 
       {listings?.map((listing) => {
-        const coordinates = listing.location?.match(/POINT\(([^)]+)\)/)?.[1].split(" ");
+        const coordinates = listing.location_text?.match(/POINT\(([^)]+)\)/)?.[1].split(" ");
         if (!coordinates) return null
 
         return (

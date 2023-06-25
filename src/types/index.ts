@@ -9,6 +9,10 @@ export type User = {
 export interface ISearchParams {
   location_id?: string
   level?: string
+  lat?: string
+  lng?: string
+  range?: string
+  
   category?: string
   minPrice?: string
   maxPrice?: string
@@ -17,4 +21,12 @@ export interface ISearchParams {
   utility?: string
   isMale?: string
   popup?: string
+}
+
+export interface School {
+  Id: string
+  Name: string
+  lat: number
+  lng: number
+  range: number
 }
