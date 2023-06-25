@@ -16,9 +16,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
-const provider = new OpenStreetMapProvider();
+const provider = import('leaflet-geosearch').then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider());
 export default function PostClient() {
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
@@ -150,22 +149,24 @@ export default function PostClient() {
 
   const Map = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
     ssr: false
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [formik.values.address.city_id])
-  const [mapCenter, setMapCenter] = useState<any>([21.0283207, 105.8540217])
-  const [selectedPoint, setSelectedPoint] = useState<any>({lng: 105.8540217, lat: 21.0283207})
+  const [mapCenter, setMapCenter] = useState<any>([15.9266657, 107.9650855])
+  const [selectedPoint, setSelectedPoint] = useState<any>({ lng: 107.9650855, lat: 15.9266657 })
 
   useEffect(() => {
     if ((addressLabel.match(/,/g) || [])?.length >= 4) return
 
     provider
-      .search({ query: (addressLabel + ", Việt Nam").replace(/Phường|Quận|Tỉnh|Thành phố/g, '') })
-      .then((results: any) => {
-        console.log(results)
-        if (results.length > 0) {
-          setMapCenter([results[0].y, results[0].x])
-          setSelectedPoint({lng: results[0].x, lat: results[0].y})
-        }
-      })
+      .then((provider) => provider
+        .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
+        .then((results: any) => {
+          console.log(results)
+          if (results.length > 0) {
+            setMapCenter([results[0].y, results[0].x])
+            setSelectedPoint({ lng: results[0].x, lat: results[0].y })
+          }
+        }))
   }, [addressLabel])
 
   useEffect(() => {

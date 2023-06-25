@@ -37,30 +37,30 @@ const ListingClient: React.FC<ListingClientProps> = ({
     })
   }, []);
 
-  const fetchRoomInfo = async () => {
-    setIsLoading(true);
-
-    const { data, error } = await supabase
-      .from('rooms')
-      .select('type, profiles (id, full_name, avatar_url, description, contact)')
-      .eq('post_id', listing.id)
-      .order('created_at', { ascending: true }) as any
-
-    if (error) {
-      toast.error('Có lỗi xảy ra.');
-      console.log(error);
-    } else {
-      setRequests(data.filter((item: any) => item.type === "request").map((item: any) => item.profiles));
-      setHost(data.find((item: any) => item.type === "host")?.profiles);
-      setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
-    }
-
-    setIsLoading(false);
-  }
-
   // On router refresh
   useEffect(() => {
     if (!listing?.id) return;
+
+    const fetchRoomInfo = async () => {
+      setIsLoading(true);
+  
+      const { data, error } = await supabase
+        .from('rooms')
+        .select('type, profiles (id, full_name, avatar_url, description, contact)')
+        .eq('post_id', listing.id)
+        .order('created_at', { ascending: true }) as any
+  
+      if (error) {
+        toast.error('Có lỗi xảy ra.');
+        console.log(error);
+      } else {
+        setRequests(data.filter((item: any) => item.type === "request").map((item: any) => item.profiles));
+        setHost(data.find((item: any) => item.type === "host")?.profiles);
+        setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
+      }
+  
+      setIsLoading(false);
+    }
 
     fetchRoomInfo();
     console.log('fetch room info')

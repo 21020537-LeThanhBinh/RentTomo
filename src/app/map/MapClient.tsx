@@ -75,6 +75,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
         setFollowing(data?.map((value) => value.post_id) || [])
         console.log(data?.map((value) => value.post_id))
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionEvent])
 
   // Search by searchParams then center the map

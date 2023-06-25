@@ -37,6 +37,19 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
   }, []);
 
   useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      handleCloseDialog(e, dialogRef.current!, () => {
+        dialogRef.current?.open && router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'))
+      })
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [router, pathname, searchParams])
+
+  useEffect(() => {
     if (!searchParams.popup) {
       dialogRef.current?.close();
     } else if (searchParams.popup === "filter") {
@@ -51,22 +64,9 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
     setUtility(searchParams.utility ? searchParams.utility?.split(',') : [])
     setIsMale((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
     setRadius(searchParams.range ? parseFloat(searchParams.range) : 0)
-
-    const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, dialogRef.current!, () => {
-        dialogRef.current?.open && router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'))
-      })
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
   }, [searchParams])
 
   const onApply = async () => {
-    setIsLoading(true);
-
     const params = new URLSearchParams(searchParams as any)
     params.set('category', (category.length < 4) ? category.toString() : '')
     params.set('minPrice', minPrice.toString())
@@ -78,8 +78,6 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
     radius && params.set('range', radius.toString())
     params.delete('popup')
     router.push(pathname + '?' + params.toString())
-
-    setIsLoading(false)
   }
 
   return (

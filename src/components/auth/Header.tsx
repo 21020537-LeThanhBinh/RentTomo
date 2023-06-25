@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 
@@ -19,9 +20,11 @@ export default function Header({
       <button onClick={() => router.back()} className="absolute top-4 text-2xl">🡠</button>
 
       <div className="flex justify-center">
-        <img
-          alt=""
+        <Image
+          alt="Favicon"
           src="/favicon.ico"
+          width={56}
+          height={56}
           className="h-14 w-14"
         />
       </div>

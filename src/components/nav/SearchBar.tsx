@@ -50,8 +50,8 @@ export default function SearchBar() {
   useEffect(() => {
     if (
       (locationId === (searchParams?.get('location_id') || "")) &&
-      (lng?.toString() === (searchParams?.get('lng') || "")) &&
-      (lat?.toString() === (searchParams?.get('lat') || ""))
+      (lng?.toString() === (searchParams?.get('lng') || "0")) &&
+      (lat?.toString() === (searchParams?.get('lat') || "0"))
     )
       return
 
