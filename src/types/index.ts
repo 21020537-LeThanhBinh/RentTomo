@@ -4,6 +4,8 @@ export type User = {
   new_avatar_url: string;
   description?: string;
   contact?: string;
+  year_of_birth?: number;
+  is_male?: boolean;
 }
 
 export interface ISearchParams {

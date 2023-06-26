@@ -6,7 +6,7 @@ import handleCloseDialog from '@/utils/handleCloseDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
-import Avatar from '../Avatar';
+import Avatar from '../profile/Avatar';
 import SetUserInfoPopup from '../profile/EditProfilePopup';
 import AuthPopup from './AuthPopup';
 import MenuItem from '../MenuItem';
@@ -28,7 +28,6 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
 
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -48,20 +47,6 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (sessionEvent != 'SIGNED_IN') return;
-  //   supabase
-  //     .from('profiles')
-  //     .select('new_full_name, new_avatar_url')
-  //     .eq('id', session?.user?.id)
-  //     .single()
-  //     .then(({ data, error }) => {
-  //       if (error) throw error;
-  //       setProfile(data);
-  //       console.log(data)
-  //     })
-  // }, [sessionEvent]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -145,10 +130,10 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
       <div ref={menuRef} className="flex flex-row items-center gap-3">
         <button onClick={() => setMenuOpen(!menuOpen)} className="p-4 md:py-2 md:pl-4 md:pr-3 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-md transition">
           <AiOutlineMenu className='block lg:hidden' />
-          <div className='font-semibold hidden lg:block'>
+          <div className='font-semibold hidden lg:block whitespace-nowrap truncate'>
             {session?.user?.user_metadata?.new_full_name || 'Tài khoản'}
           </div>
-          <div className="hidden md:block">
+          <div className="hidden md:block flex-shrink-0">
             <Avatar src={session?.user?.user_metadata?.new_avatar_url || session?.user?.user_metadata?.avatar_url} />
           </div>
         </button>

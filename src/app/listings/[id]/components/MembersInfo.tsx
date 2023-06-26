@@ -1,6 +1,6 @@
 'use client'
 
-import Avatar from "@/components/Avatar";
+import Profile from "@/components/profile/Profile";
 import { User } from "@/types";
 import MembersMenu from "./MembersMenu";
 
@@ -36,9 +36,13 @@ export default function MembersInfo({
 
         <div className="flex items-center h-full">
           <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-            <Avatar src={host?.new_avatar_url} />
+            <Profile
+              new_avatar_url={host?.new_avatar_url}
+              new_full_name={host?.new_full_name}
+              id={host?.id}
+            />
             <div className="text-neutral-600">
-              <span>{host?.new_full_name} </span>
+              <span>{host?.new_full_name} {' '}</span>
               <span className="text-sm font-light">(Trưởng phòng)</span>
             </div>
           </div>
@@ -51,7 +55,11 @@ export default function MembersInfo({
         {members?.map((member) => (
           <div key={member.id} className="flex items-center h-full">
             <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-              <Avatar src={member?.new_avatar_url} />
+              <Profile
+                new_avatar_url={member?.new_avatar_url}
+                new_full_name={member?.new_full_name}
+                id={member?.id}
+              />
               <span className="text-neutral-600">{member?.new_full_name}</span>
             </div>
 

@@ -1,5 +1,5 @@
 import { AiFillCamera } from "react-icons/ai";
-import Avatar from "../Avatar";
+import Avatar from "./Avatar";
 import { useEffect, useRef, useState } from "react";
 
 export default function EditAvatar({ new_avatar_url, selectedFile, setSelectedFile }: { new_avatar_url?: string, selectedFile?: any, setSelectedFile?: any }) {

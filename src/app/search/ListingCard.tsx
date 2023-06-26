@@ -1,5 +1,6 @@
 'use client';
 
+import Profile from "@/components/profile/Profile";
 import { supabase } from "@/supabase/supabase-app";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
@@ -9,7 +10,6 @@ import { useEffect, useState } from "react";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import Avatar from "../../components/Avatar";
 import HeartButton from "../../components/HeartButton";
 
 interface ListingCardProps {
@@ -65,7 +65,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
           </div>
           <div className="font-light text-neutral-500 flex flex-1 items-end w-2/3 sm:w-1/2">
             <div className="flex items-center gap-1 w-full">
-              <ImLocation className="flex-shrink-0"/>
+              <ImLocation className="flex-shrink-0" />
               <span className="whitespace-nowrap truncate block">
                 {(data.address + ', ' + parseAddressId(data.address_id)).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
               </span>
@@ -80,7 +80,11 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
                   <div className="flex-1 flex">
                     {data.members.map((item: any) => (
                       <div key={item?.id} className="list-avatar">
-                        <Avatar src={item?.new_avatar_url} />
+                        <Profile
+                          new_avatar_url={item?.new_avatar_url}
+                          new_full_name={item?.new_full_name}
+                          id={item?.id}
+                        />
                       </div>
                     ))}
                   </div>

@@ -5,8 +5,7 @@ async function getListingById(id: string) {
     .from('posts')
     .select(`
       id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description,
-      author: profiles!posts_author_id_fkey (id, new_full_name, new_avatar_url, contact),
-      followers: profiles!follows (id, new_full_name, new_avatar_url)
+      author: profiles!posts_author_id_fkey (id, new_full_name, new_avatar_url, contact)
     `)
     .eq('id', id)
     .limit(1)

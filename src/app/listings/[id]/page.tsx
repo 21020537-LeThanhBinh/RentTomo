@@ -55,6 +55,7 @@ const ListingPage = async ({ params, searchParams }: Props) => {
               new_avatar_url={listing.author?.new_avatar_url}
               new_full_name={listing.author?.new_full_name}
               contact={listing.author?.contact}
+              id={listing.author?.id}
             />
 
             <ListingClient listing={listing} />

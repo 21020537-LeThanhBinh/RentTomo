@@ -1,13 +1,11 @@
 'use client';
 
-import Avatar from "@/components/Avatar";
 import HeartButton from "@/components/HeartButton";
-import { supabase } from "@/supabase/supabase-app";
+import Profile from "@/components/profile/Profile";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { BsFillPersonFill, BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
@@ -77,7 +75,11 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
                   <div className="flex-1 flex">
                     {listing.members.map((item: any) => (
                       <div key={item?.id} className="list-avatar">
-                        <Avatar src={item?.new_avatar_url} />
+                        <Profile
+                          new_avatar_url={item?.new_avatar_url}
+                          new_full_name={item?.new_full_name}
+                          id={item?.id}
+                        />
                       </div>
                     ))}
                   </div>

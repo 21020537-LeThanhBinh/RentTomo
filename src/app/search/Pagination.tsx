@@ -29,6 +29,7 @@ export default function Pagination({ itemsLength, itemsPerPage = 10 }: { itemsLe
         pageCount={pageCount}
         previousLabel="<"
         renderOnZeroPageCount={null}
+        initialPage={searchParams.get("page") ? parseInt(searchParams.get("page") as string) - 1 : 0}
         className="flex items-center gap-4"
         pageLinkClassName="text-sm font-semibold w-9 h-9 flex justify-center items-center rounded-full hover:bg-neutral-100 transition cursor-pointer"
         activeLinkClassName="bg-neutral-800 text-neutral-100 hover:bg-neutral-800 cursor-default"

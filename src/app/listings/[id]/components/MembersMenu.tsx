@@ -1,4 +1,3 @@
-import Avatar from "@/components/Avatar";
 import MenuItem from "@/components/MenuItem";
 import PopupInputContainer from "@/components/input/PopupInputContainer";
 import handleCloseDialog from "@/utils/handleCloseDialog";
@@ -8,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { BsThreeDots } from "react-icons/bs";
 import { ListingContext } from "../ListingContext";
 import MembersMenuItem from "./MembersMenuItem";
+import Profile from "@/components/profile/Profile";
 
 export default function MembersMenu() {
   const { userId, members, host, onRemoveMember } = useContext(ListingContext);
@@ -89,7 +89,11 @@ export default function MembersMenu() {
           <div className="flex flex-col gap-2">
             <div className="flex items-center h-full">
               <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-                <Avatar src={host?.new_avatar_url} />
+                <Profile
+                  new_avatar_url={host?.new_avatar_url}
+                  new_full_name={host?.new_full_name}
+                  id={host?.id}
+                />
                 <div className="text-neutral-600">
                   <span>{host?.new_full_name} </span>
                   <span className="text-sm font-light">(Trưởng phòng)</span>

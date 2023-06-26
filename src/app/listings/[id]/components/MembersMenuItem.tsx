@@ -1,7 +1,7 @@
-import Avatar from "@/components/Avatar"
+import Avatar from "@/components/profile/Avatar"
 import MenuItem from "@/components/MenuItem"
 import { usePathname, useRouter } from "next/navigation"
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { AiTwotoneSetting } from "react-icons/ai"
 import { ListingContext } from "../ListingContext"
 import { toast } from "react-hot-toast"
@@ -21,6 +21,19 @@ export default function MembersMenuItem({
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter()
   const pathname = usePathname()
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const onKickOut = async () => {
     const { data, error } = await onRemoveMember(id)
@@ -63,7 +76,7 @@ export default function MembersMenuItem({
           <AiTwotoneSetting size={20} />
         </button>
 
-        <dialog open={menuOpen} className="rounded-xl shadow-md w-44 bg-white text-sm mr-0 p-0 right-0">
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-44 bg-white text-sm mr-0 p-0 right-0 z-10">
           <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
             <MenuItem
               label="Nhường vị trí"

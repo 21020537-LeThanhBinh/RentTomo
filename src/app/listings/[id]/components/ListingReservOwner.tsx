@@ -1,7 +1,7 @@
 'use client';
 
-import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
+import Profile from "@/components/profile/Profile";
 import { User } from "@/types";
 
 interface ListingRequestsProps {
@@ -24,7 +24,11 @@ const ListingRequests: React.FC<ListingRequestsProps> = ({
           <>
             <div key={request.id} className="flex gap-2 flex-col items-start sm:flex-row sm:items-center md:flex-col md:items-start justify-between lg:flex-row lg:items-center">
               <span className="flex gap-2 items-center">
-                <Avatar src={request?.new_avatar_url} />
+                <Profile
+                  new_avatar_url={request?.new_avatar_url}
+                  new_full_name={request?.new_full_name}
+                  id={request?.id}
+                />
                 {request?.new_full_name}
               </span>
 
