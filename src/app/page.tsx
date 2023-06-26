@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <main className="min-h-screen relative overflow-x-hidden">
+      <main className="min-h-screen relative overflow-x-hidden z-20">
         <div className="h-[90vh] w-full -skew-y-6 absolute -top-24 -z-10 bg-gradient-to-tr from-sky-700 to-sky-400"></div>
 
         <div className="py-4">

@@ -77,7 +77,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
                   <div className="flex-1 flex">
                     {listing.members.map((item: any) => (
                       <div key={item?.id} className="list-avatar">
-                        <Avatar src={item?.avatar_url} />
+                        <Avatar src={item?.new_avatar_url} />
                       </div>
                     ))}
                   </div>

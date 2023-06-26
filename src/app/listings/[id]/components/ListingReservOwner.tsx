@@ -24,8 +24,8 @@ const ListingRequests: React.FC<ListingRequestsProps> = ({
           <>
             <div key={request.id} className="flex gap-2 flex-col items-start sm:flex-row sm:items-center md:flex-col md:items-start justify-between lg:flex-row lg:items-center">
               <span className="flex gap-2 items-center">
-                <Avatar src={request?.avatar_url} />
-                {request?.full_name}
+                <Avatar src={request?.new_avatar_url} />
+                {request?.new_full_name}
               </span>
 
               <div className="flex gap-2 w-2/3 sm:w-1/3 md:w-2/3 lg:w-1/3">

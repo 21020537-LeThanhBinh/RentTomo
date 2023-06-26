@@ -89,9 +89,9 @@ export default function MembersMenu() {
           <div className="flex flex-col gap-2">
             <div className="flex items-center h-full">
               <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-                <Avatar src={host?.avatar_url} />
+                <Avatar src={host?.new_avatar_url} />
                 <div className="text-neutral-600">
-                  <span>{host?.full_name} </span>
+                  <span>{host?.new_full_name} </span>
                   <span className="text-sm font-light">(Trưởng phòng)</span>
                 </div>
               </div>
@@ -101,8 +101,8 @@ export default function MembersMenu() {
               <MembersMenuItem
                 key={member.id}
                 id={member.id}
-                avatarUrl={member.avatar_url}
-                fullName={member.full_name}
+                avatarUrl={member.new_avatar_url}
+                fullName={member.new_full_name}
               />
             ))}
           </div>

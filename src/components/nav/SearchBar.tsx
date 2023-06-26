@@ -43,8 +43,8 @@ export default function SearchBar() {
       params.set('range', Math.max(schools.find(school => school.lat == lat && school.lng == lng)?.range || 0, 2000).toString())
     }
 
-    if (pathname === '/search') router.push('/search?' + params.toString())
-    router.push('/map?' + params.toString())
+    if (pathname === '/map') router.push('/map?' + params.toString())
+    router.push('/search?' + params.toString())
   }
 
   useEffect(() => {

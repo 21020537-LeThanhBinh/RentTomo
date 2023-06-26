@@ -1,7 +1,7 @@
 export type User = {
   id: string;
-  full_name: string;
-  avatar_url: string;
+  new_full_name: string;
+  new_avatar_url: string;
   description?: string;
   contact?: string;
 }
@@ -21,6 +21,7 @@ export interface ISearchParams {
   utility?: string
   isMale?: string
   popup?: string
+  page?: string
 }
 
 export interface School {

@@ -1,5 +1,3 @@
-import NavBar from "@/components/nav/NavBar"
-
 export default function ListingLayout({
   children,
 }: {
@@ -7,7 +5,6 @@ export default function ListingLayout({
 }) {
   return (
     <>
-      <NavBar />
       <main className="pt-20">
         {children}
       </main>

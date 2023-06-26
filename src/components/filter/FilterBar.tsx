@@ -37,6 +37,12 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
   }, []);
 
   useEffect(() => {
+    if (pathname === '/search' && searchParams.page === 'all') {
+      router.push(pathname + '?' + deleteQueryString(searchParams, 'page'))
+    } else if (pathname === '/map' && searchParams.page !== 'all') {
+      router.push(pathname + '?' + createQueryString(searchParams, 'page', 'all'))
+    }
+
     const handleClickOutside = (e: MouseEvent) => {
       handleCloseDialog(e, dialogRef.current!, () => {
         dialogRef.current?.open && router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'))
@@ -68,14 +74,26 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
 
   const onApply = async () => {
     const params = new URLSearchParams(searchParams as any)
-    params.set('category', (category.length < 4) ? category.toString() : '')
-    params.set('minPrice', minPrice.toString())
-    params.set('maxPrice', (maxPrice < 15) ? maxPrice.toString() : '')
-    params.set('minArea', minArea.toString())
-    params.set('maxArea', maxArea.toString())
-    params.set('utility', utility.toString())
-    params.set('isMale', isMale?.toString() || 'undefined')
-    radius && params.set('range', radius.toString())
+    if (category.length < 4)
+      params.set('category', category.toString())
+
+    if (minPrice)
+      params.set('minPrice', minPrice.toString())
+    if (maxPrice < 15)
+      params.set('maxPrice', (maxPrice < 15) ? maxPrice.toString() : '')
+
+    if (minArea)
+      params.set('minArea', minArea.toString())
+    if (maxArea < 150)
+      params.set('maxArea', maxArea.toString())
+
+    if (utility.length)
+      params.set('utility', utility.toString())
+    if (isMale !== undefined)
+      params.set('isMale', isMale?.toString())
+    if (radius)
+      params.set('range', radius.toString())
+      
     params.delete('popup')
     router.push(pathname + '?' + params.toString())
   }

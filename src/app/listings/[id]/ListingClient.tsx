@@ -46,7 +46,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   
       const { data, error } = await supabase
         .from('rooms')
-        .select('type, profiles (id, full_name, avatar_url, description, contact)')
+        .select('type, profiles (id, new_full_name, new_avatar_url, description, contact)')
         .eq('post_id', listing.id)
         .order('created_at', { ascending: true }) as any
   
@@ -159,7 +159,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       <ListingReservation
         price={listing.price}
         onSubmit={onReservation}
-        disabled={isLoading || (userId === listing?.author?.id) || host?.id === userId}
+        disabled={isLoading || host?.id === userId}
         requesting={requests.some((request) => userId === request.id)}
         fees={listing.fees}
       />

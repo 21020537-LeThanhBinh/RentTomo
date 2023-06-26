@@ -1,34 +1,14 @@
-import EmptyState from "@/components/EmptyState";
-import { supabase } from "@/supabase/supabase-app";
-import ListingClient from "./ListingClient";
+import { getListingById } from "@/actions/getListingById";
 import ListingInfo from "@/app/listings/[id]/components/ListingInfo";
-import OwnerInfo from "./components/OwnerInfo";
-import { Metadata, ResolvingMetadata } from 'next'
+import EmptyState from "@/components/EmptyState";
+import { Metadata, ResolvingMetadata } from 'next';
+import ListingClient from "./ListingClient";
 import ListingHead from "./ListingHead";
+import OwnerInfo from "./components/OwnerInfo";
 
 type Props = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
-}
-
-async function getListingById(id: string) {
-  let { data, error } = await supabase
-    .from('posts')
-    .select(`
-      id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description,
-      author: profiles!posts_author_id_fkey (id, full_name, avatar_url, contact),
-      followers: profiles!follows (id, full_name, avatar_url)
-    `)
-    .eq('id', id)
-    .limit(1)
-    .single()
-
-  if (!error && data) {
-    return data
-  } else {
-    console.log(error)
-    return null
-  }
 }
 
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
@@ -72,8 +52,8 @@ const ListingPage = async ({ params, searchParams }: Props) => {
 
           <div className="order-first mb-10 md:order-last md:col-span-3 flex flex-col gap-4">
             <OwnerInfo
-              avatar_url={listing.author?.avatar_url}
-              full_name={listing.author?.full_name}
+              new_avatar_url={listing.author?.new_avatar_url}
+              new_full_name={listing.author?.new_full_name}
               contact={listing.author?.contact}
             />
 

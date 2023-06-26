@@ -36,9 +36,9 @@ export default function MembersInfo({
 
         <div className="flex items-center h-full">
           <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-            <Avatar src={host?.avatar_url} />
+            <Avatar src={host?.new_avatar_url} />
             <div className="text-neutral-600">
-              <span>{host?.full_name} </span>
+              <span>{host?.new_full_name} </span>
               <span className="text-sm font-light">(Trưởng phòng)</span>
             </div>
           </div>
@@ -51,8 +51,8 @@ export default function MembersInfo({
         {members?.map((member) => (
           <div key={member.id} className="flex items-center h-full">
             <div className="flex-1 h-full flex gap-2 items-center mr-4 my-2 overflow-x-hidden">
-              <Avatar src={member?.avatar_url} />
-              <span className="text-neutral-600">{member?.full_name}</span>
+              <Avatar src={member?.new_avatar_url} />
+              <span className="text-neutral-600">{member?.new_full_name}</span>
             </div>
 
             <div className="flex-1 h-full pl-4 border-l-[1px]">

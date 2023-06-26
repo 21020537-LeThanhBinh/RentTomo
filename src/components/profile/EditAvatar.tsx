@@ -2,7 +2,7 @@ import { AiFillCamera } from "react-icons/ai";
 import Avatar from "../Avatar";
 import { useEffect, useRef, useState } from "react";
 
-export default function EditAvatar({ avatar_url, selectedFile, setSelectedFile }: { avatar_url?: string, selectedFile?: any, setSelectedFile?: any }) {
+export default function EditAvatar({ new_avatar_url, selectedFile, setSelectedFile }: { new_avatar_url?: string, selectedFile?: any, setSelectedFile?: any }) {
   const imgInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<any>()
 
@@ -32,7 +32,7 @@ export default function EditAvatar({ avatar_url, selectedFile, setSelectedFile }
   return (
     <>
       <button onClick={() => imgInputRef.current?.click()} className="relative">
-        <Avatar src={preview || avatar_url} size={90} />
+        <Avatar src={preview || new_avatar_url} size={90} />
         <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-white hover:bg-neutral-100 transition">
           <AiFillCamera size={20} className="fill-neutral-800" />
         </div>
