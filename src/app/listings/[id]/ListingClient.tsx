@@ -48,7 +48,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         .from('rooms')
         .select('type, profiles (id, new_full_name, new_avatar_url, description, contact)')
         .eq('post_id', listing.id)
-        .order('created_at', { ascending: true }) as any
+        .order('updated_at', { ascending: true }) as any
   
       if (error) {
         toast.error('Có lỗi xảy ra.');

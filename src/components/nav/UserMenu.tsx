@@ -1,15 +1,17 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase-app';
-import { createQueryString } from '@/utils/queryString';
 import handleCloseDialog from '@/utils/handleCloseDialog';
+import { createQueryString } from '@/utils/queryString';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
-import Avatar from '../profile/Avatar';
-import SetUserInfoPopup from '../profile/EditProfilePopup';
-import AuthPopup from './AuthPopup';
 import MenuItem from '../MenuItem';
+import Avatar from '../profile/Avatar';
+import AuthPopup from './AuthPopup';
+const EditProfilePopup = dynamic(() => import('../profile/EditProfilePopup'), { ssr: false })
+const NotificationPopup = dynamic(() => import('../notification/NotificationPopup'), { ssr: false })
 
 export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   const router = useRouter();
@@ -19,15 +21,17 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   const menuRef = useRef<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const modalRef1 = useRef<HTMLDialogElement>(null);
-  const modalRef2 = useRef<HTMLDialogElement>(null);
-  const modalRef3 = useRef<HTMLDialogElement>(null);
+  const authModalRef1 = useRef<HTMLDialogElement>(null);
+  const authModalRef2 = useRef<HTMLDialogElement>(null);
+  const profileModalRef = useRef<HTMLDialogElement>(null);
+  const notiModalRef = useRef<HTMLDialogElement>(null);
 
   const [activeTab, setActiveTab] = useState(''); // login, signup, verify, set-password, edit-profile-...
   const [modalActive, setModalActive] = useState(false);
 
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
+  const [hasNoti, setHasNoti] = useState(false);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -50,8 +54,8 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, modalRef1.current!, () => modalRef1.current?.open && router.push(pathname))
-      // handleCloseDialog(e, modalRef3.current!, () => modalRef3.current?.open && router.push(pathname))
+      handleCloseDialog(e, authModalRef1.current!, () => authModalRef1.current?.open && router.push(pathname))
+      handleCloseDialog(e, notiModalRef.current!, () => notiModalRef.current?.open && router.push(pathname))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -76,13 +80,14 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   }, [session, sessionEvent, searchParams]);
 
   useEffect(() => {
-    const popup = searchParams.get('popup')!;
+    const popup = searchParams.get('popup') || '';
 
     // Close all popup
     if (!searchParams.has('popup')) {
-      modalRef1.current?.close();
-      modalRef2.current?.close();
-      modalRef3.current?.close();
+      authModalRef1.current?.close();
+      authModalRef2.current?.close();
+      profileModalRef.current?.close();
+      notiModalRef.current?.close();
 
       setActiveTab("");
       setModalActive(false);
@@ -91,34 +96,40 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
     }
 
     if (['login', 'signup', 'verify', 'set-password'].includes(popup)) {
-      !modalRef1.current?.open && modalRef1.current?.showModal();
+      !authModalRef1.current?.open && authModalRef1.current?.showModal();
     } else {
-      modalRef1.current?.close();
+      authModalRef1.current?.close();
     }
 
     if (['verify', 'set-password'].includes(popup)) {
-      !modalRef2.current?.open && modalRef2.current?.showModal();
+      !authModalRef2.current?.open && authModalRef2.current?.showModal();
     } else {
-      modalRef2.current?.close();
+      authModalRef2.current?.close();
     }
 
     if (popup.startsWith('edit-profile-')) {
-      !modalRef3.current?.open && modalRef3.current?.showModal();
+      !profileModalRef.current?.open && profileModalRef.current?.showModal();
     } else {
-      modalRef3.current?.close();
+      profileModalRef.current?.close();
+    }
+
+    if (popup === 'notification') {
+      !notiModalRef.current?.open && notiModalRef.current?.showModal();
+    } else {
+      notiModalRef.current?.close();
     }
 
     setActiveTab(popup);
   }, [searchParams])
 
   useEffect(() => {
-    const newModalActive = modalRef3.current?.open || modalRef2.current?.open || modalRef1.current?.open;
+    const newModalActive = profileModalRef.current?.open || authModalRef2.current?.open || authModalRef1.current?.open;
 
     if (!newModalActive) setModalActive(false);
     else setTimeout(() => {
       setModalActive(true)
     }, 200)
-  }, [modalRef1.current?.open, modalRef2.current?.open, modalRef3.current?.open])
+  }, [authModalRef1.current?.open, authModalRef2.current?.open, profileModalRef.current?.open])
 
   const handleSignOut = useCallback(async () => {
     await supabase.auth.signOut()
@@ -134,11 +145,12 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
             {session?.user?.user_metadata?.new_full_name || 'Tài khoản'}
           </div>
           <div className="hidden md:block flex-shrink-0">
+            {hasNoti && <span className="absolute top-0 right-0 p-2 bg-red-600 rounded-full" title="Thông báo mới"></span>}
             <Avatar src={session?.user?.user_metadata?.new_avatar_url || session?.user?.user_metadata?.avatar_url} />
           </div>
         </button>
 
-        <dialog open={menuOpen} className="rounded-xl shadow-md w-[26vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0 z-10">
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-[50vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0 z-10">
           <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
             {session ? (
               <>
@@ -152,10 +164,17 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                   onClick={() => {
                     router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))
                     // When the popup is buggy
-                    if (searchParams.get('popup') == 'edit-profile-2' && !modalRef3.current?.open)
-                      modalRef3.current?.showModal();
+                    if (searchParams.get('popup') == 'edit-profile-2' && !profileModalRef.current?.open)
+                      profileModalRef.current?.showModal();
                   }}
                 />
+                <div className='relative'>
+                  <MenuItem
+                    label="Thông báo"
+                    onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'))}
+                  />
+                  {hasNoti && <span className="absolute top-4 right-4 p-1 bg-red-600 rounded-full" title="Thông báo mới"></span>}
+                </div>
                 <MenuItem
                   label="Đăng xuất"
                   onClick={handleSignOut}
@@ -178,19 +197,26 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
       </div>
 
       <AuthPopup
-        modalRef1={modalRef1}
-        modalRef2={modalRef2}
+        modalRef1={authModalRef1}
+        modalRef2={authModalRef2}
         modalActive={modalActive}
         activeTab={activeTab}
       />
 
-      <SetUserInfoPopup
-        modalRef={modalRef3}
+      <EditProfilePopup
+        modalRef={profileModalRef}
         modalActive={modalActive}
         activeTab={activeTab}
         onBack={() => router.back()}
         onNext={() => router.push((activeTab == 'edit-profile-1') ? (pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2')) : (pathname))}
         session={session}
+      />
+
+      <NotificationPopup
+        modalRef={notiModalRef}
+        userId={session?.user?.id}
+        setHasNoti={setHasNoti}
+        last_read={session?.user?.user_metadata?.last_read}
       />
     </div>
   );
