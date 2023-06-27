@@ -64,7 +64,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   }, []);
 
   useEffect(() => {
-    if (!session) return setFollowing([])
+    if (sessionEvent !== "SIGNED_IN") return setFollowing([])
     console.log("session changed, fetching follows")
 
     supabase

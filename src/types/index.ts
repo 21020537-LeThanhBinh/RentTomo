@@ -14,7 +14,7 @@ export interface ISearchParams {
   lat?: string
   lng?: string
   range?: string
-  
+
   category?: string
   minPrice?: string
   maxPrice?: string
@@ -32,4 +32,11 @@ export interface School {
   lat: number
   lng: number
   range: number
+}
+
+export interface Notification {
+  post_id: string,
+  post_title: string,
+  type: string,
+  timestamp: Date,
 }

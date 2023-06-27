@@ -150,7 +150,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
           </div>
         </button>
 
-        <dialog open={menuOpen} className="rounded-xl shadow-md w-[50vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0 z-10">
+        <dialog open={menuOpen} className="rounded-xl shadow-md w-[50vw] sm:w-[26vw] lg:w-[240px] bg-white overflow-hidden right-0 top-14 text-sm mr-0 p-0 z-10">
           <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
             {session ? (
               <>

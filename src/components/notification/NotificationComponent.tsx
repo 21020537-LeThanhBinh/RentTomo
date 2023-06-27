@@ -14,7 +14,7 @@ const NotificationComponent: React.FC<Props> = ({ notification, read, setRead })
   return (
     <div className="relative group">
       <Link href={"/listings/" + notification.post_id} onClick={setRead} target="_blank">
-        <div className="flex flex-col rounded-lg px-3 py-4 hover:cursor-pointer hover:bg-neutral-100 transition">
+        <div className="flex flex-col rounded-lg px-3 py-4 hover:cursor-pointer hover:bg-neutral-100 transition pr-16">
           <p className={`${read ? 'text-neutral-400' : 'text-neutral-800'}`}>
             {notification.type === "request" ?
               "Bạn có yêu cầu mới trong "
