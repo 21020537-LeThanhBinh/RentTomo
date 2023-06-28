@@ -8,7 +8,7 @@ import { User } from "@/types";
 import { toast } from "react-hot-toast";
 import ListingReservation from "./components/ListingReservation";
 import MembersInfo from "./components/MembersInfo";
-import ListingRequests from "./components/ListingReservOwner";
+import ListingRequests from "./components/ListingRequests";
 import ContextProvider from "./ListingContext";
 
 interface ListingClientProps {
@@ -23,15 +23,15 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const searchParams = useSearchParams()!
 
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [myUserId, setMyUserId] = useState<string | null>(null);
   const [host, setHost] = useState<User | null>(null);
   const [members, setMembers] = useState<User[]>([]);
   const [requests, setRequests] = useState<User[]>([]);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
-      if (session) setUserId(session.user.id)
-      else setUserId(null)
+      if (session) setMyUserId(session.user.id)
+      else setMyUserId(null)
 
       if (event === 'INITIAL_SESSION') setIsLoading(false)
     })
@@ -43,13 +43,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     const fetchRoomInfo = async () => {
       setIsLoading(true);
-  
+
       const { data, error } = await supabase
         .from('rooms')
         .select('type, profiles (id, new_full_name, new_avatar_url, description, contact)')
         .eq('post_id', listing.id)
         .order('updated_at', { ascending: true }) as any
-  
+
       if (error) {
         toast.error('Có lỗi xảy ra.');
         console.log(error);
@@ -58,7 +58,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setHost(data.find((item: any) => item.type === "host")?.profiles);
         setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
       }
-  
+
       setIsLoading(false);
     }
 
@@ -67,19 +67,28 @@ const ListingClient: React.FC<ListingClientProps> = ({
   }, [listing]);
 
   const onReservation = async () => {
-    if (!userId) return router.push(pathname + '?popup=login')
+    if (!myUserId) return router.push(pathname + '?popup=login')
 
-    const { data, error } = (requests.some((item: any) => item.id === userId)) ? (
+    const isReserved = requests.some((item: any) => item.id === myUserId)
+    const { data, error } = isReserved ? (
       // Cancel reservation
-      await onRemoveMember(userId)
+      await onRemoveMember(myUserId)
     ) : (
       // Reserve listing
       await supabase
         .from('rooms')
         .insert([
-          { user_id: userId, post_id: listing.id },
+          { user_id: myUserId, post_id: listing.id },
         ])
     )
+
+    if (!isReserved) {
+      await supabase
+        .from('follows')
+        .insert([
+          { post_id: listing.id, follower_id: myUserId },
+        ])
+    }
 
     if (error) {
       toast.error('Có lỗi xảy ra.');
@@ -115,12 +124,21 @@ const ListingClient: React.FC<ListingClientProps> = ({
       .eq('post_id', listing.id)
   }
 
-  const onOwnerAction = async (userId: string, action: string) => {
+  const onOwnerAction = async (thisUserId: string, action: string) => {
     const { data, error } = (action === "accept") ? (
-      await onUpdateMember(userId)
+      await onUpdateMember(thisUserId)
     ) : (
-      await onRemoveMember(userId)
+      await onRemoveMember(thisUserId)
     )
+
+    // Un-follow after host accepted
+    if (action === "accept" && myUserId === listing?.author?.id) {
+      await supabase
+        .from('follows')
+        .delete()
+        .eq('post_id', listing.id)
+        .eq('follower_id', myUserId)
+    }
 
     if (error) {
       toast.error('Có lỗi xảy ra.');
@@ -134,7 +152,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   return (
     <ContextProvider
-      userId={userId}
+      userId={myUserId}
       listingId={listing.id}
       members={members}
       host={host}
@@ -145,10 +163,10 @@ const ListingClient: React.FC<ListingClientProps> = ({
         host={host}
         members={members}
         requests={requests}
-        userId={userId}
+        userId={myUserId}
       />
 
-      {((userId === listing?.author?.id && !host) || host?.id === userId || members.some((member) => member.id === userId)) && (
+      {((myUserId === listing?.author?.id && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
         <ListingRequests
           onSubmit={onOwnerAction}
           disabled={isLoading}
@@ -159,8 +177,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
       <ListingReservation
         price={listing.price}
         onSubmit={onReservation}
-        disabled={isLoading || host?.id === userId}
-        requesting={requests.some((request) => userId === request.id)}
+        disabled={isLoading || host?.id === myUserId}
+        requesting={requests.some((request) => myUserId === request.id)}
         fees={listing.fees}
       />
     </ContextProvider>

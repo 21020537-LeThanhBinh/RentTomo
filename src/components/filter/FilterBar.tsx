@@ -38,9 +38,9 @@ export default function FilterBar({ searchParams, children }: { searchParams: IS
 
   useEffect(() => {
     if (pathname === '/search' && searchParams.page === 'all') {
-      router.push(pathname + '?' + deleteQueryString(searchParams, 'page'))
+      router.replace(pathname + '?' + deleteQueryString(searchParams, 'page'))
     } else if (pathname === '/map' && searchParams.page !== 'all') {
-      router.push(pathname + '?' + createQueryString(searchParams, 'page', 'all'))
+      router.replace(pathname + '?' + createQueryString(searchParams, 'page', 'all'))
     }
 
     const handleClickOutside = (e: MouseEvent) => {

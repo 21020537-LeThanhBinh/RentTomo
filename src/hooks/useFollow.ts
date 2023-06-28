@@ -56,13 +56,15 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
         .eq('follower_id', userId)
     )
 
-    if (!error) {
+    if (!error || error.code == '23505') {
       setHasFollowed(!hasFollowed)
-      router.refresh();
-      toast.success('Theo dõi thành công');
+      toast.success('Thành công');
     } else {
       toast.error('Đã có lỗi xảy ra!');
+      console.log(error)
     }
+
+    router.refresh();
   }, [userId, hasFollowed, listingId, router])
 
   return {

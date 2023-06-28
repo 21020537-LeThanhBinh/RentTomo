@@ -2,7 +2,7 @@
 
 import { supabase } from "@/supabase/supabase-app"
 import { Notification } from "@/types"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import PopupInputContainer from "../input/PopupInputContainer"
 import NotificationComponent from "./NotificationComponent"
@@ -19,6 +19,7 @@ export default function NotificationPopup({
   last_read?: string,
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [readNotis, setReadNotis] = useState<any>([])
   const [notification, setNotification] = useState<(Notification | undefined)[]>([])
 
@@ -27,62 +28,41 @@ export default function NotificationPopup({
 
     console.log("notification fetching, last_read=", last_read)
 
-    // Todo: make function with params (userId, last_read), return right notifications
-    // supabase
-    //   .from(`profiles`)
-    //   .select(`
-    //     id,
-    //     follows(
-    //       post_id, 
-    //       posts (
-    //         title,
-    //         author_id,
-    //         rooms(
-    //           user_id, 
-    //           type, 
-    //           updated_at
-    //         )
-    //       )
-    //     )
-    //   `)
-    //   .eq('id', userId)
-    //   .gte('follows.posts.rooms.updated_at', last_read || new Date(2000, 1, 1).toISOString())
-    //   // .gte('follows.posts.rooms.updated_at', new Date(2000, 1, 1).toISOString())
-    //   .single()
-    //   .then(({ data, error }) => {
-    //     if (error) throw error
+    supabase
+      .rpc('latest_notification', { user_id: userId, last_read: last_read || new Date(2000, 1, 1).toISOString() })
+      .then(({ data, error }) => {
+        if (error) throw error
 
-    //     const newNotification = data?.follows
-    //       ?.filter((follow: any) => !!follow.posts.rooms.length)
-    //       ?.map((follow: any) => {
-    //         // if not in room, or not owner, don't show request
-    //         const isOwner = follow.posts.author_id === userId
-    //         const isMember = follow.posts.rooms.some((room: any) => room.user_id === userId && room.type != "request")
-            
-    //         let filteredRooms = follow.posts.rooms
-    //         if (!isOwner && !isMember) {
-    //           filteredRooms = filteredRooms.filter((room: any) => room.type != "request")
-    //           if (!filteredRooms.length) return
-    //         }
-            
-    //         // if more than 1 noti -> other, else -> type of that noti
-    //         const type = filteredRooms.length > 1 ? "other" : filteredRooms[0].type
+        const newNoti = data
+          ?.map((noti: any) => {
+            // if not in room, or not owner, don't show request
+            const isOwner = noti.post_author_id === userId
+            const isMember = noti.room.some((room: any) => room.user_id === userId && room.type != "request")
 
-    //         // get latest timestamp
-    //         const timestamp = filteredRooms.reduce((maxTimestamp: any, object: any) => Math.max(maxTimestamp, new Date(object.updated_at).getTime()), 0);
+            let filteredRooms = noti.room
+            if (!isOwner && !isMember) 
+              filteredRooms = filteredRooms.filter((room: any) => room.type != "request")
+            if (!filteredRooms.length) 
+              return;
 
-    //         return {
-    //           post_id: follow?.post_id || "",
-    //           post_title: follow?.posts?.title || "",
-    //           type: type || "",
-    //           timestamp: new Date(timestamp),
-    //         }
-    //       })
-    //       ?.filter((noti: any) => noti != undefined) 
+            // if more than 1 noti -> other, else -> type of that noti
+            const type = filteredRooms.length > 1 ? "other" : filteredRooms[0].type
 
-    //     setNotification(newNotification)
-    //   })
+            // get latest timestamp
+            const timestamp = filteredRooms.reduce((maxTimestamp: any, object: any) => Math.max(maxTimestamp, new Date(object.updated_at).getTime()), 0);
 
+            return { 
+              post_id: noti.post_id, 
+              post_title: noti.post_title, 
+              type, 
+              timestamp: new Date(timestamp) 
+            }
+          })
+          ?.filter((noti: any) => noti != undefined)
+
+        console.log(newNoti)
+        setNotification(newNoti)
+      })
   }, [userId])
 
   useEffect(() => {
@@ -102,7 +82,7 @@ export default function NotificationPopup({
 
   return (
     <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-hidden'>
-      <PopupInputContainer label="Thông báo" onBack={() => router.back()}>
+      <PopupInputContainer label="Thông báo" onBack={() => router.push(pathname)}>
         {notification?.length ? notification?.map((noti: any, i: number) =>
           <NotificationComponent
             key={noti.post_id}

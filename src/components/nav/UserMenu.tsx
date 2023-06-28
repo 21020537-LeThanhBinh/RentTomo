@@ -171,7 +171,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                 <div className='relative'>
                   <MenuItem
                     label="Thông báo"
-                    onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'))}
+                    onClick={() => router.replace(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'))}
                   />
                   {hasNoti && <span className="absolute top-4 right-4 p-1 bg-red-600 rounded-full" title="Thông báo mới"></span>}
                 </div>

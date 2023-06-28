@@ -18,12 +18,31 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 const provider = import('leaflet-geosearch').then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider());
+
 export default function PostClient() {
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [addressLabel, setAddressLabel] = useState<string>('')
   const [files, setFiles] = useState<any[]>([])
+
+  const [addressLabel, setAddressLabel] = useState<string>('')
+  const [mapCenter, setMapCenter] = useState<any>([15.9266657, 107.9650855])
+  const [selectedPoint, setSelectedPoint] = useState<any>({ lng: 107.9650855, lat: 15.9266657 })
+
+  useEffect(() => {
+    if ((addressLabel.match(/,/g) || [])?.length >= 4) return
+
+    provider
+      .then((provider) => provider
+        .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
+        .then((results: any) => {
+          console.log(results)
+          if (results.length > 0) {
+            setMapCenter([results[0].y, results[0].x])
+            setSelectedPoint({ lng: results[0].x, lat: results[0].y })
+          }
+        }))
+  }, [addressLabel])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -37,18 +56,16 @@ export default function PostClient() {
   }, []);
 
   const handleSubmit = async (values: FormikValues) => {
-    const uid = (await supabase.auth.getUser())?.data?.user?.id
-    if (!uid) return toast.error('Bạn chưa đăng nhập!')
+    const userId = (await supabase.auth.getUser())?.data?.user?.id
 
-    if (files.length < 3) {
-      toast.error('Hãy thêm từ 3 đến 12 ảnh.');
-      return;
-    }
+    if (!userId)
+      return toast.error('Bạn chưa đăng nhập!')
 
-    if (Object.keys(values).some((key) => !values[key])) {
-      toast.error('Vui lòng điền đầy đủ thông tin!');
-      return;
-    }
+    if (files.length < 3)
+      return toast.error('Hãy thêm từ 3 đến 12 ảnh.');
+
+    if (Object.keys(values).some((key) => !values[key]))
+      return toast.error('Vui lòng điền đầy đủ thông tin!');
 
     setIsLoading(true);
 
@@ -57,7 +74,7 @@ export default function PostClient() {
 
     const listingValues = {
       ...values,
-      author_id: uid,
+      author_id: userId,
       address: values.address.number + (values.address.number ? ', ' : '') + values.address.street,
       address_id: {
         city_id: values.address.city_id,
@@ -71,18 +88,31 @@ export default function PostClient() {
     const { data, error } = await supabase
       .from('posts')
       .insert([listingValues])
+      .select('id')
+      .single()
 
-    if (!error) {
-      toast.success('Đăng tin thành công!');
-      router.refresh()
-      formik.resetForm()
-      setFiles([])
-    } else {
+    if (error || !data) {
       toast.error('Đã có lỗi xảy ra!');
-      console.log(data, error)
+      return console.log(error)
     }
 
+    onSubmitSuccess(data.id, userId)
+  }
+
+  const onSubmitSuccess = async (postId: string, userId: string) => {
+    toast.success('Đăng tin thành công!');
+    formik.resetForm()
+    setFiles([])
+
     setIsLoading(false);
+
+    await supabase
+      .from('follows')
+      .insert([
+        { 'post_id': postId, 'follower_id': userId },
+      ])
+
+    router.push(`/listings/${postId}`)
   }
 
   const handleUploadImages = async (file: any) => {
@@ -104,24 +134,13 @@ export default function PostClient() {
   const formik = useFormik({
     initialValues: {
       category: "",
-      address: {
-        city_id: "",
-        district_id: "",
-        ward_id: "",
-        street: "",
-        number: "",
-      },
+      address: { city_id: "", district_id: "", ward_id: "", street: "", number: "" },
       area: 0,
       utility: [],
       title: "",
       description: "",
       price: 0,
-      fees: {
-        deposit: 0,
-        electricity: 0,
-        water: 0,
-        internet: 0,
-      },
+      fees: { deposit: 0, electricity: 0, water: 0, internet: 0 },
     },
     onSubmit: handleSubmit,
   } as FormikConfig<{
@@ -151,27 +170,6 @@ export default function PostClient() {
     ssr: false
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [formik.values.address.city_id])
-  const [mapCenter, setMapCenter] = useState<any>([15.9266657, 107.9650855])
-  const [selectedPoint, setSelectedPoint] = useState<any>({ lng: 107.9650855, lat: 15.9266657 })
-
-  useEffect(() => {
-    if ((addressLabel.match(/,/g) || [])?.length >= 4) return
-
-    provider
-      .then((provider) => provider
-        .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
-        .then((results: any) => {
-          console.log(results)
-          if (results.length > 0) {
-            setMapCenter([results[0].y, results[0].x])
-            setSelectedPoint({ lng: results[0].x, lat: results[0].y })
-          }
-        }))
-  }, [addressLabel])
-
-  useEffect(() => {
-    console.log(selectedPoint)
-  }, [selectedPoint])
 
   return (
     <form className="my-6 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
