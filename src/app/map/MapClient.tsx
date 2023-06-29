@@ -23,6 +23,7 @@ import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json'
 import schoolsFull from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import ListingMarker from "./components/ListingMarker";
 import SetViewOnClick from "@/components/map/SetViewOnClick";
+import convertPointToArrayCoordinates from "@/utils/convertPointToArrayCoordinates";
 
 const provider = new OpenStreetMapProvider();
 
@@ -214,12 +215,12 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
       )}
 
       {listings?.map((listing) => {
-        const coordinates = listing.location_text?.match(/POINT\(([^)]+)\)/)?.[1].split(" ");
+        const coordinates = convertPointToArrayCoordinates(listing.location_text);
         if (!coordinates) return null
 
         return (
           <ListingMarker
-            coordinates={[parseFloat(coordinates[1]), parseFloat(coordinates[0])]}
+            coordinates={coordinates}
             listing={listing}
             initHasFollowed={following.includes(listing.id)}
             userId={session?.user?.id || null}

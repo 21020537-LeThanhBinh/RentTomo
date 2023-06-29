@@ -24,10 +24,10 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  center?: number[]
+  center?: number[] | string[]
   zoom?: number
-  selectedPoint?: number[]
-  setSelectedPoint: (l: any) => void
+  selectedPoint?: number[] | string[]
+  setSelectedPoint?: (l: any) => void
 }
 
 const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -53,6 +53,8 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
       ref={mapRef}
       //@ts-ignore
       fullscreenControl={true}
+      //@ts-ignore
+      scrollWheelZoom={true}
       style={{ cursor: 'crosshair' }}
       className="h-[35vh] rounded-lg"
     >
@@ -67,7 +69,7 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
               e.preventDefault()
               mapRef.current?.locate().on("locationfound", function (e: any) {
                 mapRef.current.flyTo(e.latlng, 16);
-                setSelectedPoint(e.latlng)
+                setSelectedPoint?.(e.latlng)
               });
             }}
           >

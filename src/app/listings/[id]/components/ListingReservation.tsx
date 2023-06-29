@@ -75,7 +75,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <div className="p-4 flex items-center justify-between font-semibold text-lg">
         <div className="flex items-center gap-2">
           <span>Tổng cộng</span>
-          <AiFillQuestionCircle size={16} title={"Tiền thuê tháng đầu + cọc"} className="cursor-pointer"/>
+          <AiFillQuestionCircle size={16} title={"Tiền thuê tháng đầu + cọc"} />
         </div>
         <div>
           đ {formatBigNumber((price + fees.deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>

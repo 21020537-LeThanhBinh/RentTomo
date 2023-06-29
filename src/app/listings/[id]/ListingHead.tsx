@@ -7,6 +7,7 @@ import { supabase } from "@/supabase/supabase-app";
 import HeartButton from "@/components/HeartButton";
 import MediaSlider from "@/components/MediaSlider";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import Heading from "@/components/Heading";
 
 interface ListingHeadProps {
   imageSrc: string[];
@@ -41,138 +42,146 @@ const ListingHead: React.FC<ListingHeadProps> = ({
   }, []);
 
   return (
-    <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">
-      {/* Images on phone */}
-      <Image
-        src={imageSrc?.[0]}
-        fill
-        alt="Image"
-        className="object-cover w-full sm:hidden cursor-pointer"
+    <>
+      <Heading
+        title={"Nhượng lại phòng trọ ngõ 20 Hồ Tùng Mậu"}
       />
 
-      {/* Images on desktop */}
-      <div className="hidden h-[102%] sm:grid grid-cols-4 grid-rows-2 gap-2">
-        <div
-          onClick={() => {
-            !dialogRef.current?.open && dialogRef.current?.showModal()
-          }}
-          onMouseEnter={() => setImageIndex(0)}
-          className={`
+      <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">
+
+
+        {/* Images on phone */}
+        <Image
+          src={imageSrc?.[0]}
+          fill
+          alt="Image"
+          className="object-cover w-full sm:hidden cursor-pointer"
+        />
+
+        {/* Images on desktop */}
+        <div className="hidden h-[102%] sm:grid grid-cols-4 grid-rows-2 gap-2">
+          <div
+            onClick={() => {
+              !dialogRef.current?.open && dialogRef.current?.showModal()
+            }}
+            onMouseEnter={() => setImageIndex(0)}
+            className={`
             relative cursor-pointer
             ${imageSrc.length === 4 ? 'row-span-1' : 'row-span-2'}
             ${imageSrc.length === 1 ? 'col-span-4' : 'col-span-2'}
           `}
-        >
-          <Image
-            src={imageSrc?.[0]}
-            fill
-            alt="Image"
-            className="object-cover"
-          />
-        </div>
-        <div
-          onClick={() => {
-            !dialogRef.current?.open && dialogRef.current?.showModal()
-          }}
-          onMouseEnter={() => setImageIndex(1)}
-          className={`
+          >
+            <Image
+              src={imageSrc?.[0]}
+              fill
+              alt="Image"
+              className="object-cover"
+            />
+          </div>
+          <div
+            onClick={() => {
+              !dialogRef.current?.open && dialogRef.current?.showModal()
+            }}
+            onMouseEnter={() => setImageIndex(1)}
+            className={`
             relative cursor-pointer
             ${imageSrc.length === 2 ? 'row-span-2' : 'row-span-1'}
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-        >
-          <Image
-            src={imageSrc?.[1]}
-            fill
-            alt="Image"
-            className="object-cover"
-          />
-        </div>
-        <div
-          onClick={() => {
-            !dialogRef.current?.open && dialogRef.current?.showModal()
-          }}
-          onMouseEnter={() => setImageIndex(2)}
-          className={`
+          >
+            <Image
+              src={imageSrc?.[1]}
+              fill
+              alt="Image"
+              className="object-cover"
+            />
+          </div>
+          <div
+            onClick={() => {
+              !dialogRef.current?.open && dialogRef.current?.showModal()
+            }}
+            onMouseEnter={() => setImageIndex(2)}
+            className={`
             relative cursor-pointer
             row-span-1
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-        >
-          <Image
-            src={imageSrc?.[2]}
-            fill
-            alt="Image"
-            className="object-cover"
-          />
-        </div>
-        <div
-          onClick={() => {
-            !dialogRef.current?.open && dialogRef.current?.showModal()
-          }}
-          onMouseEnter={() => setImageIndex(3)}
-          className={`
+          >
+            <Image
+              src={imageSrc?.[2]}
+              fill
+              alt="Image"
+              className="object-cover"
+            />
+          </div>
+          <div
+            onClick={() => {
+              !dialogRef.current?.open && dialogRef.current?.showModal()
+            }}
+            onMouseEnter={() => setImageIndex(3)}
+            className={`
             relative cursor-pointer
             row-span-1
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-        >
-          <Image
-            src={imageSrc?.[3]}
-            fill
-            alt="Image"
-            className="object-cover"
-          />
-        </div>
-        <div
-          onClick={() => {
-            !dialogRef.current?.open && dialogRef.current?.showModal()
-          }}
-          onMouseEnter={() => setImageIndex(4)}
-          className={`
+          >
+            <Image
+              src={imageSrc?.[3]}
+              fill
+              alt="Image"
+              className="object-cover"
+            />
+          </div>
+          <div
+            onClick={() => {
+              !dialogRef.current?.open && dialogRef.current?.showModal()
+            }}
+            onMouseEnter={() => setImageIndex(4)}
+            className={`
             relative cursor-pointer
             row-span-1
             col-span-1
           `}
-        >
-          <Image
-            src={imageSrc?.[4]}
-            fill
-            alt="Image"
-            className="object-cover"
-          />
+          >
+            <Image
+              src={imageSrc?.[4]}
+              fill
+              alt="Image"
+              className="object-cover"
+            />
 
-          {imageSrc.length > 5 && (
-            <div className={`
+            {imageSrc.length > 5 && (
+              <div className={`
                 absolute inset-0 flex items-center justify-center bg-neutral-500/70
                 text-white font-bold text-4xl
                 drop-shadow-sm
               `}
-            >
-              {imageSrc.length - 4}+
-            </div>
+              >
+                {imageSrc.length - 4}+
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="absolute top-5 right-5">
+          {!isLoading && (
+            <HeartButton
+              listingId={id}
+              userId={userId}
+            />
           )}
         </div>
-      </div>
 
-      <div className="absolute top-5 right-5">
-        {!isLoading && (
-          <HeartButton
-            listingId={id}
-            userId={userId}
+        <dialog ref={dialogRef} className="popup h-[90vh] w-[90vw] overflow-hidden bg-transparent">
+          <MediaSlider
+            images={imageSrc}
+            index={imageIndex}
+            fullView={true}
+            onClose={() => dialogRef.current?.close()}
           />
-        )}
+        </dialog>
       </div>
-
-      <dialog ref={dialogRef} className="popup h-[90vh] w-[90vw] overflow-hidden bg-transparent">
-        <MediaSlider
-          images={imageSrc}
-          index={imageIndex}
-          fullView={true}
-          onClose={() => dialogRef.current?.close()}
-        />
-      </dialog>
-    </div>
+    </>
   );
 }
 

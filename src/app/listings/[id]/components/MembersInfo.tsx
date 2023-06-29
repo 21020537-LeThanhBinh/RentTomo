@@ -9,13 +9,15 @@ export default function MembersInfo({
   members,
   requests,
   userId,
+  isLoading
 }: {
   host: User | null,
   members: User[] | null,
   requests: User[] | null,
   userId: string | null,
+  isLoading: boolean
 }) {
-  if (!host) {
+  if (!host && !isLoading) {
     return (
       <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
         <div className="flex items-center gap-1 p-4">
@@ -70,7 +72,7 @@ export default function MembersInfo({
         ))}
       </div>
 
-      {(userId === host.id || members?.some((member) => member.id === userId)) && (
+      {(userId === host?.id || members?.some((member) => member.id === userId)) && (
         <MembersMenu />
       )}
     </div>

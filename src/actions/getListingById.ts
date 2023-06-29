@@ -2,10 +2,9 @@ import { supabase } from "@/supabase/supabase-app"
 
 async function getListingById(id: string) {
   let { data, error } = await supabase
-    .from('posts')
+    .from('posts_members')
     .select(`
-      id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description,
-      author: profiles!posts_author_id_fkey (id, new_full_name, new_avatar_url, contact)
+      id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description, location_text, author
     `)
     .eq('id', id)
     .limit(1)

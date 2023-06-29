@@ -42,11 +42,9 @@ const ListingClient: React.FC<ListingClientProps> = ({
     if (!listing?.id) return;
 
     const fetchRoomInfo = async () => {
-      setIsLoading(true);
-
       const { data, error } = await supabase
         .from('rooms')
-        .select('type, profiles (id, new_full_name, new_avatar_url, description, contact)')
+        .select('type, profiles (id, new_full_name, new_avatar_url, description)')
         .eq('post_id', listing.id)
         .order('updated_at', { ascending: true }) as any
 
@@ -58,12 +56,10 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setHost(data.find((item: any) => item.type === "host")?.profiles);
         setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
       }
-
-      setIsLoading(false);
     }
 
+    console.log('fetching room members info')
     fetchRoomInfo();
-    console.log('fetch room info')
   }, [listing]);
 
   const onReservation = async () => {
@@ -164,6 +160,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         members={members}
         requests={requests}
         userId={myUserId}
+        isLoading={isLoading}
       />
 
       {((myUserId === listing?.author?.id && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
