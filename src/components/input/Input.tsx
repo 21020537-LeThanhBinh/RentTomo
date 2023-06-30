@@ -7,12 +7,12 @@ import TextareaAutosize from "react-textarea-autosize";
 interface InputProps {
   id: string;
   label: string;
+  value: string;
+  onChange: (value: string) => void;
   type?: string;
   disabled?: boolean;
   formatPrice?: boolean;
   required?: boolean;
-  onChange: (value: string) => void;
-  value: string;
   onClick?: () => void;
   onBlur?: FocusEventHandler<any>;
   multiline?: boolean;

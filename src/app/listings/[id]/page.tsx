@@ -5,14 +5,17 @@ import { Metadata, ResolvingMetadata } from 'next';
 import ListingClient from "./ListingClient";
 import ListingHead from "./ListingHead";
 import OwnerInfo from "./OwnerInfo";
+import Tabs from "./Tabs";
+import RoomRules from "./RoomRules";
+import { getListingMetaDataById } from "@/actions/getListingMetaDataById";
 
 type Props = {
   params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: { [key: string]: string | undefined }
 }
 
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const listing = await getListingById(params.id);
+  const listing = await getListingMetaDataById(params.id);
 
   return {
     title: listing?.title || 'Không tìm thấy',
@@ -22,6 +25,7 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 
 const ListingPage = async ({ params, searchParams }: Props) => {
   const listing = (await getListingById(params.id)) as any;
+  const activeTab = searchParams.tab || 'info';
 
   if (!listing) {
     return (
@@ -37,27 +41,42 @@ const ListingPage = async ({ params, searchParams }: Props) => {
         <ListingHead
           imageSrc={listing.image_src}
           id={listing.id}
+          title={listing.title}
+          created_at={listing.created_at}
         />
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
-          <ListingInfo
-            category={listing.category}
-            description={listing.description}
-            utility={listing.utility}
-            area={listing.area}
-            title={listing.title}
-            address={listing.address}
-            price={listing.price}
-            address_id={listing.address_id}
-            created_at={listing.created_at}
-            location_text={listing.location_text}
-          />
+          <div className="col-span-4 flex flex-col gap-8">
+            <Tabs searchParams={searchParams} activeTab={activeTab} />
+
+            {activeTab === 'info' ? (
+              <ListingInfo
+                category={listing.category}
+                description={listing.description}
+                utility={listing.utility}
+                area={listing.area}
+                address={listing.address}
+                price={listing.price}
+                address_id={listing.address_id}
+                location_text={listing.location_text}
+              />
+            ) : activeTab === 'rules' ? (
+              <RoomRules
+                id={listing.id}
+              />
+            ) : (
+              <>
+                Đang cập nhật
+              </>
+            )
+            }
+          </div>
 
           <div className="order-first mb-10 md:order-last md:col-span-3 flex flex-col gap-4">
             <OwnerInfo
-              new_avatar_url={listing.author[0]?.new_avatar_url}
-              new_full_name={listing.author[0]?.new_full_name}
-              contact={listing.author[0]?.contact}
-              id={listing.author[0]?.id}
+              new_avatar_url={listing.author?.new_avatar_url}
+              new_full_name={listing.author?.new_full_name}
+              contact={listing.author?.contact}
+              id={listing.author?.id}
             />
 
             <ListingClient listing={listing} />

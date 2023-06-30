@@ -8,12 +8,14 @@ interface HeartButtonProps {
   listingId: string
   userId?: string | null
   setHasFollowed?: (hasFollowed: boolean) => void
+  full?: boolean
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({
   listingId,
   userId,
-  setHasFollowed
+  setHasFollowed,
+  full
 }) => {
   const { hasFollowed, toggleFavorite } = useFollow({
     listingId,
@@ -24,7 +26,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
     setHasFollowed?.(hasFollowed);
   }, [hasFollowed]);
 
-  return (
+  const Button = () => (
     <div
       onClick={toggleFavorite}
       className="
@@ -32,10 +34,11 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         hover:opacity-80
         transition
         cursor-pointer
+        group-hover:opacity-80
       "
     >
       <BsBookmark
-        size={28}
+        size={24}
         className="
           fill-white
           absolute
@@ -44,11 +47,20 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         "
       />
       <BsBookmarkFill
-        size={24}
+        size={20}
         className={
           hasFollowed ? 'fill-sky-500' : 'fill-neutral-500/70'
         }
       />
+    </div>
+  );
+
+  if (!full) return <Button />
+
+  return (
+    <div onClick={toggleFavorite} className="flex items-center gap-2 cursor-pointer group">
+      <Button />
+      <span className="text-neutral-600 underline">Lưu</span>
     </div>
   );
 }

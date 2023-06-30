@@ -30,7 +30,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
     <div className="group h-full max-h-36">
       <div className="flex gap-4 h-full">
         <div className="aspect-[4/3] w-1/4 md:w-1/5 relative overflow-hidden rounded-xl flex-shrink-0">
-          <Link href={`/listings/${data.id}`}>
+          <Link href={`/listings/${data.id}`} target="_blank">
             <Image
               fill
               src={data.image_src[0]}
@@ -47,7 +47,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
         </div>
 
         <div className="flex-1 flex flex-col gap-2 relative w-3/4 lg:w-4/5">
-          <Link href={`/listings/${data.id}`} className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
+          <Link href={`/listings/${data.id}`} target="_blank" className="font-semibold text-lg h-1/5 whitespace-nowrap truncate">
             {data.title}
           </Link>
 

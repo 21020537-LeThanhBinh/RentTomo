@@ -12,16 +12,21 @@ import Heading from "@/components/Heading";
 interface ListingHeadProps {
   imageSrc: string[];
   id: string;
+  title: string;
+  created_at: string;
 }
 
 const ListingHead: React.FC<ListingHeadProps> = ({
   imageSrc,
   id,
+  title,
+  created_at
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [imageIndex, setImageIndex] = useState(0);
+  const date = new Date(created_at);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -43,13 +48,22 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 
   return (
     <>
-      <Heading
-        title={"Nhượng lại phòng trọ ngõ 20 Hồ Tùng Mậu"}
-      />
+      <div className="flex justify-between">
+        <Heading
+          title={title}
+          subtitle={`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
+        />
+
+        <div className="flex items-end">
+          <HeartButton
+            listingId={id}
+            userId={userId}
+            full
+          />
+        </div>
+      </div>
 
       <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">
-
-
         {/* Images on phone */}
         <Image
           src={imageSrc?.[0]}
@@ -163,15 +177,6 @@ const ListingHead: React.FC<ListingHeadProps> = ({
           </div>
         </div>
 
-        <div className="absolute top-5 right-5">
-          {!isLoading && (
-            <HeartButton
-              listingId={id}
-              userId={userId}
-            />
-          )}
-        </div>
-
         <dialog ref={dialogRef} className="popup h-[90vh] w-[90vw] overflow-hidden bg-transparent">
           <MediaSlider
             images={imageSrc}
@@ -180,6 +185,8 @@ const ListingHead: React.FC<ListingHeadProps> = ({
             onClose={() => dialogRef.current?.close()}
           />
         </dialog>
+
+        <div id="head" className="absolute bottom-12"></div>
       </div>
     </>
   );

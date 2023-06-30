@@ -64,7 +64,7 @@ export default function MembersMenu() {
             <>
               <MenuItem
                 label="Thêm/ sửa Quy định"
-                onClick={() => { }}
+                onClick={() => router.push(pathname + '?tab=rules#head')}
               />
               <MenuItem
                 label="Quản lý Thành viên"
