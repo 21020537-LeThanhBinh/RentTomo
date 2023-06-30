@@ -65,8 +65,9 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   }, []);
 
   useEffect(() => {
-    if (sessionEvent !== "SIGNED_IN") return setFollowing([])
-    console.log("session changed, fetching follows")
+    if (!session?.user?.id || sessionEvent === "SIGNED_OUT") return setFollowing([])
+    if (following.length) return
+    console.log("fetching follows")
 
     supabase
       .from('follows')
@@ -77,7 +78,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
         console.log(data?.map((value) => value.post_id))
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionEvent])
+  }, [sessionEvent, following])
 
   // Search by searchParams then center the map
   useEffect(() => {
