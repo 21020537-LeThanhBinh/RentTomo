@@ -65,6 +65,11 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   }, [pathname]);
 
   useEffect(() => {
+    // Close popup after logged in
+    if (sessionEvent == 'SIGNED_IN' && (searchParams.get('popup') === 'login')) {
+      router.push(pathname + '?' + createQueryString(searchParams, 'popup', ''))
+    }
+
     if (!session || searchParams.has('account')) {
       return;
     }

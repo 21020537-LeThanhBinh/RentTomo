@@ -7,12 +7,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillEdit } from "react-icons/ai";
 
-export default function RoomRules({ id }: { id: string }) {
+export default function RoomRules({ id, isActive, roomRules }: { id: string, isActive: boolean, roomRules: string }) {
   const [userId, setUserId] = useState<string | null>(null);
   const [hostId, setHostId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [rules, setRules] = useState<string | null>('');
-  const [hasRules, setHasRules] = useState(false);
+  const [rules, setRules] = useState<string>(roomRules || '');
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -37,13 +36,12 @@ export default function RoomRules({ id }: { id: string }) {
         console.log(error);
       } else {
         setHostId(data?.rooms[0]?.profiles?.id);
-        setHasRules(!!data?.room_rules?.general_rules);
         setRules(data?.room_rules?.general_rules);
       }
     }
 
     fetchRoomInfo();
-  }, [id]);
+  }, []);
 
   const putRules = async () => {
     const { data, error } = await supabase
@@ -58,11 +56,12 @@ export default function RoomRules({ id }: { id: string }) {
       toast.error('Có lỗi xảy ra.');
       console.log(error);
     } else {
-      console.log(data, rules);
       setIsEditing(false);
       toast.success('Đã lưu.');
     }
   }
+
+  if (!isActive) return null;
 
   return (
     <>
@@ -70,7 +69,7 @@ export default function RoomRules({ id }: { id: string }) {
         <span>Quy định chung</span>
 
         {userId && userId === hostId && (
-          <AiFillEdit onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />
+          <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />
         )}
       </div>
 

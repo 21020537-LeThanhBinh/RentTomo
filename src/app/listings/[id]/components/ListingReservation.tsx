@@ -2,9 +2,11 @@
 
 import Button from "@/components/Button";
 import formatBigNumber from "@/utils/formatBigNumber";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { ListingContext } from "../ListingContext";
 import { AiFillQuestionCircle } from "react-icons/ai";
+import handleCloseDialog from "@/utils/handleCloseDialog";
+import PopupInputContainer from "@/components/input/PopupInputContainer";
 
 interface ListingReservationProps {
   price: number;
@@ -17,6 +19,7 @@ interface ListingReservationProps {
     water: number;
     internet: number;
   };
+  roomRules: string;
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -25,11 +28,24 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   disabled,
   requesting,
   fees,
+  roomRules,
 }) => {
   const { userId, members, host } = useContext(ListingContext);
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   const isJoined = members?.some((item) => item.id === userId) || host?.id === userId
   const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      handleCloseDialog(e, modalRef.current!, () => modalRef.current?.close())
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
@@ -47,8 +63,32 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         <Button
           disabled={disabled || isJoined}
           label={requesting ? "Huỷ yêu cầu" : (!host ? "Đặt phòng" : "Tham gia")}
-          onClick={onSubmit}
+          onClick={() => { !requesting ? !modalRef.current?.open && modalRef.current?.showModal() : onSubmit(); }}
         />
+
+        <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl'>
+          <PopupInputContainer label="Quy định chung" onBack={() => { !modalRef.current?.close(); }} className="flex flex-col gap-6">
+            <div className="text-neutral-600 whitespace-pre-line">
+              {roomRules || "Chưa có quy định chung."}
+            </div>
+
+            <div className="flex justify-end gap-2 w-full">
+              <div className="w-full sm:w-1/3 lg:w-1/4">
+                <Button
+                  label="Hủy"
+                  onClick={() => { !modalRef.current?.close(); }}
+                  outline
+                />
+              </div>
+              <div className="w-full sm:w-1/3 lg:w-1/4">
+                <Button
+                  label="Đồng ý"
+                  onClick={() => { onSubmit(); !modalRef.current?.close(); }}
+                />
+              </div>
+            </div>
+          </PopupInputContainer>
+        </dialog>
       </div>
 
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">

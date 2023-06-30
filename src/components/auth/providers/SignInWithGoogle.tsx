@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from "next/navigation";
 import { loginFields } from "../formFields";
 import { supabase } from '@/supabase/supabase-app';
 
@@ -8,10 +9,13 @@ let fieldsState: any = {};
 fields.forEach(field => fieldsState[field.id] = '');
 
 export default function SignInWithGoogle() {
+  const router = useRouter()
+
   async function handleSignInWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: 'google', options: { skipBrowserRedirect: true }
     })
+    window.open(data.url || '/', '_blank')
 
     console.log(data, error)
   }

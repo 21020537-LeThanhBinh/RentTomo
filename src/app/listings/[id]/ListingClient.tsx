@@ -1,32 +1,39 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
 import { toast } from "react-hot-toast";
+import ContextProvider from "./ListingContext";
+import ListingRequests from "./components/ListingRequests";
 import ListingReservation from "./components/ListingReservation";
 import MembersInfo from "./components/MembersInfo";
-import ListingRequests from "./components/ListingRequests";
-import ContextProvider from "./ListingContext";
 
 interface ListingClientProps {
-  listing: any;
+  listingId: string;
+  authorId?: string;
+  price: number;
+  fees?: any;
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
-  listing,
+  listingId,
+  authorId,
+  price,
+  fees,
 }) => {
   const router = useRouter();
   const pathname = usePathname()
-  const searchParams = useSearchParams()!
 
   const [isLoading, setIsLoading] = useState(true);
   const [myUserId, setMyUserId] = useState<string | null>(null);
+  
   const [host, setHost] = useState<User | null>(null);
   const [members, setMembers] = useState<User[]>([]);
   const [requests, setRequests] = useState<User[]>([]);
+  const [rules, setRules] = useState<string | null>('');
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -39,28 +46,29 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   // On router refresh
   useEffect(() => {
-    if (!listing?.id) return;
+    if (!listingId) return;
 
     const fetchRoomInfo = async () => {
       const { data, error } = await supabase
-        .from('rooms')
-        .select('type, profiles (id, new_full_name, new_avatar_url, description)')
-        .eq('post_id', listing.id)
-        .order('updated_at', { ascending: true }) as any
+        .from('posts')
+        .select('rooms(type, profiles (id, new_full_name, new_avatar_url, description)), room_rules(general_rules)')
+        .eq('id', listingId)
+        .single() as any
 
       if (error) {
         toast.error('Có lỗi xảy ra.');
         console.log(error);
       } else {
-        setRequests(data.filter((item: any) => item.type === "request").map((item: any) => item.profiles));
-        setHost(data.find((item: any) => item.type === "host")?.profiles);
-        setMembers(data.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
+        setHost(data.rooms.find((item: any) => item.type === "host")?.profiles);
+        setMembers(data.rooms.filter((item: any) => item.type === "member").map((item: any) => item.profiles));
+        setRequests(data.rooms.filter((item: any) => item.type === "request").map((item: any) => item.profiles));
+        setRules(data.room_rules?.general_rules);
       }
     }
 
     console.log('fetching room members info')
     fetchRoomInfo();
-  }, [listing]);
+  }, [listingId, fees]);
 
   const onReservation = async () => {
     if (!myUserId) return router.push(pathname + '?popup=login')
@@ -74,7 +82,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       await supabase
         .from('rooms')
         .insert([
-          { user_id: myUserId, post_id: listing.id },
+          { user_id: myUserId, post_id: listingId },
         ])
     )
 
@@ -82,7 +90,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       await supabase
         .from('follows')
         .insert([
-          { post_id: listing.id, follower_id: myUserId },
+          { post_id: listingId, follower_id: myUserId },
         ])
     }
 
@@ -101,14 +109,14 @@ const ListingClient: React.FC<ListingClientProps> = ({
       .from('rooms')
       .delete()
       .eq('user_id', userId)
-      .eq('post_id', listing.id)
+      .eq('post_id', listingId)
   }
 
   const onUpdateMember = async (userId: string) => {
     const { data, error } = await supabase
       .from('rooms')
       .select('type')
-      .eq('post_id', listing.id)
+      .eq('post_id', listingId)
 
     if (error) throw error
     const hasHost = data?.some((item: any) => item.type === "host")
@@ -117,7 +125,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       .from('rooms')
       .update({ type: hasHost ? 'member' : 'host' })
       .eq('user_id', userId)
-      .eq('post_id', listing.id)
+      .eq('post_id', listingId)
   }
 
   const onOwnerAction = async (thisUserId: string, action: string) => {
@@ -128,11 +136,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
     )
 
     // Un-follow after host accepted
-    if (action === "accept" && myUserId === listing?.author?.id) {
+    if (action === "accept" && myUserId === authorId) {
       await supabase
         .from('follows')
         .delete()
-        .eq('post_id', listing.id)
+        .eq('post_id', listingId)
         .eq('follower_id', myUserId)
     }
 
@@ -149,7 +157,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   return (
     <ContextProvider
       userId={myUserId}
-      listingId={listing.id}
+      listingId={listingId}
       members={members}
       host={host}
       onRemoveMember={onRemoveMember}
@@ -163,7 +171,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         isLoading={isLoading}
       />
 
-      {((myUserId === listing?.author?.id && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
+      {((myUserId === authorId && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
         <ListingRequests
           onSubmit={onOwnerAction}
           disabled={isLoading}
@@ -172,11 +180,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
       )}
 
       <ListingReservation
-        price={listing.price}
+        price={price}
         onSubmit={onReservation}
         disabled={isLoading || host?.id === myUserId}
         requesting={requests.some((request) => myUserId === request.id)}
-        fees={listing.fees}
+        fees={fees}
+        roomRules={rules || ''}
       />
     </ContextProvider>
   )
