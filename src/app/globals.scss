@@ -122,7 +122,6 @@ dialog[open].popup {
 
 @layer base {
   html {
-    font-family: "Rubik", sans-serif;
     overflow-x: hidden;
     scroll-behavior: smooth;
   }
@@ -133,12 +132,6 @@ dialog[open].popup {
 
   div[hidden] {
     display: none;
-  }
-
-  body {
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
   }
 
   body.lock-scroll {
@@ -162,11 +155,6 @@ dialog[open].popup {
   .form :is(a, button, input, textarea, select, details, summary):focus-visible,
   footer :is(a, button, input, textarea, select, details, summary):focus {
     outline-color: #fff;
-  }
-
-  input.border-red-500:focus-visible,
-  .bg-soft-red:focus-visible {
-    outline-color: rgb(239 68 68);
   }
 
   // Effect when switching tabs
@@ -193,31 +181,13 @@ dialog[open].popup {
     width: -webkit-fill-available;
   }
 
-  .filter-dark {
-    filter: invert(1) hue-rotate(180deg);
-  }
-
   .filter-logo-white {
     filter: invert(1) brightness(6) hue-rotate(180deg);
-  }
-
-  .filter-orange {
-    filter: brightness(0) saturate(100%) invert(52%) sepia(43%) saturate(4016%)
-      hue-rotate(326deg) brightness(98%) contrast(99%);
-  }
-
-  .transition-filter {
-    transition: filter 220ms linear;
-    -webkit-transition: -webkit-filter 220ms linear;
   }
 
   .banner-1,
   .banner-2 {
     position: relative;
-  }
-
-  .bg-line {
-    background: url("./assets/images/bg-dots.svg") no-repeat left 15.8125rem;
   }
 
   .banner-1::after {
@@ -275,25 +245,6 @@ dialog[open].popup {
 }
 
 @layer utilities {
-  ::-webkit-scrollbar {
-    width: 0.9375rem;
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #0ea5e9;
-    border-radius: 1.25rem;
-    border: 0.1875rem solid transparent;
-    background-clip: content-box;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #0284c7;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     html:focus-within {
       scroll-behavior: auto;

@@ -37,7 +37,10 @@ export default function NotificationPopup({
           ?.map((noti: any) => {
             // if not in room, or not owner, don't show request
             const isOwner = noti.post_author_id === userId
-            const isMember = noti.room.some((room: any) => room.user_id === userId && room.type != "request")
+
+            // Todo: fetch room members to check
+            // const isMember = noti.room.some((room: any) => room.user_id === userId && room.type != "request")
+            const isMember = true
 
             let filteredRooms = noti.room
             if (!isOwner && !isMember) 

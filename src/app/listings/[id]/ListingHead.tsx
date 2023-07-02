@@ -66,6 +66,9 @@ const ListingHead: React.FC<ListingHeadProps> = ({
       <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">
         {/* Images on phone */}
         <Image
+          onClick={() => {
+            !dialogRef.current?.open && dialogRef.current?.showModal()
+          }}
           src={imageSrc?.[0]}
           fill
           alt="Image"

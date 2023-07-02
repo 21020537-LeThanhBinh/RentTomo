@@ -7,11 +7,11 @@ export default function Logo({ isWhite = false }: { isWhite?: boolean }) {
   return (
     <Link href="/">
       <Image
-        src={!isWhite ? "/images/logo_full.png" : "/images/logo_full_white.png"}
+        src={"/images/logo_full.png"}
         height="32"
         width="167"
         alt="Logo"
-        className=""
+        className={isWhite ? "filter-logo-white" : ""}
       />
     </Link>
   );

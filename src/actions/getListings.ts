@@ -29,9 +29,9 @@ async function getListings(searchParams: ISearchParams) {
     query = query.in('category', searchParams.category.split(','))
 
   if (searchParams.minPrice && searchParams.minPrice != "0")
-    query = query.gte('price', Math.round(parseFloat(searchParams.minPrice)) * 1000000)
+    query = query.gte('price', Math.round(parseFloat(searchParams.minPrice) * 1000000))
   if (searchParams.maxPrice && parseFloat(searchParams.maxPrice) < 15)
-    query = query.lte('price', Math.round(parseFloat(searchParams.maxPrice)) * 1000000)
+    query = query.lte('price', Math.round(parseFloat(searchParams.maxPrice) * 1000000))
 
   if (searchParams.minArea && searchParams.minArea != "0")
     query = query.gte('area', searchParams.minArea)

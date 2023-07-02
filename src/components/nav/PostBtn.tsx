@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-export default function PostBtn() {
+export default function PostBtn({ isWhite }: { isWhite?: boolean }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -25,7 +25,7 @@ export default function PostBtn() {
   }, [isLoggedIn, pathname]);
 
   return (
-    <Link href={'/post'} onClick={onClick} className={`hidden sm:flex py-3 px-5 rounded-full items-center whitespace-nowrap hover:shadow-md transition font-semibold bg-sky-500 text-white`}>
+    <Link href={'/post'} onClick={onClick} className={`hidden sm:flex py-3 px-5 rounded-full items-center whitespace-nowrap hover:shadow-md transition font-semibold bg-sky-500 text-white ${isWhite && 'border-2 border-white bg-transparent'}`}>
       <span>Đăng tin</span>
     </Link>
   )

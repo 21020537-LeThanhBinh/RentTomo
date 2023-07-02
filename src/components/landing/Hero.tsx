@@ -6,7 +6,8 @@ export default function Hero() {
   return (
     <>
       <div className="pt-8 lg:pt-24 lg:w-1/2">
-        <h1 className="my-6 text-5xl font-bold text-white sm:hidden">
+        {/* Phone Hero */}
+        <h1 className="my-6 text-4xl md:text-5xl font-bold text-white sm:hidden">
           Ứng dụng tìm trọ, bạn cùng phòng lý tưởng cho sinh viên
         </h1>
 
@@ -21,9 +22,9 @@ export default function Hero() {
           Hoặc, tham gia ngay vào những phòng đã có thành viên để tiết kiệm chi phí và gặp gỡ những người bạn mới.
         </div>
 
-        <div className="my-6 w-[90%] flex gap-2">
+        <div className="my-6 flex gap-2 max-w-[33.75rem]">
           <SearchBar />
-          <PostBtn />
+          <PostBtn isWhite />
         </div>
       </div>
 
@@ -38,7 +39,7 @@ export default function Hero() {
       <Image
         src={'/images/demo_2.png'}
         alt="Demo Picture 2"
-        width={280}
+        width={264}
         height={560}
         className="hidden lg:block absolute right-72 top-40 rounded-3xl border-2"
       />

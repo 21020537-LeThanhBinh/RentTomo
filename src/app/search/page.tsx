@@ -97,11 +97,11 @@ export default async function SearchPage({ searchParams }: { searchParams: ISear
         </div>
       </div>
 
-      <div className="mt-12 mb-32 flex justify-center">
+      <div className="my-12 flex justify-center">
         <Pagination itemsLength={count || 0} />
       </div>
 
-      <div className="fixed bottom-12 left-[calc(50vw-24px)]">
+      <div className="fixed bottom-12 left-[calc(50vw-73px)]">
         <Link href={{ pathname: "map", query: { ...searchParams } }} className="flex items-center gap-2 py-3 px-5 bg-neutral-800 rounded-full text-white whitespace-nowrap transition font-semibold hover:scale-110 hover:shadow-md">
           <span>Mở bản đồ</span>
           <BsFillMapFill />

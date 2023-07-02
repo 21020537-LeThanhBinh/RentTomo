@@ -2,8 +2,8 @@ import { BiChevronDown } from "react-icons/bi";
 
 const Questions = () => {
   return (
-    <div className="px-4 md:px-8">
-      <h2 className=" mb-[1.3125rem] text-center text-[1.5rem] font-bold text-very-dark-blue md:text-[2rem]">
+    <div className="mt-4 px-4 md:px-8">
+      <h2 className="mb-[1.3125rem] text-center text-2xl font-bold md:text-3xl text-neutral-800">
         Câu hỏi thường gặp
       </h2>
       <p className="mx-auto max-w-[46ch] text-center text-neutral-500 md:text-lg">
@@ -13,7 +13,7 @@ const Questions = () => {
 
       <div className="mx-auto mt-[3.5rem] mb-[3.125rem] max-w-[33.75rem]">
         <details className="border-t border-very-dark-blue/50">
-          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg">
+          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg text-neutral-800">
             Ai có thể đăng tin?
             <div>
               <BiChevronDown size={25} className="fill-sky-500 transition-all duration-300 ease-in-out" />
@@ -26,7 +26,7 @@ const Questions = () => {
           </p>
         </details>
         <details className="border-t border-very-dark-blue/50">
-          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg">
+          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg text-neutral-800">
             Làm thế nào để tìm bạn cùng phòng phù hợp?
             <div>
               <BiChevronDown size={25} className="fill-sky-500 transition-all duration-300 ease-in-out" />
@@ -39,7 +39,7 @@ const Questions = () => {
           </p>
         </details>
         <details className="border-t border-very-dark-blue/50">
-          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg">
+          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg text-neutral-800">
             Làm thế nào để tìm phòng trọ phù hợp?
             <div>
               <BiChevronDown size={25} className="fill-sky-500 transition-all duration-300 ease-in-out" />
@@ -52,7 +52,7 @@ const Questions = () => {
           </p>
         </details>
         <details className="border-y border-very-dark-blue/50">
-          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg">
+          <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg text-neutral-800">
             Làm thế nào để tránh bị lừa khi thuê trọ?
             <div>
               <BiChevronDown size={25} className="fill-sky-500 transition-all duration-300 ease-in-out" />
@@ -60,8 +60,10 @@ const Questions = () => {
           </summary>
           <p className="px-4 py-3 text-neutral-500 md:text-[1rem]">
             Có rất nhiều trang web và video về vấn đề này để bạn tham khảo. Ví dụ:
-            <p className="hover:underline pl-4"><a href="https://homedy.com/news/nam-long-7-dieu-nay-sinh-vien-di-thue-nha-tro-khong-lo-bi-ho-ne4260">“Nằm lòng” 7 điều này sinh viên đi thuê nhà trọ không lo bị hớ</a></p>
-            <p className="hover:underline pl-4"><a href="https://www.youtube.com/watch?v=nhGs6IXmD4I&ab_channel=TH%C6%AFVI%E1%BB%86NPH%C3%81PLU%E1%BA%ACT">Giúp Sinh Viên Tránh Bẫy Lừa Đảo Khi Thuê Trọ | TVPL</a></p>
+            <br/>
+            <a className="hover:underline pl-4" href="https://homedy.com/news/nam-long-7-dieu-nay-sinh-vien-di-thue-nha-tro-khong-lo-bi-ho-ne4260">“Nằm lòng” 7 điều này sinh viên đi thuê nhà trọ không lo bị hớ</a>
+            <br/>
+            <a className="hover:underline pl-4" href="https://www.youtube.com/watch?v=nhGs6IXmD4I&ab_channel=TH%C6%AFVI%E1%BB%86NPH%C3%81PLU%E1%BA%ACT">Giúp Sinh Viên Tránh Bẫy Lừa Đảo Khi Thuê Trọ | TVPL</a>
           </p>
         </details>
       </div>

@@ -17,9 +17,9 @@ const NotificationComponent: React.FC<Props> = ({ notification, read, setRead })
         <div className="flex flex-col rounded-lg px-3 py-4 hover:cursor-pointer hover:bg-neutral-100 transition pr-16">
           <p className={`${read ? 'text-neutral-400' : 'text-neutral-800'}`}>
             {notification.type === "request" ?
-              "Bạn có yêu cầu mới trong "
+              "Có yêu cầu mới trong "
               : (notification.type === "member" || notification.type === "host") ?
-                "Bạn có thành viên mới trong "
+                "Có thành viên mới trong "
                 : "Có thay đổi mới trong "
             }
             <span className="font-semibold">

@@ -1,3 +1,5 @@
+import Footer from "@/components/footer/Footer"
+
 export default function SearchLayout({
   children,
 }: {
@@ -8,6 +10,7 @@ export default function SearchLayout({
       <main className="pt-20 relative">
         {children}
       </main>
+      <Footer />
     </>
   )
 }

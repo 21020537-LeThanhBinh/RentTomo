@@ -1,4 +1,4 @@
-const TabPanel = ({ title, description, index, selectedTab, image }: any) => {
+const TabPanel = ({ title, description, index, selectedTab, image, url }: any) => {
   return (
     <div
       role="tabpanel"
@@ -13,13 +13,13 @@ const TabPanel = ({ title, description, index, selectedTab, image }: any) => {
           src={image}
           alt=""
           aria-hidden="true"
-          width={538}
-          height={347}
-          className="mx-auto lg:mx-0"
+          width={760}
+          height={400}
+          className="mx-auto lg:mx-0 rounded-md"
         />
       </div>
       <div className="text-center md:flex md:flex-col md:gap-[1.5625rem] md:text-left lg:pt-[3.25rem] lg:pl-[4.5rem]">
-        <h3 className="mt-[1.125rem] text-[1.375rem] font-bold leading-none md:text-3xl">
+        <h3 className="mt-[1.125rem] text-2xl font-bold leading-none md:text-[2rem] text-neutral-800">
           {title}
         </h3>
         <p className="leading-[1.57] text-neutral-500 md:text-lg">
@@ -27,7 +27,7 @@ const TabPanel = ({ title, description, index, selectedTab, image }: any) => {
         </p>
         <div className="">
           <a
-            href="#"
+            href={url}
             className="mx-auto mt-[0.5rem] block w-max rounded-md border-[0.188rem] border-sky-500 bg-sky-500 py-[0.6558rem] px-[1.437rem] font-bold text-white transition duration-300 hover:bg-white hover:text-sky-500 md:mx-0"
           >
             Bắt đầu

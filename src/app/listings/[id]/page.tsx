@@ -45,7 +45,7 @@ const ListingPage = async ({ params, searchParams }: Props) => {
           title={listing.title}
           created_at={listing.created_at}
         />
-        <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-4">
           <div className="col-span-4 flex flex-col gap-8">
             <Tabs activeTab={activeTab} />
 
