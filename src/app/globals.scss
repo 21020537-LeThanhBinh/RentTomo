@@ -2,124 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-} */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-} */
-
-/* body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
-
-dialog[open].popup {
-  animation: fadeAndUp 0.2s ease-out forwards;
-}
-
-@keyframes fadeAndUp {
-  from {
-    opacity: 0;
-    transform: translateY(50%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0%);
-  }
-}
-
-.menu-login-enter {
-  position: absolute;
-  transform: translateX(-110%);
-}
-
-.menu-login-enter-active {
-  transform: translateX(0%);
-  transition: all 0.2s ease-out;
-}
-
-.menu-login-exit {
-  position: absolute;
-}
-
-.menu-login-exit-active {
-  transform: translateX(-110%);
-  transition: all 0.2s ease-out;
-}
-
-.menu-signup-enter {
-  /* position: absolute; */
-  transform: translateX(110%);
-}
-
-.menu-signup-enter-active {
-  transform: translateX(0%);
-  transition: all 0.2s ease-out;
-}
-
-// .menu-signup-exit {
-//   position: absolute;
-// }
-
-.menu-signup-exit-active {
-  transform: translateX(110%);
-  transition: all 0.2s ease-out;
-}
-
-.modalRef2::backdrop {
-  background: transparent;
-}
-
-.list-avatar:not(:first-child) {
-  margin-left: -8px;
-}
-
-.price-range-track-1 {
-  background-color: #222222;
-  height: 2px;
-}
-
-.price-range-track-0 {
-  background-color: #ddd;
-  height: 2px;
-}
-
-.price-range-track-2 {
-  background-color: #ddd;
-  height: 2px;
-}
-
-.radius-range-track-0 {
-  background-color: #222222;
-  height: 2px;
-}
-
-.radius-range-track-1 {
-  background-color: #ddd;
-  height: 2px;
-}
-
-.leaflet-bottom,
-.leaflet-control,
-.leaflet-pane,
-.leaflet-top {
-  z-index: 0 !important;
-}
-
 @layer base {
   html {
     overflow-x: hidden;
@@ -141,6 +23,106 @@ dialog[open].popup {
 }
 
 @layer components {
+  // Popup animation ////////////////////////////////////////////////////////////////////////////////////
+  dialog[open].popup {
+    animation: fadeAndUp 0.2s ease-out forwards;
+  }
+
+  @keyframes fadeAndUp {
+    from {
+      opacity: 0;
+      transform: translateY(50%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+
+  .menu-login-enter {
+    position: absolute;
+    transform: translateX(-110%);
+  }
+
+  .menu-login-enter-active {
+    transform: translateX(0%);
+    transition: all 0.2s ease-out;
+  }
+
+  .menu-login-exit {
+    position: absolute;
+  }
+
+  .menu-login-exit-active {
+    transform: translateX(-110%);
+    transition: all 0.2s ease-out;
+  }
+
+  .menu-signup-enter {
+    /* position: absolute; */
+    transform: translateX(110%);
+  }
+
+  .menu-signup-enter-active {
+    transform: translateX(0%);
+    transition: all 0.2s ease-out;
+  }
+
+  // .menu-signup-exit {
+  //   position: absolute;
+  // }
+
+  .menu-signup-exit-active {
+    transform: translateX(110%);
+    transition: all 0.2s ease-out;
+  }
+
+  // Overlap modal
+  .modalRef2::backdrop {
+    background: transparent;
+  }
+
+  // Overlap avatar
+  .list-avatar:not(:first-child) {
+    margin-left: -8px;
+  }
+
+  // Range slider
+  .price-range-track-1 {
+    background-color: #222222;
+    height: 2px;
+  }
+
+  .price-range-track-0 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  .price-range-track-2 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  .radius-range-track-0 {
+    background-color: #222222;
+    height: 2px;
+  }
+
+  .radius-range-track-1 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  // Leaflet
+  .leaflet-bottom,
+  .leaflet-control,
+  .leaflet-pane,
+  .leaflet-top {
+    z-index: 0 !important;
+  }
+
+  // Landing page's stuff ////////////////////////////////////////////////////////////////////////////////////
   .transition-visibility {
     --transition: 200ms ease-in-out;
     transition: transform var(--transition), visibility var(--transition),
