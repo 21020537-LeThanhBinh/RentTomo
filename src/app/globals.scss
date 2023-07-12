@@ -1,0 +1,248 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  details[open] div {
+    transform: rotate(180deg);
+  }
+
+  div[hidden] {
+    display: none;
+  }
+
+  body.lock-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
+@layer components {
+  // Popup animation ////////////////////////////////////////////////////////////////////////////////////
+  dialog[open].popup {
+    animation: fadeAndUp 0.2s ease-out forwards;
+  }
+
+  @keyframes fadeAndUp {
+    from {
+      opacity: 0;
+      transform: translateY(50%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+
+  .menu-login-enter {
+    position: absolute;
+    transform: translateX(-110%);
+  }
+
+  .menu-login-enter-active {
+    transform: translateX(0%);
+    transition: all 0.2s ease-out;
+  }
+
+  .menu-login-exit {
+    position: absolute;
+  }
+
+  .menu-login-exit-active {
+    transform: translateX(-110%);
+    transition: all 0.2s ease-out;
+  }
+
+  .menu-signup-enter {
+    /* position: absolute; */
+    transform: translateX(110%);
+  }
+
+  .menu-signup-enter-active {
+    transform: translateX(0%);
+    transition: all 0.2s ease-out;
+  }
+
+  // .menu-signup-exit {
+  //   position: absolute;
+  // }
+
+  .menu-signup-exit-active {
+    transform: translateX(110%);
+    transition: all 0.2s ease-out;
+  }
+
+  // Overlap modal
+  .modalRef2::backdrop {
+    background: transparent;
+  }
+
+  // Overlap avatar
+  .list-avatar:not(:first-child) {
+    margin-left: -8px;
+  }
+
+  // Range slider
+  .price-range-track-1 {
+    background-color: #222222;
+    height: 2px;
+  }
+
+  .price-range-track-0 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  .price-range-track-2 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  .radius-range-track-0 {
+    background-color: #222222;
+    height: 2px;
+  }
+
+  .radius-range-track-1 {
+    background-color: #ddd;
+    height: 2px;
+  }
+
+  // Leaflet
+  .leaflet-bottom,
+  .leaflet-control,
+  .leaflet-pane,
+  .leaflet-top {
+    z-index: 0 !important;
+  }
+
+  // Landing page's stuff ////////////////////////////////////////////////////////////////////////////////////
+  .transition-visibility {
+    --transition: 200ms ease-in-out;
+    transition: transform var(--transition), visibility var(--transition),
+      opacity var(--transition);
+  }
+
+  :is(a, button, input, textarea, select, details, summary):focus-visible {
+    outline: #0ea5e9 solid 0.188rem;
+    outline-offset: 0.188rem;
+  }
+
+  .form :is(a, button, input, textarea, select, details, summary):focus-visible,
+  footer :is(a, button, input, textarea, select, details, summary):focus {
+    outline-color: #fff;
+  }
+
+  // Effect when switching tabs
+  .border-tab::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 0.1875rem;
+    border-radius: 0.25rem;
+    background-color: #0ea5e9;
+    bottom: 0;
+    left: 0;
+    transform-origin: center;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .border-tab.border-selected::after {
+    transform-origin: center;
+    transform: scaleX(1);
+  }
+
+  .width-fill-available {
+    width: -webkit-fill-available;
+  }
+
+  .filter-logo-white {
+    filter: invert(1) brightness(6) hue-rotate(180deg);
+  }
+
+  .banner-1,
+  .banner-2 {
+    position: relative;
+  }
+
+  .banner-1::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    border-radius: 624.9375rem;
+    bottom: 3%;
+    left: 15%;
+    height: 74%;
+    width: 400%;
+    background-color: #0ea5e9;
+  }
+
+  .banner-2::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    border-radius: 624.9375rem;
+    top: 26%;
+    right: 15%;
+    height: clamp(9rem, 45vw, 17.375rem);
+    width: 200%;
+    background-color: #0ea5e9;
+  }
+
+  @media screen and (min-width: 54.4375em) {
+    .banner-1::after {
+      top: 5rem;
+    }
+
+    .banner-2::after {
+      top: 32%;
+      right: 56%;
+    }
+  }
+
+  @media screen and (min-width: 87.5rem) {
+    .banner-1::after {
+      bottom: 0;
+      top: 9rem;
+      left: 12rem;
+      height: 22rem;
+    }
+
+    .banner-2::after {
+      top: 9.6rem;
+      right: 39.6rem;
+      height: 22rem;
+      width: 100vw;
+    }
+  }
+}
+
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      -webkit-animation-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      -webkit-animation-iteration-count: 1 !important;
+      animation-iteration-count: 1 !important;
+      -webkit-transition-duration: 0.01ms !important;
+      -o-transition-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

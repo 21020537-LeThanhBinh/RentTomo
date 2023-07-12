@@ -1,0 +1,29 @@
+import React from "react"
+
+type FormActionProps = {
+  handleSubmit?: (e: any) => void,
+  type?: string,
+  action?: "submit" | "reset" | "button" | undefined,
+  children: React.ReactNode
+}
+
+export default function FormAction({
+  handleSubmit,
+  type = 'Button',
+  action = 'submit',
+  children
+}: FormActionProps) {
+  return (
+    <>
+      {type === 'Button' &&
+        <button
+          type={action}
+          onSubmit={handleSubmit}
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 mt-10"
+        >
+          {children}
+        </button>
+      }
+    </>
+  )
+}
