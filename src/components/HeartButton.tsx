@@ -4,20 +4,20 @@ import useFollow from "@/hooks/useFollow";
 import { useEffect } from "react";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
-interface HeartButtonProps {
+interface FollowButtonProps {
   listingId: string
   userId?: string | null
   setHasFollowed?: (hasFollowed: boolean) => void
   full?: boolean
 }
 
-const HeartButton: React.FC<HeartButtonProps> = ({
+const FollowButton: React.FC<FollowButtonProps> = ({
   listingId,
   userId,
   setHasFollowed,
   full
 }) => {
-  const { hasFollowed, toggleFavorite } = useFollow({
+  const { hasFollowed, toggleFollow } = useFollow({
     listingId,
     userId
   });
@@ -28,7 +28,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
 
   const Button = () => (
     <div
-      onClick={toggleFavorite}
+      onClick={toggleFollow}
       className="
         relative
         hover:opacity-80
@@ -58,11 +58,11 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   if (!full) return <Button />
 
   return (
-    <div onClick={toggleFavorite} className="flex items-center gap-2 cursor-pointer group">
+    <div onClick={toggleFollow} className="flex items-center gap-2 cursor-pointer group">
       <Button />
       <span className="text-neutral-600 underline">Lưu</span>
     </div>
   );
 }
 
-export default HeartButton;
+export default FollowButton;

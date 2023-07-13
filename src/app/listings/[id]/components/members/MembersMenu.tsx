@@ -5,9 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsThreeDots } from "react-icons/bs";
-import { ListingContext } from "../ListingContext";
 import MembersMenuItem from "./MembersMenuItem";
 import Profile from "@/components/profile/Profile";
+import { ListingContext } from "../../ListingContext";
 
 export default function MembersMenu() {
   const { userId, members, host, onRemoveMember } = useContext(ListingContext);

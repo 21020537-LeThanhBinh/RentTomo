@@ -37,7 +37,7 @@ export default function Hero() {
       />
 
       <Image
-        src={'/images/demo_2.png'}
+        src={'/images/demo_2_ver3.png'}
         alt="Demo Picture 2"
         width={264}
         height={560}

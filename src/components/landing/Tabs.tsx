@@ -8,13 +8,13 @@ const Tabs = () => {
 
   const [tabsNames] = useState([
     {
-      title: "Tìm kiếm dễ dàng",
+      title: "Tìm kiếm phòng trọ",
     },
     {
-      title: "Tìm hiểu nhanh chóng",
+      title: "Tìm hiểu bạn cùng phòng",
     },
     {
-      title: "Đăng bài hiệu quả",
+      title: "Đăng tin dễ dàng",
     },
   ]);
   const [tabs] = useState([
@@ -22,21 +22,21 @@ const Tabs = () => {
       title: "Tìm kiếm phòng trọ theo nhu cầu",
       description:
         "Tìm kiếm theo khu vực, tiện ích, giá cả, ... Sử dụng bản đồ để dễ dàng tìm vị trí tốt nhất và so sánh các phòng trọ trong vùng.",
-      image: "/images/demo_search.jpg",
+      image: "/images/demo_search_ver3.png",
       url: "/search",
     },
     {
       title: "Tìm hiểu bạn cùng phòng, quy định trong phòng",
       description:
         "Giới thiệu, tìm hiểu tính cách, sở thích, thói quen sinh hoạt của nhau và đặt quy định trong phòng để sống chung được lâu dài.",
-      image: "/images/demo_listing.png",
+      image: "/images/demo_listing_ver1.png",
       url: "/search",
     },
     {
-      title: "Đăng bài hiệu quả",
+      title: "Đăng tin, chia sẻ dễ dàng",
       description:
         "Đăng bài với nhiều thông tin chi tiết, dễ dàng chia sẻ lên các trang mạng xã hội giúp thu hút người thuê phòng nhanh chóng.",
-      image: "/images/demo_post.png",
+      image: "/images/demo_post_ver1.png",
       url: "/post",
     },
   ]);

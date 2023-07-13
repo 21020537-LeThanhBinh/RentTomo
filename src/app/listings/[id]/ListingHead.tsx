@@ -4,10 +4,11 @@ import Image from "next/image";
 
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/supabase/supabase-app";
-import HeartButton from "@/components/HeartButton";
+import FollowButton from "@/components/HeartButton";
 import MediaSlider from "@/components/MediaSlider";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import Heading from "@/components/Heading";
+import ShareButton from "@/components/ShareButton";
 
 interface ListingHeadProps {
   imageSrc: string[];
@@ -50,17 +51,11 @@ const ListingHead: React.FC<ListingHeadProps> = ({
     <>
       <div className="flex justify-between">
         <Heading
+          userId={userId}
+          id={id}
           title={title}
           subtitle={`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
         />
-
-        <div className="flex items-end">
-          <HeartButton
-            listingId={id}
-            userId={userId}
-            full
-          />
-        </div>
       </div>
 
       <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">

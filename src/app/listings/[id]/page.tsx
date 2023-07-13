@@ -1,14 +1,11 @@
 import { getListingById } from "@/actions/getListingById";
-import ListingInfo from "@/app/listings/[id]/ListingInfo";
+import { getListingMetaDataById } from "@/actions/getListingMetaDataById";
 import EmptyState from "@/components/EmptyState";
 import { Metadata, ResolvingMetadata } from 'next';
 import ListingClient from "./ListingClient";
 import ListingHead from "./ListingHead";
 import OwnerInfo from "./OwnerInfo";
 import Tabs from "./Tabs";
-import RoomRules from "./RoomRules";
-import { getListingMetaDataById } from "@/actions/getListingMetaDataById";
-import RoomChat from "./RoomChat";
 
 type Props = {
   params: { id: string }
@@ -46,31 +43,10 @@ const ListingPage = async ({ params, searchParams }: Props) => {
           created_at={listing.created_at}
         />
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-4">
-          <div className="col-span-4 flex flex-col gap-8">
-            <Tabs activeTab={activeTab} />
-
-            {activeTab === 'info' && (
-              <ListingInfo
-                category={listing.category}
-                description={listing.description}
-                utility={listing.utility}
-                area={listing.area}
-                address={listing.address}
-                price={listing.price}
-                address_id={listing.address_id}
-                location_text={listing.location_text}
-              />
-            )}
-
-            <RoomRules
-              id={listing.id}
-              isActive={activeTab === 'rules'}
-              roomRules={listing.room_rules}
-            />
-
-            <RoomChat
-              id={listing.id}
-              isActive={activeTab === 'room_chat'}
+          <div className="col-span-4">
+            <Tabs
+              activeTab={activeTab}
+              listing={listing}
             />
           </div>
 

@@ -2,7 +2,7 @@ import convertPointToArrayCoordinates from "@/utils/convertPointToArrayCoordinat
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
 import dynamic from "next/dynamic";
-import UtilityBox from "../../../components/UtilityBox";
+import UtilityBox from "../../../../../components/UtilityBox";
 const MiniMap = dynamic(() => import('@/components/map/MiniMap'), { ssr: false });
 
 interface ListingInfoProps {

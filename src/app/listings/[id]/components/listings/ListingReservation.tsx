@@ -3,10 +3,10 @@
 import Button from "@/components/Button";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { useContext, useEffect, useRef } from "react";
-import { ListingContext } from "../ListingContext";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import PopupInputContainer from "@/components/input/PopupInputContainer";
+import { ListingContext } from "../../ListingContext";
 
 interface ListingReservationProps {
   price: number;

@@ -1,6 +1,6 @@
 'use client';
 
-import HeartButton from "@/components/HeartButton";
+import FollowButton from "@/components/HeartButton";
 import Profile from "@/components/profile/Profile";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
@@ -31,7 +31,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
             />
           </Link>
           <div className="absolute top-3 right-3">
-            <HeartButton
+            <FollowButton
               listingId={listing.id}
               userId={userId}
               setHasFollowed={setHasFollowed}

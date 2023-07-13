@@ -26,7 +26,7 @@ export default function OwnerInfo({
         </div>
 
         <div className="flex-1 flex items-center h-full pl-4 border-l-[1px] w-1/2">
-          <p className="text-neutral-600 whitespace-pre-line truncate">{contact}</p>
+          <p className="text-neutral-600 whitespace-pre-line truncate text-sm">{contact}</p>
         </div>
       </div>
     </div>

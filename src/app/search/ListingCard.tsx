@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import HeartButton from "../../components/HeartButton";
+import FollowButton from "../../components/HeartButton";
 
 interface ListingCardProps {
   data: any;
@@ -39,7 +39,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
             />
           </Link>
           <div className="absolute top-3 right-3">
-            <HeartButton
+            <FollowButton
               listingId={data.id}
               userId={userId}
             />

@@ -7,9 +7,9 @@ import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
 import { toast } from "react-hot-toast";
 import ContextProvider from "./ListingContext";
-import ListingRequests from "./components/ListingRequests";
-import ListingReservation from "./components/ListingReservation";
-import MembersInfo from "./components/MembersInfo";
+import ListingRequests from "./components/listings/ListingRequests";
+import ListingReservation from "./components/listings/ListingReservation";
+import MembersInfo from "./components/members/MembersInfo";
 
 interface ListingClientProps {
   listingId: string;

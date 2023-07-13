@@ -56,7 +56,7 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
       //@ts-ignore
       scrollWheelZoom={true}
       style={{ cursor: 'crosshair' }}
-      className="h-[35vh] rounded-lg"
+      className="h-[35vh] rounded-lg z-0"
     >
       <SearchField />
       <ZoomControl position='topright' />

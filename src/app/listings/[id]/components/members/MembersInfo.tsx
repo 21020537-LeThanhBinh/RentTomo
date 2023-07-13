@@ -33,7 +33,7 @@ export default function MembersInfo({
 
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 relative">
-      <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-col gap-3 p-4">
         <div className="text-xl font-semibold">Các thành viên</div>
 
         <div className="flex items-center h-full">
@@ -50,7 +50,7 @@ export default function MembersInfo({
           </div>
 
           <div className="flex-1 h-full pl-4 border-l-[1px]">
-            <p className="text-neutral-600 whitespace-pre-line">{host?.description}</p>
+            <p className="text-neutral-600 whitespace-pre-line text-sm">{host?.description}</p>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ export default function MembersInfo({
             </div>
 
             <div className="flex-1 h-full pl-4 border-l-[1px]">
-              <p className="text-neutral-600 whitespace-pre-line">{member?.description}</p>
+              <p className="text-neutral-600 whitespace-pre-line text-sm">{member?.description}</p>
             </div>
           </div>
         ))}
