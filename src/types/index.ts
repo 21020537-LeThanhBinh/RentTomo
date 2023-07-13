@@ -9,6 +9,8 @@ export type User = {
 }
 
 export interface ISearchParams {
+  id?: string
+  
   location_id?: string
   level?: string
   lat?: string

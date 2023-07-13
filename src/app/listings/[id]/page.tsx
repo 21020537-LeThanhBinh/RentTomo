@@ -23,7 +23,6 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 
 const ListingPage = async ({ params, searchParams }: Props) => {
   const listing = (await getListingById(params.id)) as any;
-  const activeTab = searchParams.tab || (listing.room_rules ? 'rules' : 'info');
 
   if (!listing) {
     return (
@@ -45,8 +44,8 @@ const ListingPage = async ({ params, searchParams }: Props) => {
         <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-4">
           <div className="col-span-4">
             <Tabs
-              activeTab={activeTab}
               listing={listing}
+              tab={searchParams.tab || ""}
             />
           </div>
 

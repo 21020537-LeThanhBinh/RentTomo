@@ -2,13 +2,12 @@
 
 import Image from "next/image";
 
-import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/supabase/supabase-app";
 import FollowButton from "@/components/HeartButton";
 import MediaSlider from "@/components/MediaSlider";
-import handleCloseDialog from "@/utils/handleCloseDialog";
-import Heading from "@/components/Heading";
 import ShareButton from "@/components/ShareButton";
+import { supabase } from "@/supabase/supabase-app";
+import handleCloseDialog from "@/utils/handleCloseDialog";
+import { useEffect, useRef, useState } from "react";
 
 interface ListingHeadProps {
   imageSrc: string[];
@@ -49,13 +48,30 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 
   return (
     <>
-      <div className="flex justify-between">
-        <Heading
-          userId={userId}
-          id={id}
-          title={title}
-          subtitle={`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
-        />
+      <div className="w-full">
+        <div className="text-2xl font-bold">
+          {title}
+        </div>
+
+        <div className="mt-2 flex gap-2 justify-between items-center">
+          <div className="font-light text-neutral-500">
+            {`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
+          </div>
+
+          <div className="flex gap-4">
+            <ShareButton
+              listingId={id}
+              title={title}
+              userId={userId}
+            />
+
+            <FollowButton
+              listingId={id}
+              userId={userId}
+              full
+            />
+          </div>
+        </div>
       </div>
 
       <div className="w-full h-[30vh] sm:h-[60vh] overflow-hidden rounded-xl relative">

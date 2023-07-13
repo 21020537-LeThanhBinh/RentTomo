@@ -65,14 +65,6 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
 
   return (
     <>
-      <div className="text-xl font-semibold flex justify-between items-center gap-2">
-        <span>Quy định chung</span>
-
-        {userId && userId === hostId && (
-          <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />
-        )}
-      </div>
-
       {isEditing ? (
         <form onSubmit={putRules}>
           <Input
@@ -100,8 +92,12 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
           </div>
         </form>
       ) : (
-        <div className="text-neutral-600 whitespace-pre-line">
-          {rules || "Chưa có quy định chung."}
+        <div className="text-neutral-600 whitespace-pre-line flex justify-between items-center gap-2">
+          <span>{rules || "Trưởng phòng chưa ra quy định chung."}</span>
+
+          {userId && userId === hostId && (
+            <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />
+          )}
         </div>
       )}
       <hr />

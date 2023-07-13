@@ -10,7 +10,7 @@ async function getListings(searchParams: ISearchParams) {
   } else {
     query = supabase
       .from('posts_members')
-      .select(`id, title, address, address_id, area, category, image_src, price, utility, location_text, members`, {
+      .select(`id, title, address, address_id, area, category, image_src, price, utility, location_text, members, author_id: author->>id`, {
         count: 'exact',
       })
   }

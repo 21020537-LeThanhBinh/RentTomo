@@ -181,6 +181,14 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                   {hasNoti && <span className="absolute top-4 right-4 p-1 bg-red-600 rounded-full" title="Thông báo mới"></span>}
                 </div>
                 <MenuItem
+                  label="Tin của bạn"
+                  onClick={() => router.push(`/search/my-listings?id=${session.user.id}`)}
+                />
+                <MenuItem
+                  label="Tin theo dõi"
+                  onClick={() => router.push(`/search/following-listings?id=${session.user.id}`)}
+                />
+                <MenuItem
                   label="Đăng xuất"
                   onClick={handleSignOut}
                 />

@@ -58,13 +58,17 @@ export default function MembersMenu() {
         <BsThreeDots size={20} />
       </button>
 
-      <dialog open={menuOpen} className="rounded-xl shadow-md w-44 bg-white right-0 top-14 text-sm mr-0 p-0">
+      <dialog open={menuOpen} className="rounded-xl shadow-md w-56 bg-white right-0 top-14 text-sm mr-0 p-0 z-10">
         <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
           {isHost && (
             <>
               <MenuItem
                 label="Thêm/ sửa Quy định"
-                onClick={() => router.push(pathname + '?tab=rules#head')}
+                onClick={() => router.replace(pathname + '?tab=rules#head')}
+              />
+              <MenuItem
+                label="Thêm/ sửa Link group chat"
+                onClick={() => router.replace(pathname + '?tab=room_chat#head')}
               />
               <MenuItem
                 label="Quản lý Thành viên"
