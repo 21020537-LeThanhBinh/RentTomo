@@ -99,15 +99,15 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         </div>
         <div className="w-full flex justify-between">
           <span>Điện</span>
-          <span>đ {formatBigNumber(fees.electricity)} / kWh</span>
+          <span>đ {formatBigNumber(fees.electricity)}</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Nước</span>
-          <span>đ {formatBigNumber(fees.water)} / m³</span>
+          <span>đ {formatBigNumber(fees.water)}</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Wifi</span>
-          <span>đ {formatBigNumber(fees.internet)} / tháng</span>
+          <span>đ {formatBigNumber(fees.internet)}</span>
         </div>
       </div>
       <hr />

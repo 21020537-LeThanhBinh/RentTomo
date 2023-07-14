@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import cityList from '../../../public/DiaGioiHanhChinhVN.json' assert { type: 'json' };
 import Button from "../Button";
 import Input from "./Input";
@@ -19,10 +19,10 @@ interface AddressProps {
   isLoading: boolean;
   addressRef: React.RefObject<HTMLDialogElement>;
   setAddressLabel: (label: string) => void;
-  addressLabel: string;
 }
 
-export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel, addressLabel }: AddressProps) {
+export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel }: AddressProps) {
+  const isFirstRender = useRef(true);
   const [city, setCity] = useState<any>()
   const [district, setDistrict] = useState<any>()
   const [ward, setWard] = useState<any>()
@@ -50,6 +50,11 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
   }, [value?.ward_id])
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
     const newAddress = []
     if (value?.number) newAddress.push(value.number)
     if (value?.street) newAddress.push(value.street)

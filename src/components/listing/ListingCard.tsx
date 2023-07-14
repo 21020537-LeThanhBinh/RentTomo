@@ -11,7 +11,7 @@ import { AiTwotoneSetting } from "react-icons/ai";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import FollowButton from "../HeartButton";
+import FollowButton from "../FollowButton";
 import MenuItem from "../MenuItem";
 import { useRouter } from "next/navigation";
 
@@ -44,7 +44,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
   }, []);
 
   const onEditListing = () => {
-    // router.push(`/post?id=${data.id}`)
+    router.push(`/post?id=${data.id}`)
   }
 
   const onDeleteListing = () => {

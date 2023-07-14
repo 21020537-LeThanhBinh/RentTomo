@@ -1,6 +1,6 @@
 'use client';
 
-import FollowButton from "./HeartButton";
+import FollowButton from "./FollowButton";
 import ShareButton from "./ShareButton";
 
 interface HeadingProps {

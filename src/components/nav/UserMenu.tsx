@@ -141,6 +141,10 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
     router.push(pathname)
   }, [pathname]);
 
+  const handleHelp = () => {
+
+  }
+
   return (
     <div className={`flex justify-end flex-shrink-0 relative ${isWhite && 'text-white'}`} >
       <div ref={menuRef} className="flex flex-row items-center gap-3">
@@ -165,6 +169,16 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                   className='sm:hidden'
                 />
                 <MenuItem
+                  label="Tin của bạn"
+                  onClick={() => router.push(`/search/my-listings?id=${session.user.id}`)}
+                />
+                <MenuItem
+                  label="Đang theo dõi"
+                  onClick={() => router.push(`/search/following-listings?id=${session.user.id}`)}
+                />
+                <div className='border-t-[1px] my-2' />
+
+                <MenuItem
                   label="Thông tin cá nhân"
                   onClick={() => {
                     router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'), { scroll: false })
@@ -172,25 +186,27 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                     // if (searchParams.get('popup') == 'edit-profile-2' && !profileModalRef.current?.open)
                     //   profileModalRef.current?.showModal();
                   }}
+                  light
                 />
                 <div className='relative'>
                   <MenuItem
                     label="Thông báo"
                     onClick={() => router.replace(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'), { scroll: false })}
+                    light
                   />
                   {hasNoti && <span className="absolute top-4 right-4 p-1 bg-red-600 rounded-full" title="Thông báo mới"></span>}
                 </div>
+                <div className='border-t-[1px] my-2' />
+
                 <MenuItem
-                  label="Tin của bạn"
-                  onClick={() => router.push(`/search/my-listings?id=${session.user.id}`)}
-                />
-                <MenuItem
-                  label="Tin theo dõi"
-                  onClick={() => router.push(`/search/following-listings?id=${session.user.id}`)}
+                  label="Trợ giúp"
+                  onClick={handleHelp}
+                  light
                 />
                 <MenuItem
                   label="Đăng xuất"
                   onClick={handleSignOut}
+                  light
                 />
               </>
             ) : (

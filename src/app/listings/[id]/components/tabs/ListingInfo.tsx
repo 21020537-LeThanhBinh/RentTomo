@@ -1,8 +1,8 @@
-import convertPointToArrayCoordinates from "@/utils/convertPointToArrayCoordinates";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
 import dynamic from "next/dynamic";
 import UtilityBox from "../../../../../components/UtilityBox";
+import { convertPointToArrayCoordinates } from "@/utils/convertPointToCoordinates";
 const MiniMap = dynamic(() => import('@/components/map/MiniMap'), { ssr: false });
 
 interface ListingInfoProps {
@@ -73,7 +73,6 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
 
       <div>
         <MiniMap
-          center={coordinates}
           zoom={16}
           selectedPoint={coordinates}
         />

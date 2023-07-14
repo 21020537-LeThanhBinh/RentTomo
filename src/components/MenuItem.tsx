@@ -4,12 +4,14 @@ interface MenuItemProps {
   onClick: (e?: any) => void;
   label: string;
   className?: string;
+  light?: boolean;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
   onClick,
   label,
-  className
+  className,
+  light = false
 }) => {
   return (
     <div
@@ -19,7 +21,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
         py-3 
         hover:bg-neutral-100 
         transition
-        font-semibold
+        ${light ? 'font-normal' : 'font-semibold'}
         ${className}
       `}
     >

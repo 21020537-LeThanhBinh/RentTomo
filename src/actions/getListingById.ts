@@ -7,7 +7,6 @@ async function getListingById(id: string) {
       id, title, address, address_id, area, category, created_at, image_src, price, fees, utility, description, location_text, author, room_rules
     `)
     .eq('id', id)
-    .limit(1)
     .single()
 
   if (!error && data) {

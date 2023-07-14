@@ -1,36 +1,34 @@
 'use client'
 
-import Button from '@/components/Button';
-import AddressInputPopup from '@/components/input/AddressInputPopup';
-import CategoryInput from '@/components/input/CategoryInput';
-import ImageUpload from '@/components/input/ImageUpload';
-import Input from '@/components/input/Input';
-import ItemSelect from '@/components/input/ItemSelect';
-import MultiItemSelect from '@/components/input/MultiItemSelect';
-import { utilities } from '@/components/input/UtilityInput';
+import { deleteImage } from '@/actions/deleteImage';
+import { uploadImage } from '@/actions/uploadImage';
 import { supabase } from '@/supabase/supabase-app';
-import formatBigNumber from '@/utils/formatBigNumber';
-import handleCloseDialog from '@/utils/handleCloseDialog';
-import { FormikConfig, FormikValues, useFormik } from 'formik';
-import dynamic from 'next/dynamic';
+import { IPostForm } from '@/types/postForm';
+import { convertPointToCoordinates } from '@/utils/convertPointToCoordinates';
+import imageSrcToPublicId from '@/utils/imageSrcToPublicId';
+import { parseAddressId } from '@/utils/parseAddress';
+import { FormikValues, useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import PostForm from './PostForm';
 
 const provider = import('leaflet-geosearch').then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider());
 
-export default function PostClient() {
+export default function PostClient({ listing }: { listing?: any }) {
   const router = useRouter()
-  const addressRef = useRef<HTMLDialogElement>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  const [imageSrcOld, setImageSrcOld] = useState<string[]>(listing?.image_src || [])
   const [files, setFiles] = useState<any[]>([])
 
-  const [addressLabel, setAddressLabel] = useState<string>('')
-  const [mapCenter, setMapCenter] = useState<any>([15.9266657, 107.9650855])
-  const [selectedPoint, setSelectedPoint] = useState<any>({ lng: 107.9650855, lat: 15.9266657 })
+  const [addressLabel, setAddressLabel] = useState<string>(listing ? (listing?.address + ', ' + parseAddressId(listing?.address_id)) : '')
+  const [selectedPoint, setSelectedPoint] = useState<{ lat: number, lng: number }>(convertPointToCoordinates(listing?.location_text) || { lng: 107.9650855, lat: 15.9266657 })
+  const [zoom, setZoom] = useState<number>(listing ? 15 : 5)
 
   useEffect(() => {
-    if ((addressLabel.match(/,/g) || [])?.length >= 4) return
+    if (!!listing) return
+    if ((addressLabel.match(/,/g) || [])?.length >= 4) return;
 
     provider
       .then((provider) => provider
@@ -38,73 +36,121 @@ export default function PostClient() {
         .then((results: any) => {
           console.log(results)
           if (results.length > 0) {
-            setMapCenter([results[0].y, results[0].x])
             setSelectedPoint({ lng: results[0].x, lat: results[0].y })
           }
         }))
   }, [addressLabel])
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, addressRef.current!, () => addressRef.current?.close())
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   const handleSubmit = async (values: FormikValues) => {
     const userId = (await supabase.auth.getUser())?.data?.user?.id
-
-    if (!userId)
-      return toast.error('Bạn chưa đăng nhập!')
-
-    if (files.length < 3)
-      return toast.error('Hãy thêm từ 3 đến 12 ảnh.');
-
-    if (Object.keys(values).some((key) => !values[key]))
-      return toast.error('Vui lòng điền đầy đủ thông tin!');
-
+    if (!checkSubmit(values, userId)) return
     setIsLoading(true);
 
-    const multiUpload = await Promise.all(files.map((file) => handleUploadImages(file)));
-    const image_src = multiUpload.map((item) => item.secure_url)
+    // Delete old images
+    await Promise.all(listing?.image_src?.map((url: string) => {
+      if (!imageSrcOld.some((keepUrl) => keepUrl === url))
+        deleteImage(imageSrcToPublicId(url))
+    }) || [])
+    // Upload new images
+    const multiUpload = await Promise.all(files.map((file) => uploadImage(file)));
+    const imageSrcNew = multiUpload.map((item) => item.secure_url)
+
+    const image_src = [...imageSrcOld, ...imageSrcNew]
 
     const listingValues = {
       ...values,
       author_id: userId,
-      address: values.address.number + (values.address.number ? ', ' : '') + values.address.street,
-      address_id: {
-        city_id: values.address.city_id,
-        district_id: values.address.district_id,
-        ward_id: values.address.ward_id
-      },
+      address: makeAddress(values),
+      address_id: makeAddressId(values),
       image_src: image_src,
       location: `POINT(${selectedPoint.lng} ${selectedPoint.lat})`
     }
 
-    const { data, error } = await supabase
-      .from('posts')
-      .insert([listingValues])
-      .select('id')
-      .single()
+    let query
+    if (listing?.id)
+      query = supabase
+        .from('posts')
+        .upsert([{ ...listingValues, id: listing.id }])
+        .select('id')
+        .single()
+    else
+      query = supabase
+        .from('posts')
+        .insert([listingValues])
+        .select('id')
+        .single()
+    const { data, error } = await query
 
-    if (error || !data) {
-      toast.error('Đã có lỗi xảy ra!');
-      return console.log(error)
+    setIsLoading(false);
+    if (error || !data)
+      onSubmitFailure(error, imageSrcNew)
+    else
+      onSubmitSuccess(data.id, userId!)
+  }
+
+  const checkSubmit = (values: FormikValues, userId?: string) => {
+    if (!userId) {
+      toast.error('Bạn chưa đăng nhập!')
+      return false
     }
+    if ((imageSrcOld.length + files.length) < 3) {
+      toast.error('Hãy thêm từ 3 đến 12 ảnh.');
+      return false
+    }
+    if (!listing && (!values.address.city_id || !values.address.district_id || !values.address.ward_id)) {
+      toast.error('Vui lòng nhập địa chỉ chi tiết hơn!');
+      return false
+    }
+    if (Object.keys(values).some((key) => !values[key])) {
+      toast.error('Vui lòng điền đầy đủ thông tin!');
+      return false
+    }
+    return true
+  }
 
-    onSubmitSuccess(data.id, userId)
+  const makeAddress = (values: FormikValues) => {
+    if (values.address.street)
+      return values.address.number + (values.address.number ? ', ' : '') + values.address.street
+    else if (!!listing)
+      return listing.address
+    else
+      toast.error('Vui lòng điền đầy đủ thông tin!');
+
+    return ''
+  }
+
+  const makeAddressId = (values: FormikValues) => {
+    if (values.address.city_id && values.address.district_id && values.address.ward_id)
+      return {
+        city_id: values.address.city_id,
+        district_id: values.address.district_id,
+        ward_id: values.address.ward_id
+      }
+    else if (!!listing)
+      return listing.address_id
+    else
+      toast.error('Vui lòng điền đầy đủ thông tin!');
+
+    return {
+      city_id: '',
+      district_id: '',
+      ward_id: ''
+    }
+  }
+
+  const onSubmitFailure = async (error: any, imageSrcNew: string[]) => {
+    toast.error('Đã có lỗi xảy ra!');
+    console.log(error)
+
+    // Delete new images if error
+    await Promise.all(imageSrcNew.map((src: string) => {
+      deleteImage(imageSrcToPublicId(src))
+    }))
+    console.log("Don't worry, images are deleted!")
   }
 
   const onSubmitSuccess = async (postId: string, userId: string) => {
     toast.success('Đăng tin thành công!');
-    formik.resetForm()
-    setFiles([])
-
-    setIsLoading(false);
 
     await supabase
       .from('follows')
@@ -115,247 +161,48 @@ export default function PostClient() {
     router.push(`/listings/${postId}`)
   }
 
-  const handleUploadImages = async (file: any) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'swnb0zrk');
-
-    try {
-      const response = await fetch('https://api.cloudinary.com/v1_1/dhfrxvhb2/image/upload', {
-        method: 'POST',
-        body: formData
-      })
-      return response.json();
-    } catch (error) {
-      return error;
-    }
-  }
-
-  const formik = useFormik({
+  const formik = useFormik<IPostForm>({
     initialValues: {
-      category: "",
-      address: { city_id: "", district_id: "", ward_id: "", street: "", number: "" },
-      area: 0,
-      utility: [],
-      title: "",
-      description: "",
-      price: 0,
-      fees: { deposit: 0, electricity: 0, water: 0, internet: 0 },
+      category: listing?.category || "",
+      address: {
+        city_id: "",
+        district_id: "",
+        ward_id: "",
+        street: "",
+        number: "",
+      },
+      area: listing?.area || 0,
+      utility: listing?.utility || [],
+      title: listing?.title || "",
+      description: listing?.description || "",
+      price: listing?.price || 0,
+      fees: listing?.fees || { deposit: 0, electricity: 0, water: 0, internet: 0 },
     },
     onSubmit: handleSubmit,
-  } as FormikConfig<{
-    category: string;
-    address: {
-      city_id: string;
-      district_id: string;
-      ward_id: string;
-      street: string;
-      number: string;
-    },
-    area: number;
-    utility: string[];
-    title: string;
-    description: string;
-    price: number;
-    fees: {
-      deposit: number;
-      electricity: number;
-      water: number;
-      internet: number;
-    }
-  }>
-  );
+  });
 
-  const Map = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
-    ssr: false
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [formik.values.address.city_id])
+  useEffect(() => {
+    if (!!listing) return
+
+    const newZoom = formik.values.address.ward_id ? 15 : formik.values.address.district_id ? 13 : formik.values.address.city_id ? 9 : 5
+    setZoom(newZoom)
+  }, [formik.values.address.ward_id, formik.values.address.district_id, formik.values.address.city_id])
 
   return (
-    <form className="my-6 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={formik.handleSubmit}>
-      <div className="flex flex-col gap-4 md:w-1/3 w-full relative">
-        <div className='font-semibold text-lg text-neutral-600'>
-          Địa chỉ
-        </div>
-
-        <div>
-          <div onClick={() => !addressRef.current?.open && addressRef.current?.showModal()}>
-            <ItemSelect
-              onChange={() => !addressRef.current?.open && addressRef.current?.showModal()}
-              value={{ label: addressLabel }}
-              placeholder="Địa chỉ"
-              isClearable={false}
-              alwaysClosed={true}
-              tabIndex={-1}
-              required
-            />
-          </div>
-
-          <AddressInputPopup
-            value={formik.values.address}
-            setFieldValue={(name, value) => formik.setFieldValue(name, value)}
-            isLoading={isLoading}
-            addressRef={addressRef}
-            setAddressLabel={setAddressLabel}
-            addressLabel={addressLabel}
-          />
-        </div>
-
-        <div className="h-[35vh]">
-          <Map
-            center={mapCenter}
-            zoom={formik.values.address.ward_id ? 15 : formik.values.address.district_id ? 13 : formik.values.address.city_id ? 9 : 5}
-            selectedPoint={selectedPoint}
-            setSelectedPoint={setSelectedPoint}
-          />
-        </div>
-        {formik.values.address.number && (
-          <span className='text-neutral-600'>*Vui lòng chọn vị trí thủ công trên bản đồ</span>
-        )}
-
-        <div className='font-semibold text-lg text-neutral-600 mt-2'>
-          Hình ảnh (3 đến 12 tệp)
-        </div>
-
-        <ImageUpload
-          files={files}
-          setFiles={setFiles}
-        />
-
-        {/* Video upload */}
-      </div>
-
-      <div className="flex-1 flex flex-col gap-4">
-        <div className='font-semibold text-lg text-neutral-600'>
-          Thông tin chung
-        </div>
-
-        <CategoryInput
-          onChange={(value) => formik.setFieldValue("category", value)}
-          value={formik.values.category}
-        />
-
-        <MultiItemSelect
-          placeholder="Thêm tiện ích"
-          options={utilities.map((utility: any) => {
-            return { value: utility.label, label: utility.label, icon: utility.icon }
-          })}
-          value={formik.values.utility.map((utility: string) => { return { value: utility, label: utility, icon: undefined } })}
-          onChange={(utility: any) => {
-            formik.setFieldValue("utility", utility.map((item: any) => item.value))
-          }}
-        />
-
-        <Input
-          onChange={(value) => formik.setFieldValue("area", value)}
-          value={formik.values.area ? formik.values.area.toString() : ""}
-          id="area"
-          label="Diện tích (m²)"
-          disabled={isLoading}
-          required
-        />
-
-        <div className='font-semibold text-lg text-neutral-600 mt-2'>
-          Giá thuê và các khoản phí
-        </div>
-
-        <Input
-          onChange={(value) => formik.setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
-          value={formatBigNumber(formik.values.price)}
-          id="price"
-          label="Giá thuê (/tháng)"
-          formatPrice
-          type="string"
-          disabled={isLoading}
-          required
-        />
-
-        <Input
-          onChange={(value) => formik.setFieldValue("fees.deposit", parseInt(value.replace(/\D/g, "")))}
-          value={formatBigNumber(formik.values.fees.deposit)}
-          id="deposit"
-          label="Tiền cọc"
-          formatPrice
-          type="string"
-          disabled={isLoading}
-          required
-        />
-
-        <div className='flex gap-2'>
-          <Input
-            onChange={(value) => formik.setFieldValue("fees.electricity", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(formik.values.fees.electricity)}
-            id="electricity"
-            label="Điện (/kWh)"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-
-          <Input
-            onChange={(value) => formik.setFieldValue("fees.water", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(formik.values.fees.water)}
-            id="water"
-            label="Nước (/m³)"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-
-          <Input
-            onChange={(value) => formik.setFieldValue("fees.internet", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(formik.values.fees.internet)}
-            id="internet"
-            label="Wifi (/tháng)"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className='font-semibold text-lg text-neutral-600 mt-2'>
-          Nội dung tin đăng
-        </div>
-
-        <Input
-          onChange={(value) => formik.setFieldValue("title", value)}
-          value={formik.values.title}
-          id="title"
-          label="Tiêu đề"
-          disabled={isLoading}
-          required
-        />
-
-        <Input
-          onChange={(value) => formik.setFieldValue("description", value)}
-          value={formik.values.description}
-          id="description"
-          label="Mô tả chi tiết"
-          disabled={isLoading}
-          required
-          multiline
-        />
-
-        <div className="flex justify-end mt-2">
-          <div className='w-full sm:w-1/2 lg:w-1/3 flex gap-4'>
-            <Button
-              label='Hủy'
-              onClick={() => router.back()}
-              disabled={isLoading}
-              outline
-            />
-            <Button
-              label='Đăng tin'
-              onClick={() => { }}
-              disabled={isLoading}
-              type='submit'
-            />
-          </div>
-        </div>
-      </div>
-    </form >
+    <PostForm
+      isLoading={isLoading}
+      handleSubmit={formik.handleSubmit}
+      values={formik.values}
+      setFieldValue={formik.setFieldValue}
+      addressLabel={addressLabel}
+      setAddressLabel={setAddressLabel}
+      selectedPoint={selectedPoint}
+      setSelectedPoint={setSelectedPoint}
+      zoom={zoom}
+      imageSrcOld={imageSrcOld}
+      setImageSrcOld={setImageSrcOld}
+      files={files}
+      setFiles={setFiles}
+    />
   )
 }

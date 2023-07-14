@@ -2,7 +2,7 @@ import { BiChevronDown } from "react-icons/bi";
 
 const Questions = () => {
   return (
-    <div className="mt-4 px-4 md:px-8">
+    <div id="faq" className="pt-4 px-4 md:px-8">
       <h2 className="mb-[1.3125rem] text-center text-2xl font-bold md:text-3xl text-neutral-800">
         Câu hỏi thường gặp
       </h2>

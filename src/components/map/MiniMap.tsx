@@ -24,29 +24,28 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  center?: number[] | string[]
   zoom?: number
-  selectedPoint?: number[] | string[]
+  selectedPoint?: { lat: number, lng: number } | number[]
   setSelectedPoint?: (l: any) => void
 }
 
 const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint }) => {
+const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) => {
   const mapRef = useRef<any>()
 
   useEffect(() => {
-    if (!center || !zoom) return
+    if (!selectedPoint || !zoom) return
 
-    mapRef.current?.setView(center as L.LatLngExpression, zoom, {
+    mapRef.current?.setView(selectedPoint as L.LatLngExpression, zoom, {
       animate: true,
     })
-  }, [zoom, center])
+  }, [zoom, selectedPoint])
 
   return (
     <MapContainer
-      center={center as L.LatLngExpression || [51, -0.09]}
+      center={selectedPoint as L.LatLngExpression || [51, -0.09]}
       zoom={zoom}
       scrollWheelZoom={false}
       zoomControl={false}
@@ -82,7 +81,7 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
         url={url}
         attribution={attribution}
       />
-      {center && (
+      {selectedPoint && (
         <Marker position={selectedPoint as L.LatLngExpression} />
       )}
       <SetViewOnClick selectPoint={setSelectedPoint} />
