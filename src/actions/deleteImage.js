@@ -7,11 +7,12 @@ const deleteImage = async (public_id) => {
     api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET
   });
 
-  cloudinary.v2.uploader.destroy(public_id, function (error, result) {
-    console.log(result, error)
-  })
-    .then(resp => console.log(resp))
-    .catch(_err => console.log("Something went wrong, please try again later."));
+  try {
+    const res = await cloudinary.v2.uploader.destroy(public_id)
+    console.log(res)
+  } catch (error) {
+    console.log("Delete image error", error)
+  }
 }
 
 export { deleteImage }

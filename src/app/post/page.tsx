@@ -1,6 +1,8 @@
 import { getListingById } from "@/actions/getListingById";
 import PostClient from "./PostClient";
 
+export const revalidate = 86400 // revalidate this page everyday
+
 export default async function PostPage({ searchParams }: { searchParams: { id?: string } }) {
   const listing = (searchParams.id) ? (await getListingById(searchParams.id)) : null;
 

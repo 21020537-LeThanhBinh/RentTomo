@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaListUl } from "react-icons/fa";
 const MapClient = dynamic(() => import('./MapClient'), { ssr: false });
 
-export const revalidate = 3600 // revalidate this page every 60 minutes
+export const revalidate = 86400 // revalidate this page everyday
 
 export default async function MapPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getListings(searchParams)

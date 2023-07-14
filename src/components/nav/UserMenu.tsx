@@ -139,7 +139,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   const handleSignOut = useCallback(async () => {
     await supabase.auth.signOut()
     router.push(pathname)
-  }, [pathname]);
+  }, [router, pathname]);
 
   const handleHelp = () => {
 

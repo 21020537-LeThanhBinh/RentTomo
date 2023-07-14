@@ -17,7 +17,7 @@ import CategorySelect from "./CategorySelect"
 import PriceRange from "./PriceRange"
 import { AiFillQuestionCircle } from "react-icons/ai"
 
-export default function FilterBarClient({ searchParams, children }: { searchParams: ISearchParams, children: React.ReactNode }) {
+export default function FilterBarClient({ searchParams, className, children }: { searchParams: ISearchParams, className?: string, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
@@ -106,12 +106,7 @@ export default function FilterBarClient({ searchParams, children }: { searchPara
     <>
       <div
         onClick={() => router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'filter'), { scroll: false })}
-        className={`
-          p-6 border-[1px] border-black border-opacity-20 rounded-xl relative z-[10000] bg-white 
-          ${!isLoading && 'cursor-pointer'}
-          hidden md:block sticky top-[104px]
-          w-[320px] max-h-[518px]
-        `}
+        className={`${!isLoading && 'cursor-pointer'} ${className}`}
       >
         {children}
       </div>

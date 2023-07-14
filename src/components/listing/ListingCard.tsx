@@ -2,58 +2,59 @@
 
 import Profile from "@/components/profile/Profile";
 import { supabase } from "@/supabase/supabase-app";
+import { IListingData } from "@/types/listingData";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { AiTwotoneSetting } from "react-icons/ai";
+import { useEffect, useState } from "react";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import FollowButton from "../FollowButton";
-import MenuItem from "../MenuItem";
+import ListingOptions from "./ListingOptions";
+import { deleteImage } from "@/actions/deleteImage";
+import imageSrcToPublicId from "@/utils/imageSrcToPublicId";
+import { deleteListingById } from "@/actions/deleteListingById";
+import revalidateListings from "@/actions/revalidateListings";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 interface ListingCardProps {
-  data: any;
+  data: IListingData;
 };
 
 const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const menuRef = useRef<any>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
+  const [hidden, setHidden] = useState<boolean>(false);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) setUserId(session.user.id)
       else setUserId(null)
     })
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
   }, []);
 
   const onEditListing = () => {
     router.push(`/post?id=${data.id}`)
   }
 
-  const onDeleteListing = () => {
+  const onDeleteListing = async () => {
+    const batch = [
+      ...data.image_src.map((image) => deleteImage(imageSrcToPublicId(image))),
+      deleteListingById(data.id)
+    ]
+    await Promise.all(batch)
 
+    await revalidateListings()
+    setHidden(true)
+    toast.success("Xoá tin thành công")
   }
 
   return (
-    <div className="group h-full max-h-36">
-      <div className="flex gap-4 h-full">
+    <div className="group h-full max-h-36" hidden={hidden}>
+      <div className="flex h-full relative">
         <div className="aspect-[4/3] w-1/4 md:w-1/5 relative overflow-hidden rounded-xl flex-shrink-0">
           <Link href={`/listings/${data.id}`} target="_blank">
             <Image
@@ -71,34 +72,16 @@ const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col gap-2 relative w-3/4 lg:w-4/5">
-          <div className="flex justify-between items-center">
-            <Link href={`/listings/${data.id}`} target="_blank" className="font-semibold text-lg whitespace-nowrap truncate">
-              {data.title}
-            </Link>
+        <div className="pl-4 flex-1 flex flex-col gap-2 w-3/4 lg:w-4/5 relative">
+          <Link href={`/listings/${data.id}`} target="_blank" className="w-[calc(100%-36px)] font-semibold text-lg whitespace-nowrap truncate">
+            {data.title}
+          </Link>
 
-            {data.author_id === userId && (
-              <div ref={menuRef}>
-                <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 rounded-full hover:bg-neutral-100 transition">
-                  <AiTwotoneSetting size={20} />
-                </button>
-
-                <dialog open={menuOpen} className="rounded-xl shadow-md w-44 bg-white text-sm mr-0 p-0 right-0 z-10">
-                  <div onClick={() => setMenuOpen(false)} className="flex flex-col w-full cursor-pointer">
-                    <MenuItem
-                      label="Chỉnh sửa"
-                      onClick={onEditListing}
-                    />
-                    <MenuItem
-                      label="Xóa tin"
-                      onClick={onDeleteListing}
-                      className="text-red-500"
-                    />
-                  </div>
-                </dialog>
-              </div>
-            )}
-          </div>
+          {data.author_id === userId && (
+            <div className="absolute -top-1 right-0">
+              <ListingOptions onEditListing={onEditListing} onDeleteListing={onDeleteListing} />
+            </div>
+          )}
 
           <div className="font-light text-neutral-500 flex items-center gap-1 w-1/2">
             <BsHouseFill className="hidden sm:block" />

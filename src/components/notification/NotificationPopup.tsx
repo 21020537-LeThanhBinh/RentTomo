@@ -26,8 +26,6 @@ export default function NotificationPopup({
   useEffect(() => {
     if (!userId) return
 
-    console.log("notification fetching, last_read=", last_read)
-
     supabase
       .rpc('latest_notification', { user_id: userId, last_read: last_read || new Date(2000, 1, 1).toISOString() })
       .then(({ data, error }) => {

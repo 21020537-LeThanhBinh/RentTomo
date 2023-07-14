@@ -13,7 +13,7 @@ import formatBigNumber from "@/utils/formatBigNumber"
 import handleCloseDialog from "@/utils/handleCloseDialog"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 export default function PostForm({
   isLoading,
@@ -24,11 +24,11 @@ export default function PostForm({
   setAddressLabel,
   selectedPoint,
   setSelectedPoint,
-  zoom,
-  imageSrcOld, 
+  imageSrcOld,
   setImageSrcOld,
-  files, 
-  setFiles
+  files,
+  setFiles,
+  isEditPost
 }: {
   isLoading: boolean,
   handleSubmit: () => void
@@ -38,15 +38,17 @@ export default function PostForm({
   setAddressLabel: (label: string) => void
   selectedPoint: { lat: number, lng: number }
   setSelectedPoint: (point: { lat: number, lng: number }) => void
-  zoom: number
   imageSrcOld: string[]
   setImageSrcOld: React.Dispatch<React.SetStateAction<string[]>>
   files: any[]
   setFiles: React.Dispatch<React.SetStateAction<any[]>>
+  isEditPost?: boolean
 }) {
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
-  const Map = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
+  const [zoom, setZoom] = useState<number>(isEditPost ? 5 : 15)
+  const MiniMap = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
+    loading: () => <p>loading...</p>,
     ssr: false
   }), [])
 
@@ -60,6 +62,13 @@ export default function PostForm({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (isEditPost) return
+
+    const newZoom = values.address.ward_id ? 15 : values.address.district_id ? 13 : values.address.city_id ? 9 : 5
+    setZoom(newZoom)
+  }, [isEditPost, values.address.ward_id, values.address.district_id, values.address.city_id])
 
   return (
     <form className="my-6 rounded-2xl border-2 flex flex-col md:flex-row gap-6 p-6" onSubmit={handleSubmit}>
@@ -91,11 +100,13 @@ export default function PostForm({
         </div>
 
         <div className="h-[35vh]">
-          <Map
-            zoom={zoom}
-            selectedPoint={selectedPoint}
-            setSelectedPoint={setSelectedPoint}
-          />
+          {(!isLoading) && (
+            <MiniMap
+              zoom={zoom}
+              selectedPoint={selectedPoint}
+              setSelectedPoint={setSelectedPoint}
+            />
+          )}
         </div>
         {values.address.number && (
           <span className='text-neutral-600'>*Vui lòng chọn vị trí thủ công trên bản đồ</span>
@@ -236,7 +247,7 @@ export default function PostForm({
               outline
             />
             <Button
-              label='Đăng tin'
+              label={isEditPost ? 'Cập nhật' : 'Đăng tin'}
               onClick={() => { }}
               disabled={isLoading}
               type='submit'

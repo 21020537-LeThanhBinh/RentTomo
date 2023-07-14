@@ -21,6 +21,7 @@ interface AddressProps {
   setAddressLabel: (label: string) => void;
 }
 
+// Todo: Fix UI bug when clear input
 export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel }: AddressProps) {
   const isFirstRender = useRef(true);
   const [city, setCity] = useState<any>()
@@ -33,7 +34,8 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
     setCity(thisCity)
     setDistrict(null)
     setFieldValue("address.district_id", "")
-  }, [value?.city_id])
+  }, [value?.city_id])    
+
 
   useEffect(() => {
     const thisDistrict = city?.Districts.find((district: any) => district.Id === value?.district_id)

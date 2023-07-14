@@ -34,6 +34,7 @@ export default function RangeMarker({
     const newRadius = range / (40075016.686 * Math.abs(Math.cos(coordinates.lat * Math.PI / 180)) / Math.pow(2, zoom + 8))
 
     newRadius && setRadius(newRadius)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, range])
 
   const onClick = () => {

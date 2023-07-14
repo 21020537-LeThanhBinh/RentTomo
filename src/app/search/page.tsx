@@ -7,7 +7,7 @@ import Link from "next/link";
 import { BsFillMapFill } from "react-icons/bs";
 import Pagination from "../../components/Pagination";
 
-export const revalidate = 60 // revalidate this page every 60 seconds
+export const revalidate = 86400 // revalidate this page everyday
 
 export default async function SearchPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getListings(searchParams);

@@ -43,6 +43,7 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
     }
 
     fetchRoomInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isActive]);
 
   const putMessageUrl = async () => {

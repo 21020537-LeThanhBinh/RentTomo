@@ -4,7 +4,13 @@ import { BiFilterAlt } from "react-icons/bi";
 
 export default function FilterBar({ searchParams }: { searchParams: ISearchParams }) {
   return (
-    <FilterBarClient searchParams={searchParams}>
+    <FilterBarClient
+      searchParams={searchParams}
+      className="
+        p-6 border-[1px] border-black border-opacity-20 rounded-xl z-[10000] bg-white 
+        hidden md:block sticky top-[104px] w-[320px] max-h-[518px]
+      "
+    >
       <div className="absolute top-6 left-24 text-xl font-semibold w-full flex gap-2 items-center">
         <BiFilterAlt size={24} />
         <span>Bộ lọc</span>

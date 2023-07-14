@@ -4,33 +4,33 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="bg-neutral-800">
-      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 flex gap-8 py-9 flex-wrap md:gap-0">
+      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 flex gap-8 py-8 flex-wrap md:gap-0">
         <div className="md:flex-1 flex flex-col gap-2">
-          <p className="text-white text-xl font-semibold">RentTomo</p>
+          <p className="text-white text-lg font-semibold">RentTomo</p>
           <p className="text-neutral-500 text-sm">Copyright Ⓒ 2023</p>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
-          <p className="text-white text-xl font-semibold">About</p>
+          <p className="text-white text-lg font-semibold">About</p>
           <Link href="#" className="text-neutral-500 text-sm">About Us</Link>
           <Link href="#" className="text-neutral-500 text-sm">Blog</Link>
           <Link href="#" className="text-neutral-500 text-sm">Contact</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
-          <p className="text-white text-xl font-semibold">Legal</p>
+          <p className="text-white text-lg font-semibold">Legal</p>
           <Link href="#" className="text-neutral-500 text-sm">Terms & Conditions</Link>
           <Link href="/privacy-policy" className="text-neutral-500 text-sm">Privacy Policy</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
-          <p className="text-white text-xl font-semibold">Help</p>
+          <p className="text-white text-lg font-semibold">Help</p>
           <Link href="/#faq" className="text-neutral-500 text-sm">FAQ</Link>
           <Link href="#" className="text-neutral-500 text-sm">Support</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
-          <p className="text-white text-xl font-semibold">Follow Us</p>
+          <p className="text-white text-lg font-semibold">Follow Us</p>
           <ul className="flex items-center gap-6">
             <li>
               <Link href="https://www.facebook.com/lethanksbinh/" aria-label="Facebook" className="block">

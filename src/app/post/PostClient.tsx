@@ -12,33 +12,38 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import PostForm from './PostForm';
-
-const provider = import('leaflet-geosearch').then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider());
+import revalidateListings from '@/actions/revalidateListings';
 
 export default function PostClient({ listing }: { listing?: any }) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [provider, setProvider] = useState<any>(null)
 
   const [imageSrcOld, setImageSrcOld] = useState<string[]>(listing?.image_src || [])
   const [files, setFiles] = useState<any[]>([])
 
   const [addressLabel, setAddressLabel] = useState<string>(listing ? (listing?.address + ', ' + parseAddressId(listing?.address_id)) : '')
   const [selectedPoint, setSelectedPoint] = useState<{ lat: number, lng: number }>(convertPointToCoordinates(listing?.location_text) || { lng: 107.9650855, lat: 15.9266657 })
-  const [zoom, setZoom] = useState<number>(listing ? 15 : 5)
+
+  useEffect(() => {
+    setIsLoading(false)
+    import('leaflet-geosearch')
+      .then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider())
+      .then((provider) => setProvider(provider))
+  }, []);
 
   useEffect(() => {
     if (!!listing) return
     if ((addressLabel.match(/,/g) || [])?.length >= 4) return;
 
     provider
-      .then((provider) => provider
-        .search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
-        .then((results: any) => {
-          console.log(results)
-          if (results.length > 0) {
-            setSelectedPoint({ lng: results[0].x, lat: results[0].y })
-          }
-        }))
+      ?.search({ query: (addressLabel + ", Việt Nam").replace(/Phường |Quận |Tỉnh |Thành phố /g, '') })
+      ?.then((results: any) => {
+        console.log(results)
+        if (results.length > 0) {
+          setSelectedPoint({ lng: results[0].x, lat: results[0].y })
+        }
+      })
   }, [addressLabel])
 
   const handleSubmit = async (values: FormikValues) => {
@@ -80,6 +85,7 @@ export default function PostClient({ listing }: { listing?: any }) {
         .select('id')
         .single()
     const { data, error } = await query
+    await revalidateListings()
 
     setIsLoading(false);
     if (error || !data)
@@ -113,8 +119,6 @@ export default function PostClient({ listing }: { listing?: any }) {
       return values.address.number + (values.address.number ? ', ' : '') + values.address.street
     else if (!!listing)
       return listing.address
-    else
-      toast.error('Vui lòng điền đầy đủ thông tin!');
 
     return ''
   }
@@ -128,8 +132,6 @@ export default function PostClient({ listing }: { listing?: any }) {
       }
     else if (!!listing)
       return listing.address_id
-    else
-      toast.error('Vui lòng điền đầy đủ thông tin!');
 
     return {
       city_id: '',
@@ -150,6 +152,10 @@ export default function PostClient({ listing }: { listing?: any }) {
   }
 
   const onSubmitSuccess = async (postId: string, userId: string) => {
+    if (!!listing) {
+      toast.success('Cập nhật thành công!');
+      return
+    }
     toast.success('Đăng tin thành công!');
 
     await supabase
@@ -181,13 +187,6 @@ export default function PostClient({ listing }: { listing?: any }) {
     onSubmit: handleSubmit,
   });
 
-  useEffect(() => {
-    if (!!listing) return
-
-    const newZoom = formik.values.address.ward_id ? 15 : formik.values.address.district_id ? 13 : formik.values.address.city_id ? 9 : 5
-    setZoom(newZoom)
-  }, [formik.values.address.ward_id, formik.values.address.district_id, formik.values.address.city_id])
-
   return (
     <PostForm
       isLoading={isLoading}
@@ -198,11 +197,11 @@ export default function PostClient({ listing }: { listing?: any }) {
       setAddressLabel={setAddressLabel}
       selectedPoint={selectedPoint}
       setSelectedPoint={setSelectedPoint}
-      zoom={zoom}
       imageSrcOld={imageSrcOld}
       setImageSrcOld={setImageSrcOld}
       files={files}
       setFiles={setFiles}
+      isEditPost={!!listing}
     />
   )
 }

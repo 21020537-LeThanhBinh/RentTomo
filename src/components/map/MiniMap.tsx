@@ -6,14 +6,14 @@ import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import 'node_modules/leaflet-geosearch/dist/geosearch.css';
 import { useEffect, useRef } from 'react';
+import { BiNavigation } from 'react-icons/bi';
 import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
+import Control from 'react-leaflet-custom-control';
 import SearchField from './SearchField';
 import SetViewOnClick from './SetViewOnClick';
-import Control from 'react-leaflet-custom-control';
-import { BiNavigation } from 'react-icons/bi';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -47,7 +47,6 @@ const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) 
     <MapContainer
       center={selectedPoint as L.LatLngExpression || [51, -0.09]}
       zoom={zoom}
-      scrollWheelZoom={false}
       zoomControl={false}
       ref={mapRef}
       //@ts-ignore
