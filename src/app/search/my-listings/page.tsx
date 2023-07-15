@@ -23,6 +23,7 @@ export default async function MyListingsPage({ searchParams }: { searchParams: I
               <ListingCard
                 key={listing.id}
                 data={listing}
+                hasOptions
               />
             )) : (
               <EmptyState />

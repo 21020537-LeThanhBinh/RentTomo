@@ -4,7 +4,7 @@ import { supabase } from "@/supabase/supabase-app"
 import { Notification } from "@/types"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import PopupInputContainer from "../input/PopupInputContainer"
+import ModalSingle from "../modal/ModalSingle"
 import NotificationComponent from "./NotificationComponent"
 
 export default function NotificationPopup({
@@ -41,9 +41,9 @@ export default function NotificationPopup({
             const isMember = true
 
             let filteredRooms = noti.room
-            if (!isOwner && !isMember) 
+            if (!isOwner && !isMember)
               filteredRooms = filteredRooms.filter((room: any) => room.type != "request")
-            if (!filteredRooms.length) 
+            if (!filteredRooms.length)
               return;
 
             // if more than 1 noti -> other, else -> type of that noti
@@ -52,11 +52,11 @@ export default function NotificationPopup({
             // get latest timestamp
             const timestamp = filteredRooms.reduce((maxTimestamp: any, object: any) => Math.max(maxTimestamp, new Date(object.updated_at).getTime()), 0);
 
-            return { 
-              post_id: noti.post_id, 
-              post_title: noti.post_title, 
-              type, 
-              timestamp: new Date(timestamp) 
+            return {
+              post_id: noti.post_id,
+              post_title: noti.post_title,
+              type,
+              timestamp: new Date(timestamp)
             }
           })
           ?.filter((noti: any) => noti != undefined)
@@ -82,19 +82,17 @@ export default function NotificationPopup({
   }, [readNotis, notification])
 
   return (
-    <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl overflow-hidden'>
-      <PopupInputContainer label="Thông báo" onBack={() => router.push(pathname)}>
-        {notification?.length ? notification?.map((noti: any, i: number) =>
-          <NotificationComponent
-            key={noti.post_id}
-            notification={noti}
-            read={readNotis.includes(noti.post_id)}
-            setRead={() => !readNotis.includes(noti.post_id) && setReadNotis([...readNotis, noti.post_id])}
-          />
-        ) : (
-          <div className="flex items-center text-black bg-white rounded-lg py-4"> Bạn không có thông báo mới! </div>
-        )}
-      </PopupInputContainer>
-    </dialog>
+    <ModalSingle modalRef={modalRef} label="Thông báo" onBack={() => router.push(pathname)}>
+      {notification?.length ? notification?.map((noti: any, i: number) =>
+        <NotificationComponent
+          key={noti.post_id}
+          notification={noti}
+          read={readNotis.includes(noti.post_id)}
+          setRead={() => !readNotis.includes(noti.post_id) && setReadNotis([...readNotis, noti.post_id])}
+        />
+      ) : (
+        <div className="flex items-center text-black bg-white rounded-lg py-4"> Bạn không có thông báo mới! </div>
+      )}
+    </ModalSingle>
   )
 }

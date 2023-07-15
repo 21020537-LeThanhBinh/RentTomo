@@ -103,7 +103,7 @@ export default function PostClient({ listing }: { listing?: any }) {
       toast.error('Hãy thêm từ 3 đến 12 ảnh.');
       return false
     }
-    if (!listing && (!values.address.city_id || !values.address.district_id || !values.address.ward_id)) {
+    if (!listing && (!values.address.city_id || !values.address.district_id || !values.address.ward_id || !values.address.street)) {
       toast.error('Vui lòng nhập địa chỉ chi tiết hơn!');
       return false
     }

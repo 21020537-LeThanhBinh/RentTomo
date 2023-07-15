@@ -4,8 +4,9 @@ import { User } from '@/types';
 import React from 'react';
 
 interface ListingContextType {
+  listingId: string;
+  imageSrc: string[];
   userId: string | null;
-  listingId: string | null;
   members: User[];
   host: User | null;
   onRemoveMember: (userId: string) => Promise<{ data: any, error: any }>;
@@ -13,8 +14,9 @@ interface ListingContextType {
 }
 
 export const ListingContext = React.createContext<ListingContextType>({
+  listingId: '',
+  imageSrc: [],
   userId: null,
-  listingId: null,
   members: [],
   host: null,
   onRemoveMember: () => Promise.resolve({ data: null, error: null }),
@@ -22,8 +24,9 @@ export const ListingContext = React.createContext<ListingContextType>({
 });
 
 export default function ContextProvider({
-  userId,
   listingId,
+  imageSrc,
+  userId,
   members,
   host,
   onRemoveMember,
@@ -31,7 +34,8 @@ export default function ContextProvider({
   children
 }: {
   userId: string | null,
-  listingId: string | null,
+  imageSrc: string[],
+  listingId: string,
   members: User[],
   host: User | null,
   onRemoveMember: (userId: string) => Promise<{ data: any, error: any }>
@@ -39,7 +43,7 @@ export default function ContextProvider({
   children: React.ReactNode
 }) {
   return (
-    <ListingContext.Provider value={{ userId, listingId, members, host, onRemoveMember, onUpdateMember }} >
+    <ListingContext.Provider value={{ listingId, imageSrc, userId, members, host, onRemoveMember, onUpdateMember }} >
       {children}
     </ListingContext.Provider>
   );

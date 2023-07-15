@@ -59,6 +59,7 @@ const ListingPage = async ({ params, searchParams }: Props) => {
 
             <ListingClient
               listingId={listing.id}
+              imageSrc={listing.image_src}
               authorId={listing.author?.id}
               price={listing.price}
               fees={listing.fees}

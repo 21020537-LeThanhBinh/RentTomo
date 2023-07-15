@@ -56,13 +56,6 @@
     "range": 2000
   },
   {
-    "Id": "SPH2",
-    "Name": "Trường Đại học Sư Phạm Hà Nội 2",
-    "lat": 21.28128649907875, 
-    "lng": 105.72574150135134,
-    "range": 2000
-  },
-  {
     "Id": "XDA",
     "Name": "Trường Đại học Xây Dựng Hà Nội",
     "lat": 21.003523797305395,
