@@ -34,7 +34,7 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
     (listingId && userId) && fetchData()
   }, [userId, listingId]);
 
-  const toggleFavorite = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
+  const toggleFollow = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
     if (!userId) {
@@ -69,7 +69,7 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
 
   return {
     hasFollowed,
-    toggleFavorite,
+    toggleFollow,
   }
 }
 

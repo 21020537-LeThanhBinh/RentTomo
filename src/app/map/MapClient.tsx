@@ -23,7 +23,7 @@ import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json'
 import schoolsFull from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import ListingMarker from "./components/ListingMarker";
 import SetViewOnClick from "@/components/map/SetViewOnClick";
-import convertPointToArrayCoordinates from "@/utils/convertPointToArrayCoordinates";
+import { convertPointToArrayCoordinates } from "@/utils/convertPointToCoordinates";
 
 const provider = new OpenStreetMapProvider();
 

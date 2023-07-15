@@ -7,12 +7,14 @@ import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
 import { toast } from "react-hot-toast";
 import ContextProvider from "./ListingContext";
-import ListingRequests from "./components/ListingRequests";
-import ListingReservation from "./components/ListingReservation";
-import MembersInfo from "./components/MembersInfo";
+import ListingRequests from "./components/listings/ListingRequests";
+import ListingReservation from "./components/listings/ListingReservation";
+import MembersInfo from "./components/members/MembersInfo";
+import MembersMenu from "./components/members/MembersMenu";
 
 interface ListingClientProps {
   listingId: string;
+  imageSrc: string[];
   authorId?: string;
   price: number;
   fees?: any;
@@ -20,6 +22,7 @@ interface ListingClientProps {
 
 const ListingClient: React.FC<ListingClientProps> = ({
   listingId,
+  imageSrc,
   authorId,
   price,
   fees,
@@ -29,7 +32,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [myUserId, setMyUserId] = useState<string | null>(null);
-  
+
   const [host, setHost] = useState<User | null>(null);
   const [members, setMembers] = useState<User[]>([]);
   const [requests, setRequests] = useState<User[]>([]);
@@ -156,20 +159,27 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   return (
     <ContextProvider
-      userId={myUserId}
       listingId={listingId}
+      imageSrc={imageSrc}
+      userId={myUserId}
       members={members}
       host={host}
       onRemoveMember={onRemoveMember}
       onUpdateMember={onUpdateMember}
     >
-      <MembersInfo
-        host={host}
-        members={members}
-        requests={requests}
-        userId={myUserId}
-        isLoading={isLoading}
-      />
+      <div className="relative">
+        <MembersInfo
+          host={host}
+          members={members}
+          requests={requests}
+          userId={myUserId}
+          isLoading={isLoading}
+        />
+
+        {(myUserId === host?.id || members?.some((member) => member.id === myUserId)) && (
+          <MembersMenu />
+        )}
+      </div>
 
       {((myUserId === authorId && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
         <ListingRequests

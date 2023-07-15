@@ -10,7 +10,7 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import MenuItem from '../MenuItem';
 import Avatar from '../profile/Avatar';
 import AuthPopup from './AuthPopup';
-const EditProfilePopup = dynamic(() => import('../profile/EditProfilePopup'), { ssr: false })
+import EditProfilePopup from '../profile/EditProfilePopup';
 const NotificationPopup = dynamic(() => import('../notification/NotificationPopup'), { ssr: false })
 
 export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
@@ -54,8 +54,8 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      handleCloseDialog(e, authModalRef1.current!, () => authModalRef1.current?.open && router.push(pathname))
-      handleCloseDialog(e, notiModalRef.current!, () => notiModalRef.current?.open && router.push(pathname))
+      handleCloseDialog(e, authModalRef1.current!, () => authModalRef1.current?.open && router.replace(pathname, { scroll: false }))
+      handleCloseDialog(e, notiModalRef.current!, () => notiModalRef.current?.open && router.replace(pathname, { scroll: false }))
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -67,7 +67,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   useEffect(() => {
     // Close popup after logged in
     if (sessionEvent == 'SIGNED_IN' && (searchParams.get('popup') === 'login')) {
-      router.push(pathname + '?' + createQueryString(searchParams, 'popup', ''))
+      router.replace(pathname + '?' + createQueryString(searchParams, 'popup', ''))
     }
 
     if (!session || searchParams.has('account')) {
@@ -139,7 +139,11 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
   const handleSignOut = useCallback(async () => {
     await supabase.auth.signOut()
     router.push(pathname)
-  }, [pathname]);
+  }, [router, pathname]);
+
+  const handleHelp = () => {
+
+  }
 
   return (
     <div className={`flex justify-end flex-shrink-0 relative ${isWhite && 'text-white'}`} >
@@ -165,24 +169,44 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                   className='sm:hidden'
                 />
                 <MenuItem
+                  label="Tin của bạn"
+                  onClick={() => router.push(`/search/my-listings?id=${session.user.id}`)}
+                />
+                <MenuItem
+                  label="Đang theo dõi"
+                  onClick={() => router.push(`/search/following-listings?id=${session.user.id}`)}
+                />
+                <div className='border-t-[1px] my-2' />
+
+                <MenuItem
                   label="Thông tin cá nhân"
                   onClick={() => {
-                    router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'))
+                    router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'), { scroll: false })
                     // When the popup is buggy
-                    if (searchParams.get('popup') == 'edit-profile-2' && !profileModalRef.current?.open)
-                      profileModalRef.current?.showModal();
+                    // if (searchParams.get('popup') == 'edit-profile-2' && !profileModalRef.current?.open)
+                    //   profileModalRef.current?.showModal();
                   }}
+                  light
                 />
                 <div className='relative'>
                   <MenuItem
                     label="Thông báo"
-                    onClick={() => router.replace(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'))}
+                    onClick={() => router.replace(pathname + '?' + createQueryString(searchParams, 'popup', 'notification'), { scroll: false })}
+                    light
                   />
                   {hasNoti && <span className="absolute top-4 right-4 p-1 bg-red-600 rounded-full" title="Thông báo mới"></span>}
                 </div>
+                <div className='border-t-[1px] my-2' />
+
+                <MenuItem
+                  label="Trợ giúp"
+                  onClick={handleHelp}
+                  light
+                />
                 <MenuItem
                   label="Đăng xuất"
                   onClick={handleSignOut}
+                  light
                 />
               </>
             ) : (
@@ -213,7 +237,11 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
         modalActive={modalActive}
         activeTab={activeTab}
         onBack={() => router.back()}
-        onNext={() => router.push((activeTab == 'edit-profile-1') ? (pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2')) : (pathname))}
+        onNext={() =>
+          (activeTab == 'edit-profile-1') ?
+            router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'), { scroll: false })
+            : router.push(pathname, { scroll: false })
+        }
         session={session}
       />
 

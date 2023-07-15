@@ -1,10 +1,10 @@
 import full_map from '../../public/DiaGioiHanhChinhVN.json' assert { type: 'json' };
 
-function edit() {
+export default function editDiaGioiHanhChinhVN() {
   const result = [] as any
 
   full_map
-    .filter((item: any) => item.Name === "Thành phố Hà Nội" || item.Name === "Thành phố Hồ Chí Minh")
+    // .filter((item: any) => item.Name === "Thành phố Hà Nội" || item.Name === "Thành phố Hồ Chí Minh")
     .forEach((city: any) => {
       const label = city.Name;
       result.push({ label: label, value: label.toLowerCase(), id: city.Id, level: 0 })

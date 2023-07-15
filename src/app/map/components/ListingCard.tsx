@@ -1,6 +1,6 @@
 'use client';
 
-import HeartButton from "@/components/HeartButton";
+import FollowButton from "@/components/FollowButton";
 import Profile from "@/components/profile/Profile";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
@@ -18,6 +18,8 @@ interface ListingCardProps {
 };
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollowed }) => {
+  const addressLabel = (listing.address + ', ' + parseAddressId(listing.address_id)).replace(/Phường |Quận |Tỉnh |Thành phố /g, '')
+
   return (
     <div className="group h-full">
       <div className="flex flex-col gap-4 h-full">
@@ -31,7 +33,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
             />
           </Link>
           <div className="absolute top-3 right-3">
-            <HeartButton
+            <FollowButton
               listingId={listing.id}
               userId={userId}
               setHasFollowed={setHasFollowed}
@@ -60,8 +62,8 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
           <div className="font-light text-neutral-500 flex flex-1 items-end">
             <div className="flex items-center gap-1 w-full">
               <ImLocation className="flex-shrink-0" />
-              <span className="whitespace-nowrap truncate block" title={(listing.address + ', ' + parseAddressId(listing.address_id)).replace(/Phường |Quận |Tỉnh |Thành phố /g, '')}>
-                {(listing.address + ', ' + parseAddressId(listing.address_id)).replace(/Phường |Quận |Tỉnh |Thành phố /g, '')}
+              <span className="whitespace-nowrap truncate block" title={addressLabel}>
+                {addressLabel}
               </span>
             </div>
           </div>

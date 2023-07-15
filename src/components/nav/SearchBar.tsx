@@ -59,8 +59,8 @@ export default function SearchBar() {
   }, [locationId, lng, lat]);
 
   return (
-    <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[500px] relative py-1 rounded-full bg-white">
-      <div className="flex items-center justify-between">
+    <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[500px] relative py-1 rounded-full bg-white flex items-center">
+      <div className="w-full flex items-center justify-between">
         <Select
           options={[
             { label: 'Khu vực', value: 'khu vực', icon: MdOutlineLocationSearching },

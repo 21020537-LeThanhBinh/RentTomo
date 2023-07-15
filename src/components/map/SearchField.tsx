@@ -14,6 +14,7 @@ const SearchField = () => {
   useEffect(() => {
     map.addControl(searchControl);
     return () => map.removeControl(searchControl) as any;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

@@ -15,7 +15,7 @@ const TabPanel = ({ title, description, index, selectedTab, image, url }: any) =
           aria-hidden="true"
           width={760}
           height={400}
-          className="mx-auto lg:mx-0 rounded-md"
+          className="mx-auto lg:mx-0"
         />
       </div>
       <div className="text-center md:flex md:flex-col md:gap-[1.5625rem] md:text-left lg:pt-[3.25rem] lg:pl-[4.5rem]">

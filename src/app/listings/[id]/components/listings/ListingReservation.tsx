@@ -3,10 +3,10 @@
 import Button from "@/components/Button";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { useContext, useEffect, useRef } from "react";
-import { ListingContext } from "../ListingContext";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import handleCloseDialog from "@/utils/handleCloseDialog";
-import PopupInputContainer from "@/components/input/PopupInputContainer";
+import { ListingContext } from "../../ListingContext";
+import ModalSingle from "@/components/modal/ModalSingle";
 
 interface ListingReservationProps {
   price: number;
@@ -63,32 +63,30 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         <Button
           disabled={disabled || isJoined}
           label={requesting ? "Huỷ yêu cầu" : (!host ? "Đặt phòng" : "Tham gia")}
-          onClick={() => { !requesting ? !modalRef.current?.open && modalRef.current?.showModal() : onSubmit(); }}
+          onClick={() => { (requesting || !host) ? onSubmit() : !modalRef.current?.open && modalRef.current?.showModal() }}
         />
 
-        <dialog ref={modalRef} className='popup sm:w-[540px] w-full rounded-2xl'>
-          <PopupInputContainer label="Quy định chung" onBack={() => { !modalRef.current?.close(); }} className="flex flex-col gap-6">
-            <div className="text-neutral-600 whitespace-pre-line">
-              {roomRules || "Chưa có quy định chung."}
-            </div>
+        <ModalSingle modalRef={modalRef} label="Quy định nhóm" onBack={() => { !modalRef.current?.close(); }} className="flex flex-col gap-6">
+          <div className="text-neutral-600 whitespace-pre-line">
+            {roomRules || "Chưa có quy định nhóm."}
+          </div>
 
-            <div className="flex justify-end gap-2 w-full">
-              <div className="w-full sm:w-1/3 lg:w-1/4">
-                <Button
-                  label="Hủy"
-                  onClick={() => { !modalRef.current?.close(); }}
-                  outline
-                />
-              </div>
-              <div className="w-full sm:w-1/3 lg:w-1/4">
-                <Button
-                  label="Đồng ý"
-                  onClick={() => { onSubmit(); !modalRef.current?.close(); }}
-                />
-              </div>
+          <div className="flex justify-end gap-2 w-full">
+            <div className="w-full sm:w-1/3 lg:w-1/4">
+              <Button
+                label="Hủy"
+                onClick={() => { !modalRef.current?.close(); }}
+                outline
+              />
             </div>
-          </PopupInputContainer>
-        </dialog>
+            <div className="w-full sm:w-1/3 lg:w-1/4">
+              <Button
+                label="Đồng ý"
+                onClick={() => { onSubmit(); !modalRef.current?.close(); }}
+              />
+            </div>
+          </div>
+        </ModalSingle>
       </div>
 
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">
@@ -99,15 +97,15 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         </div>
         <div className="w-full flex justify-between">
           <span>Điện</span>
-          <span>đ {formatBigNumber(fees.electricity)} / kWh</span>
+          <span>đ {formatBigNumber(fees.electricity)}</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Nước</span>
-          <span>đ {formatBigNumber(fees.water)} / m³</span>
+          <span>đ {formatBigNumber(fees.water)}</span>
         </div>
         <div className="w-full flex justify-between">
           <span>Wifi</span>
-          <span>đ {formatBigNumber(fees.internet)} / tháng</span>
+          <span>đ {formatBigNumber(fees.internet)}</span>
         </div>
       </div>
       <hr />

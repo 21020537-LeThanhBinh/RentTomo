@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 
-import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/supabase/supabase-app";
-import HeartButton from "@/components/HeartButton";
+import FollowButton from "@/components/FollowButton";
 import MediaSlider from "@/components/MediaSlider";
+import ShareButton from "@/components/ShareButton";
+import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
-import Heading from "@/components/Heading";
+import { useEffect, useRef, useState } from "react";
 
 interface ListingHeadProps {
   imageSrc: string[];
@@ -48,18 +48,29 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 
   return (
     <>
-      <div className="flex justify-between">
-        <Heading
-          title={title}
-          subtitle={`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
-        />
+      <div className="w-full">
+        <div className="text-2xl font-bold">
+          {title}
+        </div>
 
-        <div className="flex items-end">
-          <HeartButton
-            listingId={id}
-            userId={userId}
-            full
-          />
+        <div className="mt-2 flex gap-2 justify-between items-center">
+          <div className="font-light text-neutral-500">
+            {`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
+          </div>
+
+          <div className="flex gap-4">
+            <ShareButton
+              listingId={id}
+              title={title}
+              userId={userId}
+            />
+
+            <FollowButton
+              listingId={id}
+              userId={userId}
+              full
+            />
+          </div>
         </div>
       </div>
 
@@ -95,6 +106,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
               className="object-cover"
             />
           </div>
+          
           <div
             onClick={() => {
               !dialogRef.current?.open && dialogRef.current?.showModal()
@@ -113,6 +125,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
               className="object-cover"
             />
           </div>
+
           <div
             onClick={() => {
               !dialogRef.current?.open && dialogRef.current?.showModal()
@@ -131,53 +144,57 @@ const ListingHead: React.FC<ListingHeadProps> = ({
               className="object-cover"
             />
           </div>
-          <div
-            onClick={() => {
-              !dialogRef.current?.open && dialogRef.current?.showModal()
-            }}
-            onMouseEnter={() => setImageIndex(3)}
-            className={`
+
+          {imageSrc?.[3] && (
+            <div
+              onClick={() => {
+                !dialogRef.current?.open && dialogRef.current?.showModal()
+              }}
+              onMouseEnter={() => setImageIndex(3)}
+              className={`
             relative cursor-pointer
             row-span-1
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-          >
-            <Image
-              src={imageSrc?.[3]}
-              fill
-              alt="Image"
-              className="object-cover"
-            />
-          </div>
-          <div
-            onClick={() => {
-              !dialogRef.current?.open && dialogRef.current?.showModal()
-            }}
-            onMouseEnter={() => setImageIndex(4)}
-            className={`
-            relative cursor-pointer
-            row-span-1
-            col-span-1
-          `}
-          >
-            <Image
-              src={imageSrc?.[4]}
-              fill
-              alt="Image"
-              className="object-cover"
-            />
+            >
+              <Image
+                src={imageSrc?.[3]}
+                fill
+                alt="Image"
+                className="object-cover"
+              />
+            </div>
+          )}
 
-            {imageSrc.length > 5 && (
-              <div className={`
+          {imageSrc?.[4] && (
+            <div
+              onClick={() => !dialogRef.current?.open && dialogRef.current?.showModal()}
+              onMouseEnter={() => setImageIndex(4)}
+              className={`
+                relative cursor-pointer
+                row-span-1
+                col-span-1
+              `}
+            >
+              <Image
+                src={imageSrc?.[4]}
+                fill
+                alt="Image"
+                className="object-cover"
+              />
+
+              {imageSrc.length > 5 && (
+                <div className={`
                 absolute inset-0 flex items-center justify-center bg-neutral-500/70
                 text-white font-bold text-4xl
                 drop-shadow-sm
               `}
-              >
-                {imageSrc.length - 4}+
-              </div>
-            )}
-          </div>
+                >
+                  {imageSrc.length - 4}+
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <dialog ref={dialogRef} className="popup h-[90vh] w-[90vw] overflow-hidden bg-transparent">

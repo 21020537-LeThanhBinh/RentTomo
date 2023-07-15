@@ -6,14 +6,14 @@ import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import 'node_modules/leaflet-geosearch/dist/geosearch.css';
 import { useEffect, useRef } from 'react';
+import { BiNavigation } from 'react-icons/bi';
 import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
+import Control from 'react-leaflet-custom-control';
 import SearchField from './SearchField';
 import SetViewOnClick from './SetViewOnClick';
-import Control from 'react-leaflet-custom-control';
-import { BiNavigation } from 'react-icons/bi';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -24,31 +24,29 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  center?: number[] | string[]
   zoom?: number
-  selectedPoint?: number[] | string[]
+  selectedPoint?: { lat: number, lng: number } | number[]
   setSelectedPoint?: (l: any) => void
 }
 
 const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedPoint }) => {
+const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) => {
   const mapRef = useRef<any>()
 
   useEffect(() => {
-    if (!center || !zoom) return
+    if (!selectedPoint || !zoom) return
 
-    mapRef.current?.setView(center as L.LatLngExpression, zoom, {
+    mapRef.current?.setView(selectedPoint as L.LatLngExpression, zoom, {
       animate: true,
     })
-  }, [zoom, center])
+  }, [zoom, selectedPoint])
 
   return (
     <MapContainer
-      center={center as L.LatLngExpression || [51, -0.09]}
+      center={selectedPoint as L.LatLngExpression || [51, -0.09]}
       zoom={zoom}
-      scrollWheelZoom={false}
       zoomControl={false}
       ref={mapRef}
       //@ts-ignore
@@ -56,7 +54,7 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
       //@ts-ignore
       scrollWheelZoom={true}
       style={{ cursor: 'crosshair' }}
-      className="h-[35vh] rounded-lg"
+      className="h-[35vh] rounded-lg z-0"
     >
       <SearchField />
       <ZoomControl position='topright' />
@@ -82,7 +80,7 @@ const MiniMap: React.FC<MapProps> = ({ center, zoom, selectedPoint, setSelectedP
         url={url}
         attribution={attribution}
       />
-      {center && (
+      {selectedPoint && (
         <Marker position={selectedPoint as L.LatLngExpression} />
       )}
       <SetViewOnClick selectPoint={setSelectedPoint} />
