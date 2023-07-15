@@ -100,13 +100,11 @@ export default function PostForm({
         </div>
 
         <div className="h-[35vh]">
-          {(!isLoading) && (
-            <MiniMap
-              zoom={zoom}
-              selectedPoint={selectedPoint}
-              setSelectedPoint={setSelectedPoint}
-            />
-          )}
+          <MiniMap
+            zoom={zoom}
+            selectedPoint={selectedPoint}
+            setSelectedPoint={setSelectedPoint}
+          />
         </div>
         {values.address.number && (
           <span className='text-neutral-600'>*Vui lòng chọn vị trí thủ công trên bản đồ</span>
