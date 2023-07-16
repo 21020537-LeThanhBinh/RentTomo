@@ -47,6 +47,14 @@ export default function SearchBar() {
     else router.push('/search?' + params.toString())
   }
 
+  const onChangeSearchType = (newType: string) => {
+    setSearchType(newType)
+
+    setLocationId("")
+    setLng(0)
+    setLat(0)
+  }
+
   useEffect(() => {
     if (
       (locationId === (searchParams?.get('location_id') || "")) &&
@@ -68,7 +76,7 @@ export default function SearchBar() {
           ]}
           value={{ label: searchType }}
           isSearchable={false}
-          onChange={(value: any) => setSearchType(value?.label)}
+          onChange={(value: any) => onChangeSearchType(value?.label)}
           formatOptionLabel={(option: any) => (
             <div className="flex flex-row items-center gap-2 w-[77px]">
               {option?.icon && (

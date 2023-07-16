@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-
 import Button from "./Button";
 import Heading from "./Heading";
 
@@ -21,7 +20,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   return ( 
     <div 
       className="
-        h-[80vh]
+        h-[60vh]
         flex 
         flex-col 
         gap-2 
