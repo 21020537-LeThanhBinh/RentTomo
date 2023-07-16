@@ -5,7 +5,7 @@ import { ISearchParams } from "@/types";
 import Pagination from "../../../components/Pagination";
 import { getMyListings } from "@/actions/getMyListings";
 
-export const revalidate = 60 // revalidate this page every 60 seconds
+export const revalidate = 86400 // revalidate this page everyday
 
 export default async function MyListingsPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getMyListings(searchParams);

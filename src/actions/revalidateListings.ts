@@ -14,10 +14,10 @@ export default async function revalidateListings() {
   //   }),
   // ])
 
-  await fetch(`http://localhost:3000/api/revalidate?path=%2Fsearch`, {
+  await fetch(`${window.location.origin}/api/revalidate?path=%2Fsearch`, {
     method: 'GET',
   })
-  await fetch(`http://localhost:3000/api/revalidate?path=%2Flistings%2F%5Bid%5D`, {
+  await fetch(`${window.location.origin}/api/revalidate?path=%2Flistings%2F%5Bid%5D`, {
     method: 'GET',
   })
 }

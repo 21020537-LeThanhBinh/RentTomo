@@ -4,10 +4,15 @@ import { ISearchParams } from "@/types"
 async function getMyListings(searchParams: ISearchParams) {
   let query = supabase
     .from('posts_members')
-    .select(`id, title, address, address_id, area, category, image_src, price, utility, location_text, members, author_id: author->>id`, {
+    .select(`id, title, address, address_id, area, category, image_src, price, utility, members, author_id: author->>id`, {
       count: 'exact',
     })
-    .eq('author->>id', searchParams.id)
+
+  if (searchParams.author_id) {
+    query = query.eq('author->>id', searchParams.author_id)
+  } else if (searchParams.follower_id) {
+    query = query.contains('followers', [searchParams.follower_id])
+  }
 
   if (searchParams.category)
     query = query.in('category', searchParams.category.split(','))

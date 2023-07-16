@@ -1,11 +1,6 @@
 'use client'
 
-import { loginFields } from "../formFields";
 import { supabase } from '@/supabase/supabase-app';
-
-const fields = loginFields;
-let fieldsState: any = {};
-fields.forEach(field => fieldsState[field.id] = '');
 
 export default function SignInWithFacebook() {
   async function handleSignInWithFacebook() {

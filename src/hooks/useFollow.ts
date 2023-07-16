@@ -17,10 +17,11 @@ const useFollow = ({ listingId, userId }: IUseFollow) => {
   const [hasFollowed, setHasFollowed] = useState(false)
 
   useEffect(() => {
+    // Todo: (Optimize) use count
     async function fetchData() {
       const { data, error } = await supabase
         .from('follows')
-        .select("*")
+        .select("post_id")
         .eq('post_id', listingId)
         .eq('follower_id', userId)
 

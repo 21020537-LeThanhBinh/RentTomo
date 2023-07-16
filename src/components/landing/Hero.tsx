@@ -13,7 +13,7 @@ export default function Hero() {
 
         <h1 className="my-6 text-4xl md:text-5xl font-bold text-white hidden sm:block">
           <p>Ứng dụng tìm trọ,</p>
-          <p className="py-2">bạn cùng phòng lý tưởng</p>
+          <p className="py-2 whitespace-nowrap">bạn cùng phòng lý tưởng</p>
           <p>cho sinh viên</p>
         </h1>
 
@@ -33,6 +33,7 @@ export default function Hero() {
         alt="Demo Picture 1"
         width={500}
         height={500}
+        priority
         className="hidden lg:block absolute -right-8 top-28 rounded-lg"
       />
 
@@ -41,6 +42,7 @@ export default function Hero() {
         alt="Demo Picture 2"
         width={264}
         height={560}
+        priority
         className="hidden lg:block absolute right-72 top-40 rounded-3xl border-2"
       />
     </>

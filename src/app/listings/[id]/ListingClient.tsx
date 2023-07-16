@@ -11,6 +11,7 @@ import ListingRequests from "./components/listings/ListingRequests";
 import ListingReservation from "./components/listings/ListingReservation";
 import MembersInfo from "./components/members/MembersInfo";
 import MembersMenu from "./components/members/MembersMenu";
+import revalidateListings from "@/actions/revalidateListings";
 
 interface ListingClientProps {
   listingId: string;
@@ -117,18 +118,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   const onUpdateMember = async (userId: string) => {
     const { data, error } = await supabase
-      .from('rooms')
-      .select('type')
-      .eq('post_id', listingId)
+      .rpc('accept_member', { post_id: listingId, user_id: userId })
 
-    if (error) throw error
-    const hasHost = data?.some((item: any) => item.type === "host")
-
-    return supabase
-      .from('rooms')
-      .update({ type: hasHost ? 'member' : 'host' })
-      .eq('user_id', userId)
-      .eq('post_id', listingId)
+    if (data === 'host') revalidateListings()
+    
+    return { data, error }
   }
 
   const onOwnerAction = async (thisUserId: string, action: string) => {

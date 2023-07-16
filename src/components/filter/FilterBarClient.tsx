@@ -16,29 +16,29 @@ import AreaRange from "./AreaRange"
 import CategorySelect from "./CategorySelect"
 import PriceRange from "./PriceRange"
 
-export default function FilterBarClient({ searchParams, className, children }: { searchParams: ISearchParams, className?: string, children: React.ReactNode }) {
+export default function FilterBarClient({ searchParams, className, children }: { searchParams?: ISearchParams, className?: string, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
   const pathname = usePathname()
 
-  const [category, setCategory] = useState<string[]>(searchParams.category ? searchParams.category?.split(',') : categoryOptions.map((option) => option.value))
-  const [minPrice, setMinPrice] = useState<number>(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
-  const [maxPrice, setMaxPrice] = useState<number>(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
-  const [minArea, setMinArea] = useState<number>(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
-  const [maxArea, setMaxArea] = useState<number>(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
-  const [utility, setUtility] = useState<string[]>(searchParams.utility ? searchParams.utility?.split(',') : [])
-  const [isMale, setIsMale] = useState<boolean | undefined>((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
-  const [radius, setRadius] = useState<number>(searchParams.range ? parseFloat(searchParams.range) : 0)
+  const [category, setCategory] = useState<string[]>(searchParams?.category ? searchParams?.category?.split(',') : categoryOptions.map((option) => option.value))
+  const [minPrice, setMinPrice] = useState<number>(searchParams?.minPrice ? parseFloat(searchParams?.minPrice) : 0)
+  const [maxPrice, setMaxPrice] = useState<number>(searchParams?.maxPrice ? parseFloat(searchParams?.maxPrice) : 15)
+  const [minArea, setMinArea] = useState<number>(searchParams?.minArea ? parseFloat(searchParams?.minArea) : 0)
+  const [maxArea, setMaxArea] = useState<number>(searchParams?.maxArea ? parseFloat(searchParams?.maxArea) : 150)
+  const [utility, setUtility] = useState<string[]>(searchParams?.utility ? searchParams?.utility?.split(',') : [])
+  const [isMale, setIsMale] = useState<boolean | undefined>((searchParams?.isMale && searchParams?.isMale !== "undefined") ? searchParams?.isMale === 'true' : undefined)
+  const [radius, setRadius] = useState<number>(searchParams?.range ? parseFloat(searchParams?.range) : 0)
 
   useEffect(() => {
     setIsLoading(false)
   }, []);
 
   useEffect(() => {
-    if (pathname === '/search' && searchParams.page === 'all') {
+    if (pathname === '/search' && searchParams?.page === 'all') {
       router.replace(pathname + '?' + deleteQueryString(searchParams, 'page'), { scroll: false })
-    } else if (pathname === '/map' && searchParams.page !== 'all') {
+    } else if (pathname === '/map' && searchParams?.page !== 'all') {
       router.replace(pathname + '?' + createQueryString(searchParams, 'page', 'all'), { scroll: false })
     }
 
@@ -55,20 +55,20 @@ export default function FilterBarClient({ searchParams, className, children }: {
   }, [router, pathname, searchParams])
 
   useEffect(() => {
-    if (!searchParams.popup) {
+    if (!searchParams?.popup) {
       dialogRef.current?.close();
-    } else if (searchParams.popup === "filter") {
+    } else if (searchParams?.popup === "filter") {
       !dialogRef.current?.open && dialogRef.current?.showModal();
     }
 
-    setCategory(searchParams.category ? searchParams.category?.split(',') : categoryOptions.map((option) => option.value))
-    setMinPrice(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
-    setMaxPrice(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
-    setMinArea(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
-    setMaxArea(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
-    setUtility(searchParams.utility ? searchParams.utility?.split(',') : [])
-    setIsMale((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
-    setRadius(searchParams.range ? parseFloat(searchParams.range) : 0)
+    setCategory(searchParams?.category ? searchParams?.category?.split(',') : categoryOptions.map((option) => option.value))
+    setMinPrice(searchParams?.minPrice ? parseFloat(searchParams?.minPrice) : 0)
+    setMaxPrice(searchParams?.maxPrice ? parseFloat(searchParams?.maxPrice) : 15)
+    setMinArea(searchParams?.minArea ? parseFloat(searchParams?.minArea) : 0)
+    setMaxArea(searchParams?.maxArea ? parseFloat(searchParams?.maxArea) : 150)
+    setUtility(searchParams?.utility ? searchParams?.utility?.split(',') : [])
+    setIsMale((searchParams?.isMale && searchParams?.isMale !== "undefined") ? searchParams?.isMale === 'true' : undefined)
+    setRadius(searchParams?.range ? parseFloat(searchParams?.range) : 0)
   }, [searchParams])
 
   const onApply = async () => {
@@ -98,7 +98,11 @@ export default function FilterBarClient({ searchParams, className, children }: {
   }
 
   const onReset = () => {
-    router.push(pathname + searchParams.id ? `?id=${searchParams.id}` : '')
+    if (searchParams?.author_id)
+      return router.push(pathname + `?author_id=${searchParams?.author_id}`)
+    if (searchParams?.follower_id)
+      return router.push(pathname + `?follower_id=${searchParams?.follower_id}`)
+    router.push(pathname)
   }
 
   return (

@@ -19,6 +19,7 @@ export default function RangeMarker({
   const [zoom, setZoom] = useState<number>(5)
   const [radius, setRadius] = useState<number>(0)
   const [zooming, setZooming] = useState<boolean>(false)
+  const [hide, setHide] = useState<boolean>(false)
 
   const mapEvents = useMapEvents({
     zoomstart: () => {
@@ -27,6 +28,7 @@ export default function RangeMarker({
     zoomend: () => {
       setZoom(mapEvents.getZoom());
       setZooming(false)
+      setHide(mapEvents.getZoom() < 11)
     },
   });
 
@@ -38,7 +40,6 @@ export default function RangeMarker({
   }, [zoom, range])
 
   const onClick = () => {
-    console.log('clicked')
     const params = new URLSearchParams(searchParams as any)
     if (coordinates.lng == searchParams.get('lng') && coordinates.lat == searchParams.get('lat')) {
       params.delete("lng")
@@ -52,7 +53,7 @@ export default function RangeMarker({
     router.push('/map?' + params.toString())
   }
 
-  return (
+  return !hide && (
     <>
       {!zooming && (
         <CircleMarker
