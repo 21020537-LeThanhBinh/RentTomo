@@ -1,4 +1,4 @@
-import FilterBar from "@/components/filter/FilterBar";
+import FilterBarPlaceholder from "@/components/filter/FilterBarPlaceholder";
 import Link from "next/link";
 import { BsFillMapFill } from "react-icons/bs";
 import Pagination from "../../components/Pagination";
@@ -10,7 +10,7 @@ export default function loading() {
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
         <div className="flex gap-6 flex-col lg:flex-row mt-6">
           <div className="hidden lg:block w-[320px]">
-            <FilterBar />
+            <FilterBarPlaceholder />
           </div>
 
           <div className="w-full lg:w-[calc(100%-344px)] flex flex-col gap-6 min-h-[65vh] relative">

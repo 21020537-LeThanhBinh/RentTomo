@@ -49,6 +49,12 @@ interface MapProps {
 const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   const mapRef = useRef<any>()
   const router = useRouter()
+  const zoom = (
+    searchParams.level === '2' ? 16
+      : searchParams.level === '1' ? 14
+        : searchParams.level === '0' ? 10
+          : 6
+  )
 
   const [session, setSession] = useState<any>(null);
   const [sessionEvent, setSessionEvent] = useState<any>(null);
@@ -65,7 +71,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
   }, []);
 
   useEffect(() => {
-    if (!session?.user?.id || sessionEvent === "SIGNED_OUT") return setFollowing([])
+    if (!session?.user?.id || sessionEvent === "SIGNED_OUT") return
     if (following.length) return
     console.log("fetching follows")
 
@@ -91,7 +97,6 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
         console.log(results)
         if (results.length > 0) {
           const center = [results[0].y, results[0].x]
-          const zoom = (searchParams.level === '2' ? 16 : searchParams.level === '1' ? 14 : searchParams.level === '0' ? 10 : 6)
 
           mapRef.current?.setView(center as L.LatLngExpression, zoom, { animate: true })
         }

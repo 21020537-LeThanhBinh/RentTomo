@@ -1,4 +1,4 @@
-import FilterBar from "@/components/filter/FilterBar";
+import FilterBarPlaceholder from "@/components/filter/FilterBarPlaceholder";
 import Link from "next/link";
 import { FaListUl } from "react-icons/fa";
 
@@ -7,7 +7,7 @@ export default function loading() {
   return (
     <>
       <div className="absolute left-[3.4rem] top-[18vh]">
-        <FilterBar />
+        <FilterBarPlaceholder />
       </div>
 
       <div className="">
