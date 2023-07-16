@@ -7,19 +7,21 @@ export default function RangeMarker({
   range,
   label,
   color = 'red',
+  zoom_0 = 10,
 }: {
   coordinates: any,
   range: number,
   label: string,
   color?: string,
+  zoom_0?: number,
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const [zoom, setZoom] = useState<number>(5)
+  const [zoom, setZoom] = useState<number>(zoom_0)
   const [radius, setRadius] = useState<number>(0)
   const [zooming, setZooming] = useState<boolean>(false)
-  const [hide, setHide] = useState<boolean>(false)
+  const [hide, setHide] = useState<boolean>(zoom_0 < 11)
 
   const mapEvents = useMapEvents({
     zoomstart: () => {

@@ -4,6 +4,8 @@ import FilterBar from "@/components/filter/FilterBar";
 import { ISearchParams } from "@/types";
 import Pagination from "../../../components/Pagination";
 import { getMyListings } from "@/actions/getMyListings";
+import Link from "next/link";
+import { BiFilterAlt } from "react-icons/bi";
 
 export const revalidate = 86400 // revalidate this page everyday
 
@@ -14,8 +16,19 @@ export default async function MyListingsPage({ searchParams }: { searchParams: I
     <>
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
         <div className="flex gap-6 flex-col lg:flex-row mt-6">
-          <div className="hidden lg:block w-[320px]">
-            <FilterBar searchParams={searchParams} />
+          <div>
+            <div className="invisible lg:visible w-0 h-0 lg:w-[320px] lg:min-h-[65vh]">
+              <FilterBar searchParams={searchParams} />
+            </div>
+
+            <div className="lg:hidden">
+              <Link href={{ query: { ...searchParams, popup: 'filter' } }} className="border-[1px] rounded-lg p-4 flex gap-2 justify-center items-center">
+                <div className="text-lg font-semibold flex gap-2 items-center">
+                  <BiFilterAlt size={20} />
+                  <span>Bộ lọc</span>
+                </div>
+              </Link>
+            </div>
           </div>
 
           <div className="w-full lg:w-[calc(100%-344px)] flex flex-col gap-6 min-h-[65vh] relative">
@@ -32,7 +45,7 @@ export default async function MyListingsPage({ searchParams }: { searchParams: I
         </div>
       </div>
 
-      <div className="my-12 flex justify-center">
+      <div className="my-8 flex justify-center">
         <Pagination itemsLength={count || 0} />
       </div>
     </>

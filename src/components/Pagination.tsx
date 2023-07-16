@@ -29,10 +29,10 @@ export default function Pagination({ itemsLength = 1, itemsPerPage = 10 }: { ite
         nextLabel=">"
         onPageChange={handlePageClick}
         pageRangeDisplayed={4}
-        pageCount={pageCount}
+        pageCount={Math.max(pageCount, 1)}
         previousLabel="<"
         renderOnZeroPageCount={null}
-        initialPage={initialPage}
+        initialPage={Math.max(initialPage, 0)}
         className="flex items-center gap-4"
         pageLinkClassName="text-sm font-semibold w-9 h-9 flex justify-center items-center rounded-full hover:bg-neutral-100 transition cursor-pointer"
         activeLinkClassName="bg-neutral-800 text-neutral-100 hover:bg-neutral-800 cursor-default"
