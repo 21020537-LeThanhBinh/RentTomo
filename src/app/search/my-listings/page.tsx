@@ -7,7 +7,6 @@ import { getMyListings } from "@/actions/getMyListings";
 
 export const revalidate = 86400 // revalidate this page everyday
 
-// Todo: change id to author_id, follower_id
 export default async function MyListingsPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getMyListings(searchParams);
 

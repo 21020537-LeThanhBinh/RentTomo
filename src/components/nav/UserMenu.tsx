@@ -11,6 +11,7 @@ import MenuItem from '../MenuItem';
 import Avatar from '../profile/Avatar';
 import AuthPopup from './AuthPopup';
 import EditProfilePopup from '../profile/EditProfilePopup';
+import { toast } from 'react-hot-toast';
 const NotificationPopup = dynamic(() => import('../notification/NotificationPopup'), { ssr: false })
 
 export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
@@ -37,7 +38,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
     supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
       setSessionEvent(event)
-      console.log(event, session)
+      // console.log(event, session)
     })
 
     const handleClickOutside = (e: MouseEvent) => {
@@ -141,8 +142,9 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
     router.push(pathname)
   }, [router, pathname]);
 
+  // Todo: Add help page
   const handleHelp = () => {
-
+    toast('Chức năng đang được phát triển', { icon: '🚧' })
   }
 
   return (
@@ -170,11 +172,11 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                 />
                 <MenuItem
                   label="Tin của bạn"
-                  onClick={() => router.push(`/search/my-listings?id=${session.user.id}`)}
+                  onClick={() => router.push(`/search/my-listings?author_id=${session.user.id}`)}
                 />
                 <MenuItem
                   label="Đang theo dõi"
-                  onClick={() => router.push(`/search/following-listings?id=${session.user.id}`)}
+                  onClick={() => router.push(`/search/my-listings?follower_id=${session.user.id}`)}
                 />
                 <div className='border-t-[1px] my-2' />
 

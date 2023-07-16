@@ -11,6 +11,7 @@ import Input from "../Input";
 import { loginFields } from "../formFields";
 import SignInWithFacebook from '../providers/SignInWithFacebook';
 import SignInWithGoogle from '../providers/SignInWithGoogle';
+import SignInWithGithub from '../providers/SignInWithGithub';
 
 const fields = loginFields;
 let fieldsState: any = {};
@@ -130,7 +131,8 @@ export default function Login() {
         <p className='text-gray-900 text-center mt-5'>hoặc</p>
 
         <SignInWithGoogle />
-        <SignInWithFacebook />
+        <SignInWithGithub />
+        {/* <SignInWithFacebook /> */}
         
       </div>
     </form >

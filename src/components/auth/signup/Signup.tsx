@@ -11,6 +11,7 @@ import Input from '../Input';
 import { signupFields } from '../formFields';
 import SignInWithFacebook from '../providers/SignInWithFacebook';
 import SignInWithGoogle from '../providers/SignInWithGoogle';
+import SignInWithGithub from '../providers/SignInWithGithub';
 
 const fields = signupFields;
 let fieldsState: any = {};
@@ -100,7 +101,8 @@ export default function Signup() {
         <p className='text-gray-900 text-center mt-5'>hoặc</p>
 
         <SignInWithGoogle />
-        <SignInWithFacebook />
+        <SignInWithGithub />
+        {/* <SignInWithFacebook /> */}
         
       </div>
     </form>

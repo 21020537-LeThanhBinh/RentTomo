@@ -141,6 +141,7 @@ export default function SearchBar() {
               'Tìm kiếm theo phường, quận, ...'
               : 'Tìm kiếm theo trường đại học/ cao đẳng/ ...'
           }
+          aria-label='Nhập từ khóa tìm kiếm'
           components={{ MenuList }}
           theme={(theme) => ({
             ...theme,
@@ -181,7 +182,7 @@ export default function SearchBar() {
         />
 
         <div className='absolute right-2'>
-          <button onClick={onSearch} className="p-2 bg-sky-500 rounded-full text-white">
+          <button onClick={onSearch} aria-label='Tìm kiếm' className="p-2 bg-sky-500 rounded-full text-white">
             <BiSearch size={18} />
           </button>
         </div>

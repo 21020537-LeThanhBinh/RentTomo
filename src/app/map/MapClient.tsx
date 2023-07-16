@@ -71,7 +71,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
 
     supabase
       .from('follows')
-      .select("*")
+      .select("post_id")
       .eq('follower_id', session.user.id)
       .then(({ data, error }) => {
         setFollowing(data?.map((value) => value.post_id) || [])
@@ -130,7 +130,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
       <Control position='topright'>
         <button className='leaflet-bar'>
           <a
-            href=""
+            href="#"
             title="Định vị"
             onClick={(e) => {
               e.preventDefault()
@@ -140,7 +140,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
               });
             }}
           >
-            <BiNavigation size={20} className='absolute top-[6px] left-[6px]' />
+            <BiNavigation size={20} className='absolute top-[7px] left-[6px]' />
           </a>
         </button>
       </Control>
@@ -148,7 +148,7 @@ const MapClient: React.FC<MapProps> = ({ listings, searchParams }) => {
       <Control position='topleft'>
         <button className='leaflet-bar'>
           <a
-            href=""
+            href="#"
             title="Filter Popup"
             onClick={(e) => {
               e.preventDefault()
