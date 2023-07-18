@@ -2,7 +2,7 @@
 
 import { supabase } from '@/supabase/supabase-app';
 import handleCloseDialog from '@/utils/handleCloseDialog';
-import { createQueryString } from '@/utils/queryString';
+import { createQueryString, deleteQueryString } from '@/utils/queryString';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -242,7 +242,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
         onNext={() =>
           (activeTab == 'edit-profile-1') ?
             router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-2'), { scroll: false })
-            : router.push(pathname, { scroll: false })
+            : router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'), { scroll: false })
         }
         session={session}
       />

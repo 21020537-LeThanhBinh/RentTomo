@@ -75,7 +75,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
 
   const handleSubmit2 = async (values: FormikValues) => {
     if (!isUpdated && session?.user?.user_metadata?.new_full_name) {
-      onBack();
+      onNext();
       return;
     }
     setLoading(true);
