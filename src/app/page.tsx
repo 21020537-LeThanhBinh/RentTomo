@@ -6,6 +6,19 @@ import LastCTA from "@/components/landing/LastCTA";
 import Logo from "@/components/nav/Logo";
 import UserMenu from "@/components/nav/UserMenu";
 
+export const metadata = {
+  title: 'RentTomo - Ứng dụng tìm nơi ở, bạn cùng phòng lý tưởng',
+  description: 'Tìm kiếm trọ hiệu quả dựa trên vị trí, tiện ích phòng và ngân sách của bạn. Hoặc, tham gia ngay vào những phòng đã có thành viên để tiết kiệm chi phí và gặp gỡ những người bạn mới.',
+  openGraph: {
+    images: {
+      url: '/images/logo_full.png',
+      alt: 'RentTomo Logo',
+      width: 167,
+      height: 32,
+    },
+  },
+}
+
 export default function Home() {
   return (
     <>
@@ -19,7 +32,7 @@ export default function Home() {
             <Logo isWhite />
             <UserMenu isWhite />
           </div>
-          
+
           <Hero />
         </header>
 
