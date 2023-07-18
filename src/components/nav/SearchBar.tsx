@@ -9,6 +9,7 @@ import Select from 'react-select';
 import schools from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
 import MenuList from '../../utils/MenuList';
+import { event } from "@/lib/ga"
 
 export default function SearchBar() {
   const router = useRouter();
@@ -31,6 +32,14 @@ export default function SearchBar() {
     } else {
       params.set('location_id', locationId)
       params.set('level', level.toString())
+
+      event({
+        action: 'search_area',
+        params: {
+          location_id: locationId,
+          level: level.toString()
+        }
+      })
     }
 
     if (!lng || !lat) {
@@ -41,6 +50,14 @@ export default function SearchBar() {
       params.set('lng', lng.toString())
       params.set('lat', lat.toString())
       params.set('range', Math.max(schools.find(school => school.lat == lat && school.lng == lng)?.range || 0, 2000).toString())
+    
+      event({
+        action: 'search_nearby',
+        params: {
+          lng: lng.toString(),
+          lat: lat.toString()
+        }
+      })
     }
 
     if (pathname == '/map') router.push('/map?' + params.toString())

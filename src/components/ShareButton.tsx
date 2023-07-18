@@ -1,6 +1,7 @@
 'use client';
 
 import { BsFillShareFill } from "react-icons/bs";
+import { event } from "@/lib/ga"
 
 interface ShareButtonProps {
   listingId: string
@@ -17,7 +18,14 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     navigator.share({
       title: title,
       text: 'Share',
-      url: `https://developer.mozilla.org/${listingId}`
+      url: `https://renttomo.vercel.app/listings/${listingId}`
+    })
+
+    event({
+      action: 'share',
+      params: {
+        listing_id: listingId,
+      }
     })
   }
 

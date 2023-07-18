@@ -75,6 +75,9 @@ export default function FilterBarClient({ searchParams, className, children }: {
     const params = new URLSearchParams(searchParams as any)
     if (category.length < 4)
       params.set('category', category.toString())
+    else {
+      params.delete('category')
+    }
 
     if (minPrice)
       params.set('minPrice', minPrice.toString())
