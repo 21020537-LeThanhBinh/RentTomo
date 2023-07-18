@@ -5,7 +5,7 @@ import LastCTA from "@/components/landing/LastCTA";
 import Logo from "@/components/nav/Logo";
 import UserMenu from "@/components/nav/UserMenu";
 
-export default function Home() {
+export default function Landing() {
   return (
     <>
       <div className="fixed w-full bg-white z-10 h-[85px]"></div>
