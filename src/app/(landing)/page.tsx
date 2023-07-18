@@ -8,7 +8,7 @@ import UserMenu from "@/components/nav/UserMenu";
 export default function Home() {
   return (
     <>
-      <nav className="fixed w-full bg-white z-10 h-[85px]"></nav>
+      <div className="fixed w-full bg-white z-10 h-[85px]"></div>
 
       <div className="min-h-screen relative z-10">
         <div className="h-screen sm:h-[90vh] w-full -skew-y-6 absolute -top-24 bg-gradient-to-tr from-sky-600 to-sky-400 -z-10"></div>
