@@ -1,11 +1,11 @@
-import Footer from "@/components/footer/Footer";
-import Questions from "@/components/landing/FAQs";
-import Features from "@/components/landing/Features";
-import Hero from "@/components/landing/Hero";
-import LastCTA from "@/components/landing/LastCTA";
-import Logo from "@/components/nav/Logo";
-import UserMenu from "@/components/nav/UserMenu";
-import { Metadata } from "next";
+// import Footer from "@/components/footer/Footer";
+// import Questions from "@/components/landing/FAQs";
+// import Features from "@/components/landing/Features";
+// import Hero from "@/components/landing/Hero";
+// import LastCTA from "@/components/landing/LastCTA";
+// import Logo from "@/components/nav/Logo";
+// import UserMenu from "@/components/nav/UserMenu";
+// import { Metadata } from "next";
 
 // export const metadata: Metadata = {
 //   title: 'RentTomo - Ứng dụng tìm trọ, bạn cùng phòng lý tưởng',
