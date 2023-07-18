@@ -5,7 +5,9 @@ import Hero from "@/components/landing/Hero";
 import LastCTA from "@/components/landing/LastCTA";
 import Logo from "@/components/nav/Logo";
 import UserMenu from "@/components/nav/UserMenu";
+import UserMenuFallback from "@/components/nav/UserMenuFallback";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: 'RentTomo - Ứng dụng tìm trọ, bạn cùng phòng lý tưởng',
@@ -31,7 +33,9 @@ export default function Home() {
         <section className="h-screen max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 p-4">
           <div className="flex flex-row items-center justify-between">
             <Logo isWhite />
-            <UserMenu isWhite />
+            <Suspense fallback={<UserMenuFallback isWhite />}>
+              <UserMenu isWhite />
+            </Suspense>
           </div>
 
           <Hero />

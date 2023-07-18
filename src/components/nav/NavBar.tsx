@@ -1,7 +1,10 @@
 import Logo from "./Logo";
 import PostBtn from "./PostBtn";
 import SearchBar from "./SearchBar";
+import SearchBarFallback from "./SearchBarFallback";
 import UserMenu from "./UserMenu";
+import { Suspense } from 'react'
+import UserMenuFallback from "./UserMenuFallback";
 
 export default async function NavBar() {
   return (
@@ -13,12 +16,16 @@ export default async function NavBar() {
           </div>
 
           <div className="flex flex-[2] items-center gap-2 w-full md:w-auto">
-            <SearchBar />
+            <Suspense fallback={<SearchBarFallback />}>
+              <SearchBar />
+            </Suspense>
             <PostBtn />
           </div>
 
           <div className="lg:flex-1">
-            <UserMenu />
+            <Suspense fallback={<UserMenuFallback />}>
+              <UserMenu />
+            </Suspense>
           </div>
         </div>
       </div>

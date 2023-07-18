@@ -46,7 +46,7 @@ export default async function MyListingsPage({ searchParams }: { searchParams: I
       </div>
 
       <div className="my-8 flex justify-center">
-        <Pagination itemsLength={count || 0} />
+        <Pagination searchParams={searchParams} itemsLength={count || 0} />
       </div>
     </>
   )

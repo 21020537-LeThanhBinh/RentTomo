@@ -1,6 +1,8 @@
 import Image from "next/image";
 import PostBtn from "../nav/PostBtn";
 import SearchBar from "../nav/SearchBar";
+import SearchBarFallback from "../nav/SearchBarFallback";
+import { Suspense } from "react";
 
 export default function Hero() {
   return (
@@ -23,7 +25,9 @@ export default function Hero() {
         </div>
 
         <div className="my-6 flex gap-2 max-w-[33.75rem]">
-          <SearchBar />
+          <Suspense fallback={<SearchBarFallback />}>
+            <SearchBar />
+          </Suspense>
           <PostBtn isWhite />
         </div>
       </div>

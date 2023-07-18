@@ -46,7 +46,7 @@ export default async function SearchPage({ searchParams }: { searchParams: ISear
       </div>
 
       <div className="my-8 flex justify-center">
-        <Pagination itemsLength={count || 0} />
+        <Pagination searchParams={searchParams} itemsLength={count || 0} />
       </div>
 
       <div className="fixed bottom-12 left-[calc(50vw-80px)]">

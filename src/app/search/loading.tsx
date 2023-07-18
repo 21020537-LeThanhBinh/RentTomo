@@ -1,8 +1,7 @@
 import FilterBarPlaceholder from "@/components/filter/FilterBarPlaceholder";
 import Link from "next/link";
-import { BsFillMapFill } from "react-icons/bs";
-import Pagination from "../../components/Pagination";
 import { BiFilterAlt } from "react-icons/bi";
+import { BsFillMapFill } from "react-icons/bs";
 
 // Todo: add listing cards' loading animation
 export default function loading() {
@@ -36,10 +35,6 @@ export default function loading() {
             )} */}
           </div>
         </div>
-      </div>
-
-      <div className="my-8 flex justify-center">
-        <Pagination />
       </div>
 
       <div className="fixed bottom-12 left-[calc(50vw-73px)]">
