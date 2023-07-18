@@ -13,8 +13,6 @@ export const metadata = {
     images: {
       url: '/images/logo_full.png',
       alt: 'RentTomo Logo',
-      width: 167,
-      height: 32,
     },
   },
 }
