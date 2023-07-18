@@ -1,9 +1,9 @@
 'use client';
 
-import Image from "next/image";
-import { autoUpdate, flip, offset, shift, useClick, useFloating, useFocus, useHover, useInteractions } from '@floating-ui/react';
-import { useEffect, useState } from "react";
 import { supabase } from "@/supabase/supabase-app";
+import { autoUpdate, flip, offset, shift, useClick, useFloating, useFocus, useInteractions } from '@floating-ui/react';
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface ProfileProps {
   size?: number;
@@ -72,7 +72,7 @@ const Profile: React.FC<ProfileProps> = ({
           ref={refs.setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
-          className="relative w-[360px] border-[1px] rounded-xl bg-white flex gap-4 p-4 z-10"
+          className="relative w-[360px] border-[1px] rounded-xl bg-white flex gap-4 p-4 z-[5]"
         >
           <div className="flex-shrink-0">
             <Image

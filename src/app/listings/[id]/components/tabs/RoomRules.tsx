@@ -21,7 +21,7 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
   }, []);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !isActive || (isActive && rules)) return;
 
     const fetchRoomInfo = async () => {
       const { data, error } = await supabase
@@ -41,7 +41,8 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
     }
 
     fetchRoomInfo();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isActive]);
 
   const putRules = async () => {
     const { data, error } = await supabase

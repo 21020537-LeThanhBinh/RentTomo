@@ -106,8 +106,8 @@ export default function PostForm({
             setSelectedPoint={setSelectedPoint}
           />
         </div>
-        {values.address.number && (
-          <span className='text-neutral-600'>*Vui lòng chọn vị trí thủ công trên bản đồ</span>
+        {values.address.street && (
+          <span className='text-neutral-600'>* Vui lòng chọn vị trí thủ công bằng cách di chuyển bản đồ</span>
         )}
 
         <div className='font-semibold text-lg text-neutral-600 mt-2'>

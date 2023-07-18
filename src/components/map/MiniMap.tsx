@@ -14,6 +14,7 @@ import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import SearchField from './SearchField';
 import SetViewOnClick from './SetViewOnClick';
+import SetPointOnDrag from './SetPointOnDrag';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -37,6 +38,7 @@ const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) 
 
   useEffect(() => {
     if (!selectedPoint || !zoom) return
+    if (zoom < mapRef.current?.getZoom()) return
 
     mapRef.current?.setView(selectedPoint as L.LatLngExpression, zoom, {
       animate: true,
@@ -53,7 +55,6 @@ const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) 
       fullscreenControl={true}
       //@ts-ignore
       scrollWheelZoom={true}
-      style={{ cursor: 'crosshair' }}
       className="h-[35vh] rounded-lg z-0"
     >
       <SearchField />
@@ -84,6 +85,7 @@ const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) 
         <Marker position={selectedPoint as L.LatLngExpression} />
       )}
       <SetViewOnClick selectPoint={setSelectedPoint} />
+      <SetPointOnDrag selectPoint={setSelectedPoint} />
     </MapContainer>
   )
 }

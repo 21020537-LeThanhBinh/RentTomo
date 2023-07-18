@@ -16,7 +16,7 @@ import revalidateListings from "@/actions/revalidateListings";
 interface ListingClientProps {
   listingId: string;
   imageSrc: string[];
-  authorId?: string;
+  authorId: string;
   price: number;
   fees?: any;
 }
@@ -132,8 +132,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
       await onRemoveMember(thisUserId)
     )
 
-    // Un-follow after host accepted
-    if (action === "accept" && myUserId === authorId) {
+    // Un-follow after host accepted and host not me
+    if (action === "accept" && myUserId === authorId && thisUserId !== authorId) {
       await supabase
         .from('follows')
         .delete()
@@ -190,6 +190,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         requesting={requests.some((request) => myUserId === request.id)}
         fees={fees}
         roomRules={rules || ''}
+        authorId={authorId}
       />
     </ContextProvider>
   )
