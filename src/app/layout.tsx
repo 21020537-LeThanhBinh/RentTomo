@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   description: 'Tìm kiếm trọ hiệu quả dựa trên vị trí, tiện ích phòng và ngân sách của bạn. Hoặc, tham gia ngay vào những phòng đã có thành viên để tiết kiệm chi phí và gặp gỡ những người bạn mới.',
   openGraph: {
     images: {
-      url: '/images/logo_full.png',
+      url: '/images/renttomo_logo_full_with_bg.png',
       alt: 'RentTomo Logo',
       width: 1200,
-      height: 240,
+      height: 630,
     },
   },
 }

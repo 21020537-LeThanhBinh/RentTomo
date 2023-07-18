@@ -20,7 +20,7 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
     description: listing?.description || '',
     openGraph: {
       images: {
-        url: listing?.image_src || '/images/logo_full.png',
+        url: listing?.image_src?.[0] || '/images/logo_full.png',
         alt: 'Listing Image',
         width: 1200,
         height: 630,
