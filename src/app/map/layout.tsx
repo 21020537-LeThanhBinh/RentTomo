@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Bản đồ - RentTomo',
-  description: 'Ứng dụng tìm trọ, bạn cùng phòng lý tưởng.',
+  description: 'Ứng dụng tìm trọ, bạn cùng phòng lý tưởng cho sinh viên.',
 }
 
 export default function MapLayout({
