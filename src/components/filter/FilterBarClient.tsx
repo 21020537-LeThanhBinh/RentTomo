@@ -75,6 +75,9 @@ export default function FilterBarClient({ searchParams, className, children }: {
     const params = new URLSearchParams(searchParams as any)
     if (category.length < 4)
       params.set('category', category.toString())
+    else {
+      params.delete('category')
+    }
 
     if (minPrice)
       params.set('minPrice', minPrice.toString())
@@ -118,7 +121,7 @@ export default function FilterBarClient({ searchParams, className, children }: {
         modalRef={dialogRef}
         label="Bộ lọc"
         onBack={() => router.push(pathname + '?' + deleteQueryString(searchParams, 'popup'), { scroll: false })}
-        className="flex flex-col gap-4 overflow-x-hidden"
+        className="flex flex-col gap-4"
       >
         <div className="text-lg text-neutral-600">
           Loại phòng:

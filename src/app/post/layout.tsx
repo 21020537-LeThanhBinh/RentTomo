@@ -2,7 +2,7 @@ import Footer from "@/components/footer/Footer"
 
 export const metadata = {
   title: 'Đăng bài - RentTomo',
-  description: 'Ứng dụng tìm nơi ở, bạn cùng phòng lý tưởng.',
+  description: 'Ứng dụng tìm trọ, bạn cùng phòng lý tưởng cho sinh viên.',
 }
 
 export default function SearchLayout({

@@ -19,7 +19,7 @@ export default function FilterBarPlaceholder() {
         <div className="text-lg text-neutral-600 flex gap-2">
           <span className="whitespace-nowrap flex-1">- Tầm giá:</span>
           <span className="flex-1">
-            0tr - 15tr
+            0 - 15tr
           </span>
         </div>
 

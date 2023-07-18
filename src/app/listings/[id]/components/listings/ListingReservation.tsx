@@ -7,6 +7,7 @@ import { AiFillQuestionCircle } from "react-icons/ai";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import { ListingContext } from "../../ListingContext";
 import ModalSingle from "@/components/modal/ModalSingle";
+import ExplanationFloating from "@/components/ExplanationFloating";
 
 interface ListingReservationProps {
   price: number;
@@ -20,6 +21,7 @@ interface ListingReservationProps {
     internet: number;
   };
   roomRules: string;
+  authorId: string;
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -29,6 +31,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   requesting,
   fees,
   roomRules,
+  authorId,
 }) => {
   const { userId, members, host } = useContext(ListingContext);
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -47,6 +50,17 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     };
   }, []);
 
+  const getActionLabel = () => {
+    if (requesting) return "Huỷ yêu cầu"
+    if (!host && userId != authorId) return "Đặt phòng"
+    return "Tham gia"
+  }
+
+  const handleAction = () => {
+    if (requesting || !host) onSubmit()
+    else !modalRef.current?.open && modalRef.current?.showModal()
+  }
+
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
@@ -62,8 +76,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <div className="p-4">
         <Button
           disabled={disabled || isJoined}
-          label={requesting ? "Huỷ yêu cầu" : (!host ? "Đặt phòng" : "Tham gia")}
-          onClick={() => { (requesting || !host) ? onSubmit() : !modalRef.current?.open && modalRef.current?.showModal() }}
+          label={getActionLabel()}
+          onClick={handleAction}
         />
 
         <ModalSingle modalRef={modalRef} label="Quy định nhóm" onBack={() => { !modalRef.current?.close(); }} className="flex flex-col gap-6">
@@ -90,11 +104,17 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       </div>
 
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">
-        <div className="w-full text-center">Các phí khác</div>
+        <div className="w-full text-center">Tiền thuê, cọc</div>
+        <div className="w-full flex justify-between">
+          <span>Tiền thuê</span>
+          <span>đ {formatBigNumber(price)}</span>
+        </div>
         <div className="w-full flex justify-between">
           <span>Tiền cọc</span>
           <span>đ {formatBigNumber(fees.deposit)}</span>
         </div>
+
+        <div className="w-full text-center">Các phí khác</div>
         <div className="w-full flex justify-between">
           <span>Điện</span>
           <span>đ {formatBigNumber(fees.electricity)}</span>
@@ -110,12 +130,14 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       </div>
       <hr />
 
-      <div className="p-4 flex items-center justify-between font-semibold text-lg">
+      <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span>Tổng cộng</span>
-          <AiFillQuestionCircle size={16} title={"Tiền thuê tháng đầu + cọc"} />
+          <span className="font-semibold text-lg">Tổng cộng</span>
+          <ExplanationFloating content="Tổng cộng = (Tiền thuê tháng đầu + tiền cọc) / số thành viên có bạn">
+            <AiFillQuestionCircle size={16} />
+          </ExplanationFloating>
         </div>
-        <div>
+        <div className="font-semibold text-lg">
           đ {formatBigNumber((price + fees.deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>
         </div>
       </div>

@@ -1,15 +1,15 @@
 'use client'
 
 import { createQueryString } from "@/utils/queryString";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ReactPaginate from "react-paginate";
 
-export default function Pagination({ itemsLength = 1, itemsPerPage = 10 }: { itemsLength?: number, itemsPerPage?: number }) {
+export default function Pagination({ searchParams, itemsLength = 1, itemsPerPage = 10 }: { searchParams: any, itemsLength?: number, itemsPerPage?: number }) {
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
 
-  const page = searchParams.get("page") || ''
+  const page = searchParams.page || ''
   const initialPage = !!parseInt(page) ? parseInt(page) - 1 : 0
   const pageCount = Math.ceil(itemsLength / itemsPerPage);
 
@@ -19,7 +19,7 @@ export default function Pagination({ itemsLength = 1, itemsPerPage = 10 }: { ite
     //   `User requested page number ${event.selected}, which is offset ${newOffset}`
     // );
 
-    router.push(pathname + '?' + createQueryString(searchParams, "page", event.selected + 1))
+    router.replace(pathname + '?' + createQueryString(searchParams, "page", event.selected + 1))
   };
 
   return (

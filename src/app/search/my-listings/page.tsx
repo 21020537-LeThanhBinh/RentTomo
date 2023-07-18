@@ -7,7 +7,7 @@ import { getMyListings } from "@/actions/getMyListings";
 import Link from "next/link";
 import { BiFilterAlt } from "react-icons/bi";
 
-export const revalidate = 86400 // revalidate this page everyday
+export const revalidate = 0 // new page every time
 
 export default async function MyListingsPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getMyListings(searchParams);
@@ -46,7 +46,7 @@ export default async function MyListingsPage({ searchParams }: { searchParams: I
       </div>
 
       <div className="my-8 flex justify-center">
-        <Pagination itemsLength={count || 0} />
+        <Pagination searchParams={searchParams} itemsLength={count || 0} />
       </div>
     </>
   )

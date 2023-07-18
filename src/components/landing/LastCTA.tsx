@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import PostBtn from "../nav/PostBtn";
 import SearchBar from "../nav/SearchBar";
+import SearchBarFallback from "../nav/SearchBarFallback";
 
 export default function LastCTA() {
   return (
@@ -9,7 +11,9 @@ export default function LastCTA() {
       </h1>
 
       <div className="flex gap-2 max-w-[33.75rem]">
-        <SearchBar />
+        <Suspense fallback={<SearchBarFallback />}>
+          <SearchBar />
+        </Suspense>
         <PostBtn isWhite />
       </div>
     </div>

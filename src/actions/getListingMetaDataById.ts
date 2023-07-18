@@ -4,7 +4,7 @@ async function getListingMetaDataById(id: string) {
   let { data, error } = await supabase
     .from('posts_members')
     .select(`
-      title, description
+      title, description, image_src
     `)
     .eq('id', id)
     .single()
