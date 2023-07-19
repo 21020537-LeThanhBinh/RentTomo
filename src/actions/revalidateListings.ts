@@ -17,6 +17,9 @@ export default async function revalidateListings() {
   await fetch(`${window.location.origin}/api/revalidate?path=%2Fsearch`, {
     method: 'GET',
   })
+  await fetch(`${window.location.origin}/api/revalidate?path=%2Fmap`, {
+    method: 'GET',
+  })
   await fetch(`${window.location.origin}/api/revalidate?path=%2Flistings%2F%5Bid%5D`, {
     method: 'GET',
   })

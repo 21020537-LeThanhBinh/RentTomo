@@ -111,7 +111,7 @@ export default function PostForm({
         )}
 
         <div className='font-semibold text-lg text-neutral-600 mt-2'>
-          Hình ảnh (3 đến 12 tệp)
+          Hình ảnh (1 đến 12 tệp)
         </div>
 
         <ImageUpload

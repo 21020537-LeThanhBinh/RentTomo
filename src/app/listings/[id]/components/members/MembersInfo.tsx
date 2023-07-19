@@ -22,7 +22,7 @@ export default function MembersInfo({
         {requests?.some((request) => userId === request.id) ? (
           <span>Yêu cầu thành công. Vui lòng chờ chủ phòng xác nhận.</span>
         ) : (
-          <span>Chưa có người đặt phòng!</span>
+          <span>Phòng còn trống.</span>
         )}
       </div>
     )

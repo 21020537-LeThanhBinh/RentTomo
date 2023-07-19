@@ -89,7 +89,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data, hasOptions }) => {
           {data.title}
         </Link>
 
-        {hasOptions && data.author_id === userId && (
+        {(hasOptions && (data.author_id === userId) && (!data.members?.[0].id)) && (
           <div className="absolute -top-1 right-0">
             <ListingOptions
               onEditListing={onEditListing}
