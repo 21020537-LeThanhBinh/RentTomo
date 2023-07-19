@@ -15,7 +15,7 @@ const Questions = () => {
         <details className="border-t border-very-dark-blue/50">
           <summary className="flex w-full cursor-pointer items-center justify-between rounded-md py-[1.1875rem] font-bold tracking-[-0.02em] transition duration-300 hover:text-soft-red md:pr-[1.3125rem] md:text-lg text-neutral-800">
             Ai có thể đăng tin?
-            <div>
+            <div className="BiChevronDown">
               <BiChevronDown size={25} className="fill-sky-500 transition-all duration-300 ease-in-out" />
             </div>
           </summary>

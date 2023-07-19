@@ -4,6 +4,7 @@ import Button from "../Button";
 import ModalSingle from "../modal/ModalSingle";
 import Input from "./Input";
 import ItemSelect from "./ItemSelect";
+import { BiChevronDown } from "react-icons/bi";
 
 export type AddressValue = {
   city_id: string;
@@ -19,9 +20,11 @@ interface AddressProps {
   isLoading: boolean;
   addressRef: React.RefObject<HTMLDialogElement>;
   setAddressLabel: (label: string) => void;
+  selectedPoint: { lat: number, lng: number }
+  setSelectedPoint: (point: { lat: number, lng: number }) => void
 }
 
-export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel }: AddressProps) {
+export default function AddressInputPopup({ value, setFieldValue, isLoading, addressRef, setAddressLabel, selectedPoint, setSelectedPoint }: AddressProps) {
   const isFirstRender = useRef(true);
   const [city, setCity] = useState<any>()
   const [district, setDistrict] = useState<any>()
@@ -114,9 +117,32 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
             onChange={(value) => setFieldValue("address.number", value)}
             value={value?.number || ""}
             id="address.number"
-            label="Nhập số nhà, ngõ,..."
+            label="Nhập số nhà, ngõ, ..."
             disabled={isLoading}
           />
+
+          <details>
+            <summary className="flex w-full cursor-pointer items-center justify-between transition duration-300 text-neutral-600 pb-4">
+              <span className="underline">Nâng cao</span>
+              <div className="BiChevronDown">
+                <BiChevronDown size={25} className="transition-all duration-300 ease-in-out" />
+              </div>
+            </summary>
+
+            <Input
+              onChange={(value) =>
+                setSelectedPoint(value.split(',').length === 2 ?
+                  { lat: parseFloat(value.split(',')[0]), lng: parseFloat(value.split(',')[1]) }
+                  : selectedPoint
+                )
+              }
+              value={(selectedPoint.lat + ', ' + selectedPoint.lng) || ""}
+              id="location"
+              label="Tọa độ"
+              disabled={isLoading}
+            />
+          </details>
+
         </div>
 
         <div className="flex justify-end gap-4">
