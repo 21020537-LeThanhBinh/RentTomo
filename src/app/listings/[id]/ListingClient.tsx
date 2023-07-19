@@ -125,7 +125,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
     return { data, error }
   }
 
-  const onOwnerAction = async (thisUserId: string, action: string) => {
+  const onHostAction = async (thisUserId: string, action: string) => {
     const { data, error } = (action === "accept") ? (
       await onUpdateMember(thisUserId)
     ) : (
@@ -170,23 +170,25 @@ const ListingClient: React.FC<ListingClientProps> = ({
           isLoading={isLoading}
         />
 
-        {(myUserId === host?.id || members?.some((member) => member.id === myUserId)) && (
+        {((myUserId === host?.id) || members?.some((member) => member.id === myUserId)) && (
           <MembersMenu />
         )}
       </div>
 
-      {((myUserId === authorId && !host) || host?.id === myUserId || members.some((member) => member.id === myUserId)) && (
+      {(((myUserId === authorId) && !host) || (myUserId === host?.id) || members?.some((member) => member.id === myUserId)) && (
         <ListingRequests
-          onSubmit={onOwnerAction}
+          onSubmit={onHostAction}
           disabled={isLoading}
           requests={requests}
+          willNotice={(myUserId === authorId) && !host}
+          userId={myUserId}
         />
       )}
 
       <ListingReservation
         price={price}
         onSubmit={onReservation}
-        disabled={isLoading || host?.id === myUserId}
+        disabled={isLoading || (host?.id === myUserId)}
         requesting={requests.some((request) => myUserId === request.id)}
         fees={fees}
         roomRules={rules || ''}

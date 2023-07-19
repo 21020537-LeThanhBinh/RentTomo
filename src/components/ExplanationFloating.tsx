@@ -2,15 +2,14 @@
 
 import { autoUpdate, flip, offset, shift, useClick, useFloating, useFocus, useHover, useInteractions } from '@floating-ui/react';
 import { useState } from "react";
+import { AiFillQuestionCircle } from 'react-icons/ai';
 
 interface ExplanationProps {
   content: string;
-  children: React.ReactNode;
 }
 
 const ExplanationFloating: React.FC<ExplanationProps> = ({
   content,
-  children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { refs, context, floatingStyles } = useFloating({
@@ -37,7 +36,7 @@ const ExplanationFloating: React.FC<ExplanationProps> = ({
         {...getReferenceProps()}
         className="flex-shrink-0"
       >
-        {children}
+        <AiFillQuestionCircle size={16} />
       </button>
 
       {isOpen && (
@@ -45,7 +44,7 @@ const ExplanationFloating: React.FC<ExplanationProps> = ({
           ref={refs.setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
-          className="relative max-w-[360px] border-[1px] rounded-xl bg-white flex gap-4 p-4 z-[5]"
+          className="relative max-w-[360px] border-[1px] rounded-xl bg-white flex gap-4 p-4 z-[5] text-sm font-normal text-neutral-600"
         >
           {content}
         </div>

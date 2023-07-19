@@ -7,21 +7,23 @@ interface ButtonProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   outline?: boolean;
+  warning?: boolean;
   small?: boolean;
   icon?: IconType;
   type?: 'button' | 'submit' | 'reset';
 }
 
-const Button: React.FC<ButtonProps> = ({ 
-  label, 
-  onClick, 
-  disabled, 
+const Button: React.FC<ButtonProps> = ({
+  label,
+  onClick,
+  disabled,
   outline,
+  warning,
   small,
   icon: Icon,
   type = 'button'
 }) => {
-  return ( 
+  return (
     <button
       disabled={disabled}
       onClick={onClick}
@@ -34,8 +36,8 @@ const Button: React.FC<ButtonProps> = ({
         hover:opacity-80
         transition
         w-full
-        ${outline ? 'bg-white' : 'bg-sky-500'}
-        ${outline ? 'border-black' : 'border-sky-500'}
+        ${warning ? 'bg-red-500' : outline ? 'bg-white' : 'bg-sky-500'}
+        ${warning ? 'border-red-500' : outline ? 'border-black' : 'border-sky-500'}
         ${outline ? 'text-black' : 'text-white'}
         ${small ? 'text-sm' : 'text-md'}
         ${small ? 'py-1' : 'py-3'}
@@ -55,7 +57,7 @@ const Button: React.FC<ButtonProps> = ({
       )}
       {label}
     </button>
-   );
+  );
 }
- 
+
 export default Button;

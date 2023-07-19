@@ -96,7 +96,7 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
           </form>
         ) : (
           <div className="text-neutral-600 whitespace-pre-line flex justify-between items-center gap-2">
-            <span>{!memberIds.includes(userId || '') ? "Chỉ dành cho thành viên phòng" : chat ? chat : "Trưởng phòng chưa cập nhật link group chat."}</span>
+            <span>{!memberIds.includes(userId || '') ? "Chỉ dành cho thành viên phòng." : chat ? chat : "Chưa có link group chat."}</span>
 
             {userId && userId === hostId && (
               <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />

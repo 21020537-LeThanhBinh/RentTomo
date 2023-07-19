@@ -4,15 +4,15 @@ import { Ref } from "react"
 import ModalSingle from "./ModalSingle";
 import Button from "../Button";
 
-export default function WarningModal({
-  modalRef, onAccept, onClose
+export default function NoticeModal({
+  modalRef, onAccept, onClose, label = "Chú ý", children
 }: {
-  modalRef: Ref<HTMLDialogElement>, onAccept: () => void, onClose: () => void
+  modalRef: Ref<HTMLDialogElement>, onAccept: () => void, onClose: () => void, label?: string, children?: React.ReactNode
 }) {
   return (
-    <ModalSingle modalRef={modalRef} label="Lưu ý" onBack={onClose} className="flex flex-col gap-6">
-      <div className="text-neutral-600">
-        Hành động này không thể đảo ngược, tiếp tục?
+    <ModalSingle modalRef={modalRef} label={label} onBack={onClose} className="flex flex-col gap-6">
+      <div>
+        {children}
       </div>
 
       <div className="flex justify-end gap-2 w-full">
@@ -27,7 +27,6 @@ export default function WarningModal({
           <Button
             label="Đồng ý"
             onClick={() => { onAccept(); onClose(); }}
-            warning
           />
         </div>
       </div>

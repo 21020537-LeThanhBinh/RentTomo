@@ -2,6 +2,7 @@ import Link from "next/link";
 import ListingInfo from "./components/tabs/ListingInfo";
 import RoomRules from "./components/tabs/RoomRules";
 import RoomChat from "./components/tabs/RoomChat";
+import ExplanationFloating from "@/components/ExplanationFloating";
 
 export default function Tabs({ listing, tab }: { listing: any, tab: string }) {
   const activeTab = tab || (listing.room_rules ? 'rules' : 'info');
@@ -12,11 +13,13 @@ export default function Tabs({ listing, tab }: { listing: any, tab: string }) {
         <Link href={{ query: { tab: 'info' } }} scroll={false} replace className={`relative -bottom-[1px] rounded-t-lg border-[1px] px-4 py-2 ${activeTab === 'info' && 'border-b-white font-semibold'}`}>
           Thông tin phòng
         </Link>
-        <Link href={{ query: { tab: 'rules' } }} scroll={false} replace className={`relative -bottom-[1px] rounded-t-lg border-[1px] px-4 py-2 ${activeTab === 'rules' && 'border-b-white font-semibold'}`}>
-          Quy định nhóm
+        <Link href={{ query: { tab: 'rules' } }} scroll={false} replace className={`relative -bottom-[1px] rounded-t-lg border-[1px] px-4 py-2 flex flex-wrap items-center gap-2 ${activeTab === 'rules' && 'border-b-white font-semibold'}`}>
+          <span>Quy định nhóm</span>
+          <ExplanationFloating content="Những quy ước chung giữa các thành viên trong phòng" />
         </Link>
-        <Link href={{ query: { tab: 'room_chat' } }} scroll={false} replace className={`relative -bottom-[1px] rounded-t-lg border-[1px] px-4 py-2 ${activeTab === 'room_chat' && 'border-b-white font-semibold'}`}>
-          Tin nhắn nhóm
+        <Link href={{ query: { tab: 'room_chat' } }} scroll={false} replace className={`relative -bottom-[1px] rounded-t-lg border-[1px] px-4 py-2 flex flex-wrap items-center gap-2 ${activeTab === 'room_chat' && 'border-b-white font-semibold'}`}>
+          <span>Tin nhắn nhóm</span>
+          <ExplanationFloating content="Nhóm chat dành cho thành viên trong phòng" />
         </Link>
       </div>
 

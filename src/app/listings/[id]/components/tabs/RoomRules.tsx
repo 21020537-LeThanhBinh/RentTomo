@@ -94,7 +94,7 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
         </form>
       ) : (
         <div className="text-neutral-600 whitespace-pre-line flex justify-between items-center gap-2">
-          <span>{rules || "Trưởng phòng chưa ra quy định nhóm."}</span>
+          <span>{rules || "Chưa có quy định nhóm."}</span>
 
           {userId && userId === hostId && (
             <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />

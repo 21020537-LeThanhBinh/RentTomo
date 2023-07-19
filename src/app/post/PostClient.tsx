@@ -50,6 +50,7 @@ export default function PostClient({ listing }: { listing?: any }) {
     const userId = (await supabase.auth.getUser())?.data?.user?.id
     if (!checkSubmit(values, userId)) return
     setIsLoading(true);
+    toast.loading("Đang tải lên...");
 
     // Delete old images
     await Promise.all(listing?.image_src?.map((url: string) => {
@@ -99,8 +100,12 @@ export default function PostClient({ listing }: { listing?: any }) {
       toast.error('Bạn chưa đăng nhập!')
       return false
     }
-    if ((imageSrcOld.length + files.length) < 3) {
-      toast.error('Hãy thêm từ 3 đến 12 ảnh.');
+    if ((imageSrcOld.length + files.length) === 0) {
+      toast.error('Hãy thêm ít nhất 1 hình ảnh!');
+      return false
+    }
+    if ((imageSrcOld.length + files.length) >= 12) {
+      toast.error('Tối đa 12 hình ảnh!');
       return false
     }
     if (!listing && (!values.address.city_id || !values.address.district_id || !values.address.ward_id || !values.address.street)) {
@@ -141,6 +146,7 @@ export default function PostClient({ listing }: { listing?: any }) {
   }
 
   const onSubmitFailure = async (error: any, imageSrcNew: string[]) => {
+    toast.dismiss();
     toast.error('Đã có lỗi xảy ra!');
     console.log(error)
 
@@ -152,6 +158,7 @@ export default function PostClient({ listing }: { listing?: any }) {
   }
 
   const onSubmitSuccess = async (postId: string, userId: string) => {
+    toast.dismiss();
     if (!!listing) {
       toast.success('Cập nhật thành công!');
       return
