@@ -104,7 +104,7 @@ export default function PostClient({ listing }: { listing?: any }) {
       toast.error('Hãy thêm ít nhất 1 hình ảnh!');
       return false
     }
-    if ((imageSrcOld.length + files.length) >= 12) {
+    if ((imageSrcOld.length + files.length) > 12) {
       toast.error('Tối đa 12 hình ảnh!');
       return false
     }

@@ -96,6 +96,8 @@ export default function PostForm({
             isLoading={isLoading}
             addressRef={addressRef}
             setAddressLabel={setAddressLabel}
+            selectedPoint={selectedPoint}
+            setSelectedPoint={setSelectedPoint}
           />
         </div>
 

@@ -107,7 +107,7 @@ dialog[open].popup {
     scroll-behavior: smooth;
   }
 
-  details[open] div {
+  details[open] .BiChevronDown {
     transform: rotate(180deg);
   }
 
