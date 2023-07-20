@@ -18,9 +18,11 @@ const NotificationComponent: React.FC<Props> = ({ notification, read, setRead })
           <p className={`${read ? 'text-neutral-400' : 'text-neutral-800'}`}>
             {notification.type === "request" ?
               "Có yêu cầu mới trong "
-              : (notification.type === "member" || notification.type === "host") ?
-                "Có thành viên mới trong "
-                : "Có thay đổi mới trong "
+              : (notification.type === "accepted") ?
+                "Yêu cầu của bạn được chấp nhận trong "
+                : (notification.type === "member" || notification.type === "host") ?
+                  "Có thành viên mới trong "
+                  : "Có thay đổi mới trong "
             }
             <span className="font-semibold">
               {notification.post_title}
@@ -33,7 +35,7 @@ const NotificationComponent: React.FC<Props> = ({ notification, read, setRead })
       </Link>
 
       <button title="Đánh dấu đã đọc" onClick={setRead} className="absolute top-[22px] right-[22px] p-2 rounded-full hover:bg-neutral-100 transition hidden group-hover:block">
-        <AiOutlineCheck size={20} className="text-neutral-800"/>
+        <AiOutlineCheck size={20} className="text-neutral-800" />
       </button>
     </div>
   );
