@@ -32,23 +32,35 @@ export default function Hero() {
         </div>
       </div>
 
-      <Image
-        src={'/images/demo_1.jpg'}
-        alt="Demo Picture 1"
-        width={500}
-        height={500}
-        priority
-        className="hidden lg:block absolute -right-8 top-28 rounded-lg"
-      />
+      <div className="my-16 sm:mb-32 flex justify-center lg:my-0">
+        <div className="relative lg:static">
+          <Image
+            src={'/images/demo_1.jpg'}
+            alt="Demo Picture 1"
+            width={500}
+            height={500}
+            priority
+            className={`
+              w-[80vw] relative left-4 rounded-lg
+              sm:left-10 sm:w-[500px] 
+              lg:absolute lg:left-[max(60vw,calc(100vw-500px))] lg:top-28 
+            `}
+          />
 
-      <Image
-        src={'/images/demo_2_ver3.png'}
-        alt="Demo Picture 2"
-        width={264}
-        height={560}
-        priority
-        className="hidden lg:block absolute right-72 top-40 rounded-3xl border-2"
-      />
+          <Image
+            src={'/images/demo_2_ver3.png'}
+            alt="Demo Picture 2"
+            width={264}
+            height={560}
+            priority
+            className={`
+              w-[45vw] absolute top-8 -left-4 rounded-3xl border-2
+              sm:top-12 sm:-left-10  sm:w-[264px] 
+              lg:left-[max(55vw,calc(100vw-580px))] lg:top-40 
+            `}
+          />
+        </div>
+      </div>
     </>
   )
 }
