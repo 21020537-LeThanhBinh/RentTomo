@@ -4,6 +4,7 @@ import { supabase } from "@/supabase/supabase-app";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { event } from "@/lib/ga"
 
 export default function PostBtn({ isWhite }: { isWhite?: boolean }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +23,13 @@ export default function PostBtn({ isWhite }: { isWhite?: boolean }) {
       e.preventDefault()
       return router.push(`${pathname}?popup=login`)
     }
+
+    event({
+      action: 'post_btn_click',
+      params: {
+        isLoggedIn: isLoggedIn,
+      }
+    })
   }, [isLoggedIn, router, pathname]);
 
   return (
