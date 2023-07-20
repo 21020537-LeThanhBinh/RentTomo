@@ -37,7 +37,7 @@ const Tabs = () => {
       description:
         "Đăng bài với nhiều thông tin chi tiết, dễ dàng chia sẻ lên các trang mạng xã hội giúp thu hút người thuê phòng nhanh chóng.",
       image: "/images/demo_post_ver1.png",
-      url: "/post",
+      url: "/search",
     },
   ]);
 

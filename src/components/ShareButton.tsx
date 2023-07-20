@@ -22,7 +22,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     })
 
     event({
-      action: 'share',
+      action: 'share_btn_click',
       params: {
         listing_id: listingId,
       }
