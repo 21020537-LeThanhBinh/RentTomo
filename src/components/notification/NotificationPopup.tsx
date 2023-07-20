@@ -22,12 +22,13 @@ export default function NotificationPopup({
   const pathname = usePathname()
   const [readNotis, setReadNotis] = useState<any>([])
   const [notification, setNotification] = useState<(Notification | undefined)[]>([])
+  const lastRead = last_read || new Date(2000, 1, 1).toISOString()
 
   useEffect(() => {
     if (!userId) return
 
     supabase
-      .rpc('latest_notification', { user_id: userId, last_read: last_read || new Date(2000, 1, 1).toISOString() })
+      .rpc('latest_notification', { user_id: userId })
       .then(({ data, error }) => {
         if (error) throw error
 
@@ -35,22 +36,24 @@ export default function NotificationPopup({
           ?.map((noti: any) => {
             // if not in room, or not owner, don't show request
             const isOwner = noti.post_author_id === userId
-
-            // Todo: fetch room members to check
-            // const isMember = noti.room.some((room: any) => room.user_id === userId && room.type != "request")
-            const isMember = true
+            const isMember = noti.room.some((room: any) => room.id === userId && room.type != "request")
 
             let filteredRooms = noti.room
+              .filter((room: any) => new Date(room.updated_at).getTime() > new Date(lastRead).getTime())
             if (!isOwner && !isMember)
               filteredRooms = filteredRooms.filter((room: any) => room.type != "request")
             if (!filteredRooms.length)
               return;
 
-            // if more than 1 noti -> other, else -> type of that noti
-            const type = filteredRooms.length > 1 ? "other" : filteredRooms[0].type
+            const type = filteredRooms.length > 1 ?
+              "other"
+              : (filteredRooms[0].type != "request" && filteredRooms[0].id === userId) ?
+                "accepted"
+                : filteredRooms[0].type
 
             // get latest timestamp
-            const timestamp = filteredRooms.reduce((maxTimestamp: any, object: any) => Math.max(maxTimestamp, new Date(object.updated_at).getTime()), 0);
+            const timestamp = filteredRooms
+              .reduce((maxTimestamp: any, object: any) => Math.max(maxTimestamp, new Date(object.updated_at).getTime()), 0);
 
             return {
               post_id: noti.post_id,
@@ -61,7 +64,6 @@ export default function NotificationPopup({
           })
           ?.filter((noti: any) => noti != undefined)
 
-        console.log(newNoti)
         setNotification(newNoti)
       })
   }, [userId])
