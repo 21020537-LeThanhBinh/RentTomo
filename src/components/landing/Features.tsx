@@ -2,7 +2,7 @@ import Tabs from "./Tabs";
 
 export default function Features() {
   return (
-    <div className="mx-auto mt-16 max-w-[73.375rem] px-4 md:px-8 ">
+    <div className="mx-auto pt-16 max-w-[73.375rem] px-4 md:px-8 ">
       <h2 className="text-center text-2xl font-bold md:text-[2rem] text-neutral-800">
         Tính năng
       </h2>
