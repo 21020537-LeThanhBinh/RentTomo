@@ -19,8 +19,9 @@ import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import FollowButton from "../FollowButton";
-import WarningModal from "../modal/WarningModal";
-import ListingOptions from "./ListingOptions";
+import dynamic from "next/dynamic";
+const ListingOptions = dynamic(() => import('./ListingOptions'))
+const WarningModal = dynamic(() => import('../modal/WarningModal'))
 
 interface ListingCardProps {
   data: IListingData;
