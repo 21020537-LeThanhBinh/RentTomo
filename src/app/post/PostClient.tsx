@@ -121,7 +121,7 @@ export default function PostClient({ listing }: { listing?: any }) {
 
   const makeAddress = (values: FormikValues) => {
     if (values.address.street)
-      return values.address.number + (values.address.number ? ', ' : '') + values.address.street
+      return values.address.number.trim() + (values.address.number ? ', ' : '') + values.address.street.trim()
     else if (!!listing)
       return listing.address
 

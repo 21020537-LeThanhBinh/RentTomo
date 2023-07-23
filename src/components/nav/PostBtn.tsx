@@ -19,17 +19,17 @@ export default function PostBtn({ isWhite }: { isWhite?: boolean }) {
   }, []);
 
   const onClick = useCallback((e: any) => {
-    if (!isLoggedIn) {
-      e.preventDefault()
-      return router.push(`${pathname}?popup=login`)
-    }
-
     event({
       action: 'post_btn_click',
       params: {
         isLoggedIn: isLoggedIn,
       }
     })
+
+    if (!isLoggedIn) {
+      e.preventDefault()
+      return router.push(`${pathname}?popup=login`)
+    }
   }, [isLoggedIn, router, pathname]);
 
   return (
