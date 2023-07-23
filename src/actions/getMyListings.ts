@@ -1,6 +1,8 @@
 import { supabase } from "@/supabase/supabase-app"
 import { ISearchParams } from "@/types"
 
+const ITEMPERPAGE = 8
+
 async function getMyListings(searchParams: ISearchParams) {
   let query = supabase
     .from('posts_members')
@@ -34,9 +36,9 @@ async function getMyListings(searchParams: ISearchParams) {
     query = query.or(`members.cs.${JSON.stringify([{ is_male: (searchParams.isMale == 'true') }])}, members.cs.${JSON.stringify([{ is_male: null }])}`)
 
   if (searchParams.page && searchParams.page != 'all') {
-    query = query.range((parseInt(searchParams.page) - 1) * 10, parseInt(searchParams.page) * 10 - 1)
+    query = query.range((parseInt(searchParams.page) - 1) * ITEMPERPAGE, parseInt(searchParams.page) * ITEMPERPAGE - 1)
   } else if (searchParams.page != 'all') {
-    query = query.range(0, 9)
+    query = query.range(0, ITEMPERPAGE - 1)
   }
 
   query = query.order('created_at', { ascending: false })

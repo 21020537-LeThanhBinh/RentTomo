@@ -110,26 +110,34 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           <span>đ {formatBigNumber(fees.deposit)}</span>
         </div>
 
-        <div className="w-full text-center">Các phí khác</div>
-        <div className="w-full flex justify-between">
-          <span>Điện</span>
-          <span>đ {formatBigNumber(fees.electricity)}</span>
-        </div>
-        <div className="w-full flex justify-between">
-          <span>Nước</span>
-          <span>đ {formatBigNumber(fees.water)}</span>
-        </div>
-        <div className="w-full flex justify-between">
-          <span>Wifi</span>
-          <span>đ {formatBigNumber(fees.internet)}</span>
-        </div>
+        {(fees.electricity || fees.water || fees.internet) ? (
+          <div className="w-full text-center">Các phí khác</div>
+        ) : null}
+        {fees.electricity ? (
+          <div className="w-full flex justify-between">
+            <span>Điện</span>
+            <span>đ {formatBigNumber(fees.electricity)}</span>
+          </div>
+        ) : null}
+        {fees.water ? (
+          <div className="w-full flex justify-between">
+            <span>Nước</span>
+            <span>đ {formatBigNumber(fees.water)}</span>
+          </div>
+        ) : null}
+        {fees.internet ? (
+          <div className="w-full flex justify-between">
+            <span>Wifi</span>
+            <span>đ {formatBigNumber(fees.internet)}</span>
+          </div>
+        ) : null}
       </div>
       <hr />
 
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-lg">Tổng cộng</span>
-          <ExplanationFloating content="Tổng cộng = (Tiền thuê tháng đầu + tiền cọc) / số thành viên có bạn"/>
+          <ExplanationFloating content="Tổng cộng = (Tiền thuê tháng đầu + tiền cọc) / số thành viên có bạn" />
         </div>
         <div className="font-semibold text-lg">
           đ {formatBigNumber((price + fees.deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>

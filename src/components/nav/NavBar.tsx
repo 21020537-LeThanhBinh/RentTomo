@@ -19,7 +19,9 @@ export default async function NavBar() {
             <Suspense fallback={<SearchBarFallback />}>
               <SearchBar />
             </Suspense>
-            <PostBtn />
+            <div className="hidden sm:flex">
+              <PostBtn />
+            </div>
           </div>
 
           <div className="lg:flex-1">
