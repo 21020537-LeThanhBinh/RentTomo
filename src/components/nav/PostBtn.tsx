@@ -33,7 +33,7 @@ export default function PostBtn({ isWhite }: { isWhite?: boolean }) {
   }, [isLoggedIn, router, pathname]);
 
   return (
-    <Link href={'/post'} onClick={onClick} className={`hidden sm:flex py-3 px-5 rounded-full items-center whitespace-nowrap hover:shadow-md transition font-semibold bg-sky-500 text-white ${isWhite && 'border-2 border-white bg-transparent'}`}>
+    <Link href={'/post'} onClick={onClick} className={`py-3 px-5 rounded-full text-center whitespace-nowrap hover:shadow-md transition font-semibold bg-sky-500 text-white ${isWhite && 'border-2 border-white bg-transparent'}`}>
       <span>Đăng tin</span>
     </Link>
   )

@@ -23,6 +23,8 @@
     "leaflet": "^1.9.4",
     "leaflet-fullscreen": "^1.0.2",
     "leaflet-geosearch": "^3.8.0",
+    "linkify-html": "^4.1.1",
+    "linkifyjs": "^4.1.1",
     "next": "^13.4.10",
     "postcss": "8.4.24",
     "query-string": "^8.1.0",

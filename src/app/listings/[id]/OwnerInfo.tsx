@@ -1,9 +1,12 @@
 import Profile from "@/components/profile/Profile";
+import linkifyHtml from 'linkify-html';
+
+const options = { defaultProtocol: 'https', target: { url: '_blank' }, className: 'text-sky-500' };
 
 export default function OwnerInfo({
   new_avatar_url,
   new_full_name,
-  contact,
+  contact = '',
   id
 }: {
   new_avatar_url?: string,
@@ -26,7 +29,7 @@ export default function OwnerInfo({
         </div>
 
         <div className="flex-1 flex items-center h-full pl-4 border-l-[1px] w-1/2">
-          <p className="text-neutral-600 whitespace-pre-line truncate text-sm">{contact}</p>
+          <p className="text-neutral-600 whitespace-pre-line truncate text-sm" dangerouslySetInnerHTML={{ __html: linkifyHtml(contact, options) }}></p>
         </div>
       </div>
     </div>

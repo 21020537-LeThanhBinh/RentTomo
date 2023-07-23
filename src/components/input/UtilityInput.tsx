@@ -1,15 +1,14 @@
 'use client';
 
 import { IconType } from "react-icons";
-import { CgScreenWide } from 'react-icons/cg';
+import { AiFillClockCircle, AiOutlineWifi } from 'react-icons/ai';
+import { BiCloset } from 'react-icons/bi';
 import { FaToilet } from 'react-icons/fa';
-import { GiCctvCamera, GiCookingPot, GiHouseKeys, GiWashingMachine, GiWindow } from 'react-icons/gi';
+import { GiCctvCamera, GiCookingPot, GiHouseKeys, GiLaddersPlatform, GiWashingMachine, GiWindow } from 'react-icons/gi';
 import { IoBed } from 'react-icons/io5';
 import { MdElevator, MdHeatPump, MdOutlinePets } from 'react-icons/md';
 import { RiEBikeFill, RiFridgeFill } from 'react-icons/ri';
 import { TbAirConditioning } from 'react-icons/tb';
-import { AiFillClockCircle, AiOutlineWifi } from 'react-icons/ai';
-import { BiCloset } from 'react-icons/bi';
 
 export const utilities = [
   {
@@ -26,6 +25,11 @@ export const utilities = [
     label: 'Thang máy',
     icon: MdElevator,
     description: 'Cần thiết cho những phòng ở tầng 4 trở lên',
+  },
+  {
+    label: 'Gác xép',
+    icon: GiLaddersPlatform,
+    description: 'Thêm diện tích cho phòng của bạn',
   },
   {
     label: 'Cửa sổ',
@@ -81,11 +85,6 @@ export const utilities = [
     label: 'Tủ đồ',
     icon: BiCloset,
     description: 'Giúp mọi thứ ngăn nắp gọn gàng hơn'
-  },
-  {
-    label: 'Tivi',
-    icon: CgScreenWide,
-    description: 'Ai còn xem tivi nữa chứ?'
   },
   {
     label: 'Thú cưng',
