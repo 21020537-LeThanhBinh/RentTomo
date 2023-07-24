@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button";
 import NoticeModal from "@/components/modal/NoticeModal";
+import { event } from "@/lib/ga";
 import formatBigNumber from "@/utils/formatBigNumber";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -14,7 +15,7 @@ interface ListingReservationProps {
   onSubmit: () => void;
   disabled?: boolean;
   requesting: boolean;
-  fees: any;
+  fees?: any;
   roomRules: string;
   authorId: string;
 }
@@ -24,7 +25,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   onSubmit,
   disabled,
   requesting,
-  fees,
+  fees = {},
   roomRules,
   authorId,
 }) => {
@@ -66,10 +67,24 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     return "Tham gia"
   }
 
+  // Skip modal if cancel or join your own listing
   const handleAction = () => {
-    // Skip modal if cancel or join your own listing
     if (requesting || (userId === authorId)) onSubmit()
     else !modalRef.current?.open && modalRef.current?.showModal()
+
+    event({
+      action: 'reserve_btn_click',
+      params: {}
+    })
+  }
+
+  const onOpenCalc = () => {
+    setOpenCalc(!openCalc)
+
+    event({
+      action: 'open_calc',
+      params: {}
+    })
   }
 
   return (
@@ -121,7 +136,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         />
         <FeeView
           name="Tiền cọc"
-          value={fees.deposit}
+          value={fees?.deposit}
           counterValue={counter.deposit}
           setCounterValue={(value) => setCounter({ ...counter, deposit: value })}
           openCalc={openCalc}
@@ -133,7 +148,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         {otherFees.map((key) => (
           <FeeView
             name={key}
-            value={fees[key]}
+            value={fees?.[key]}
             counterValue={counter[key] || 0}
             setCounterValue={(value) => setCounter({ ...counter, [key]: value })}
             openCalc={openCalc}
@@ -157,15 +172,15 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <div className="p-4 flex items-center justify-between flex-wrap">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-lg whitespace-nowrap">Tổng cộng</span>
-          <button title="Mở công cụ tính tổng" onClick={() => setOpenCalc(!openCalc)} className="flex-shrink-0">
+          <button title="Mở công cụ tính tổng" onClick={onOpenCalc} className="flex-shrink-0">
             <AiTwotoneSetting size={16} />
           </button>
         </div>
         <div className="font-semibold text-lg whitespace-nowrap">
           đ {formatBigNumber((
             counter.price * price
-            + counter.deposit * fees.deposit
-            + otherFees.reduce((acc, key) => acc + counter[key] * fees[key], 0)
+            + counter.deposit * fees?.deposit
+            + otherFees.reduce((acc, key) => acc + counter[key] * fees?.[key], 0)
           ) / counter.memberNumb)}
           <span className="text-md font-normal text-neutral-600"> / tháng / người</span>
         </div>

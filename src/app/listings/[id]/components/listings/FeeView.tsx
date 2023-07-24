@@ -68,7 +68,7 @@ export default function FeeView({
               <span ref={spanRef} className="invisible absolute opacity-0">{counterValue}</span>
               <input
                 type="number"
-                style={{ width }}
+                style={{ width: Math.max(width, 10) }}
                 onChange={(e) => setCounterValue(Number(e.target.value))}
                 value={counterValue}
               />
@@ -95,7 +95,10 @@ export default function FeeView({
           </div>
         </div>
       </div>
-      <span className="flex-1 text-end">{(value != undefined) && `đ ${formatBigNumber(value)}`}</span>
+
+      <span className="flex-1 text-end">
+        {(value != undefined) && `đ ${formatBigNumber(value)}`}
+      </span>
     </div>
   )
 }
