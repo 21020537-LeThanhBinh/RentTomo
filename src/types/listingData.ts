@@ -13,12 +13,7 @@ export interface IListingData {
   title: string;
   description: string;
   price: number;
-  fees: {
-    deposit: number;
-    electricity: number;
-    water: number;
-    internet: number;
-  }
+  fees: any;
   image_src: string[];
   members: any;
 }

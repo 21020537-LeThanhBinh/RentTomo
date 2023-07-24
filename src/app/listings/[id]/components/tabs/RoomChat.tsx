@@ -6,6 +6,7 @@ import { supabase } from "@/supabase/supabase-app";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillEdit } from "react-icons/ai";
+import { event } from "@/lib/ga"
 
 export default function RoomChat({ id, isActive }: { id: string, isActive: boolean }) {
   const [userId, setUserId] = useState<string | null>(null);
@@ -43,6 +44,12 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
     }
 
     fetchRoomInfo();
+    event({
+      action: 'view_room_chat',
+      params: {
+        listing_id: id,
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isActive]);
 

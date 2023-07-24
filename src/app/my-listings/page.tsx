@@ -2,7 +2,7 @@ import ListingCard from "@/components/listing/ListingCard";
 import EmptyState from "@/components/EmptyState";
 import FilterBar from "@/components/filter/FilterBar";
 import { ISearchParams } from "@/types";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../components/Pagination";
 import { getMyListings } from "@/actions/getMyListings";
 import Link from "next/link";
 import { BiFilterAlt } from "react-icons/bi";

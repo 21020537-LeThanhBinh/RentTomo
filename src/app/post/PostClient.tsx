@@ -160,16 +160,17 @@ export default function PostClient({ listing }: { listing?: any }) {
   const onSubmitSuccess = async (postId: string, userId: string) => {
     toast.dismiss();
     if (!!listing) {
-      toast.success('Cập nhật thành công!');
-      return
-    }
-    toast.success('Đăng tin thành công!');
+      toast.success('Cập nhật thành công! \nRefresh trang để xem thay đổi.');
 
-    await supabase
-      .from('follows')
-      .insert([
-        { 'post_id': postId, 'follower_id': userId },
-      ])
+    } else {
+      toast.success('Đăng tin thành công!');
+
+      await supabase
+        .from('follows')
+        .insert([
+          { 'post_id': postId, 'follower_id': userId },
+        ])
+    }
 
     router.push(`/listings/${postId}`)
   }
@@ -189,7 +190,7 @@ export default function PostClient({ listing }: { listing?: any }) {
       title: listing?.title || "",
       description: listing?.description || "",
       price: listing?.price || 0,
-      fees: listing?.fees || { deposit: 0, electricity: 0, water: 0, internet: 0 },
+      fees: listing?.fees || { deposit: 0, "Điện (/kWh)": 0, "Nước (/m3)": 0, "Wifi (/phòng)": 0 },
     },
     onSubmit: handleSubmit,
   });

@@ -50,6 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageSrcOld, setImageSrcOld, 
               style={{ objectFit: 'cover' }}
               src={item}
               alt="Listing picture"
+              className="rounded-md"
             />
 
             <button onClick={() => setImageSrcOld(imageSrcOld.filter((_, i) => i != index))} type="button" className="absolute right-1 top-1">
@@ -67,6 +68,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageSrcOld, setImageSrcOld, 
               style={{ objectFit: 'cover' }}
               src={item}
               alt="Listing picture"
+              className="rounded-md"
             />
 
             <button onClick={() => setFiles(files.filter((_, i) => i != index))} type="button" className="absolute right-1 top-1">

@@ -6,9 +6,6 @@ export default async function revalidateListings() {
   //   fetch(`http://localhost:3000/api/revalidate?path=%2Fsearch`, {
   //     method: 'GET',
   //   }),
-  //   fetch(`http://localhost:3000/api/revalidate?path=%2Fsearch%2Fmy-listings`, {
-  //     method: 'GET',
-  //   }),
   //   fetch(`http://localhost:3000/api/revalidate?path=%map`, {
   //     method: 'GET',
   //   }),
