@@ -39,7 +39,7 @@ export default function FeeView({
   }, [setCounterValue, counterValue]);
 
   return (
-    <div key={name} className="w-full flex justify-between items-start">
+    <div className="w-full flex justify-between items-start">
       <span className="flex-1">{name}</span>
 
       <div hidden={!openCalc} className="flex-1 flex justify-center items-start">

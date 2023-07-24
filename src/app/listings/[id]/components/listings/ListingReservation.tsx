@@ -147,6 +147,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         ) : null}
         {otherFees.map((key) => (
           <FeeView
+            key={key}
             name={key}
             value={fees?.[key]}
             counterValue={counter[key] || 0}
