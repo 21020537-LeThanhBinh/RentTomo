@@ -13,12 +13,7 @@ interface ListingReservationProps {
   onSubmit: () => void;
   disabled?: boolean;
   requesting: boolean;
-  fees: {
-    deposit: number;
-    electricity: number;
-    water: number;
-    internet: number;
-  };
+  fees: any;
   roomRules: string;
   authorId: string;
 }
@@ -37,6 +32,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
   const isJoined = members?.some((item) => item.id === userId) || host?.id === userId
   const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
+  const otherFees = Object.keys(fees).filter((key) => key !== "deposit" && !!fees[key])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -65,10 +61,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold whitespace-nowrap">
-          đ {formatBigNumber(price / memberNumb)}
+          đ {formatBigNumber(price)}
         </div>
         <div className="text-neutral-600">
-          / tháng / người
+          / tháng
         </div>
       </div>
       <hr />
@@ -110,37 +106,26 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           <span>đ {formatBigNumber(fees.deposit)}</span>
         </div>
 
-        {(fees.electricity || fees.water || fees.internet) ? (
+        {(otherFees.length) ? (
           <div className="w-full text-center">Các phí khác</div>
         ) : null}
-        {fees.electricity ? (
-          <div className="w-full flex justify-between">
-            <span>Điện</span>
-            <span>đ {formatBigNumber(fees.electricity)}</span>
+        {otherFees.map((key) => (
+          <div className="w-full flex justify-between" key={key}>
+            <span>{key}</span>
+            <span>đ {formatBigNumber(fees[key])}</span>
           </div>
-        ) : null}
-        {fees.water ? (
-          <div className="w-full flex justify-between">
-            <span>Nước</span>
-            <span>đ {formatBigNumber(fees.water)}</span>
-          </div>
-        ) : null}
-        {fees.internet ? (
-          <div className="w-full flex justify-between">
-            <span>Wifi</span>
-            <span>đ {formatBigNumber(fees.internet)}</span>
-          </div>
-        ) : null}
+        ))}
       </div>
       <hr />
 
+      {/* Todo: change this to total each month */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-lg">Tổng cộng</span>
-          <ExplanationFloating content="Tổng cộng = (Tiền thuê tháng đầu + tiền cọc) / số thành viên có bạn" />
+          <ExplanationFloating content="Chưa tính tiền cọc, điện, nước hàng tháng" />
         </div>
         <div className="font-semibold text-lg">
-          đ {formatBigNumber((price + fees.deposit) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ người</span>
+          đ {formatBigNumber((price) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ tháng / người</span>
         </div>
       </div>
     </div>

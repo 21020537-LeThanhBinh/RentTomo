@@ -7,6 +7,7 @@ import ImageUpload from "@/components/input/ImageUpload"
 import Input from "@/components/input/Input"
 import ItemSelect from "@/components/input/ItemSelect"
 import MultiItemSelect from "@/components/input/MultiItemSelect"
+import OtherFeesInput from "@/components/input/OtherFeesInput"
 import { utilities } from "@/components/input/UtilityInput"
 import { IPostForm } from "@/types/postForm"
 import formatBigNumber from "@/utils/formatBigNumber"
@@ -48,7 +49,7 @@ export default function PostForm({
   const addressRef = useRef<HTMLDialogElement>(null)
   const [zoom, setZoom] = useState<number>(isEditPost ? 5 : 15)
   const MiniMap = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
-    loading: () => <p>loading...</p>,
+    loading: () => <p>Đang tải bản đồ ...</p>,
     ssr: false
   }), [])
 
@@ -155,7 +156,7 @@ export default function PostForm({
         />
 
         <div className='font-semibold text-lg text-neutral-600 mt-2'>
-          Giá thuê và các khoản phí
+          Giá thuê và các phí khác
         </div>
 
         <Input
@@ -177,43 +178,13 @@ export default function PostForm({
           formatPrice
           type="string"
           disabled={isLoading}
-          required
         />
 
-        <div className='flex gap-2'>
-          <Input
-            onChange={(value) => setFieldValue("fees.electricity", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(values.fees.electricity)}
-            id="electricity"
-            label="Điện"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-
-          <Input
-            onChange={(value) => setFieldValue("fees.water", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(values.fees.water)}
-            id="water"
-            label="Nước"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-
-          <Input
-            onChange={(value) => setFieldValue("fees.internet", parseInt(value.replace(/\D/g, "")))}
-            value={formatBigNumber(values.fees.internet)}
-            id="internet"
-            label="Wifi"
-            formatPrice
-            type="string"
-            disabled={isLoading}
-            required
-          />
-        </div>
+        <OtherFeesInput
+          values={values}
+          setFieldValue={setFieldValue}
+          isLoading={isLoading}
+        />
 
         <div className='font-semibold text-lg text-neutral-600 mt-2'>
           Nội dung tin đăng

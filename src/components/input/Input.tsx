@@ -16,6 +16,7 @@ interface InputProps {
   onClick?: () => void;
   onBlur?: FocusEventHandler<any>;
   multiline?: boolean;
+  autoFocus?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -30,11 +31,11 @@ const Input: React.FC<InputProps> = ({
   onClick,
   onBlur,
   multiline,
+  autoFocus
 }) => {
   const className = `
     peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition 
-    disabled:opacity-70 
-    disabled:cursor-not-allowed 
+    disabled:opacity-70 disabled:cursor-not-allowed 
     ${formatPrice ? 'pl-9' : 'pl-4'}
   `
 
@@ -43,7 +44,7 @@ const Input: React.FC<InputProps> = ({
       <label
         htmlFor={id}
         className={`
-          absolute text-md duration-150 transform -translate-y-3 top-5 origin-[0] 
+          absolute text-md duration-150 transform -translate-y-3 top-5 origin-[0] whitespace-nowrap
           ${formatPrice ? 'left-9' : 'left-4'}
           peer-placeholder-shown:scale-100 
           peer-placeholder-shown:translate-y-0 
@@ -52,7 +53,7 @@ const Input: React.FC<InputProps> = ({
           hover:cursor-text
         `}
       >
-        {label}
+        {label.length > 21 ? label.slice(0, 15) + "..." : label}
       </label>
     )
   }
@@ -74,6 +75,7 @@ const Input: React.FC<InputProps> = ({
           onBlur={onBlur}
           className={className}
           minRows={3}
+          autoFocus={autoFocus}
         />
       ) : (
         <input
@@ -86,6 +88,7 @@ const Input: React.FC<InputProps> = ({
           placeholder=" "
           type={type}
           onBlur={onBlur}
+          autoFocus={autoFocus}
           className={className}
         />
       )}

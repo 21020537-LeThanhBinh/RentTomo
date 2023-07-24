@@ -172,11 +172,11 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
                 />
                 <MenuItem
                   label="Tin của bạn"
-                  onClick={() => router.push(`/search/my-listings?author_id=${session.user.id}`)}
+                  onClick={() => router.push(`/my-listings?author_id=${session.user.id}`)}
                 />
                 <MenuItem
                   label="Đang theo dõi"
-                  onClick={() => router.push(`/search/my-listings?follower_id=${session.user.id}`)}
+                  onClick={() => router.push(`/my-listings?follower_id=${session.user.id}`)}
                 />
                 <div className='border-t-[1px] my-2' />
 
