@@ -43,8 +43,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     ...otherFees.reduce((acc, key) =>
     ({
       ...acc, [key]:
-        (key.search("(/người)") != -1) ? ((members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1)
-          : (key.search("(/phòng)") != -1) ? 1 : 0
+        key.includes("(/ng") ? ((members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1)
+          : key.includes("(/phòng)") ? 1 : 0
     }), {}
     )
   });
@@ -85,6 +85,13 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       action: 'open_calc',
       params: {}
     })
+  }
+
+  const onChangeMemberNumb = (value: number) => {
+    const newCounter = { ...counter }
+    Object.keys(counter).forEach((key) => key.includes("(/ng") && (newCounter[key] = value))
+
+    setCounter({ ...newCounter, memberNumb: value })
   }
 
   return (
@@ -162,7 +169,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
             <FeeView
               name={"Số thành viên"}
               counterValue={counter.memberNumb}
-              setCounterValue={(value) => setCounter({ ...counter, memberNumb: value })}
+              setCounterValue={onChangeMemberNumb}
               openCalc={openCalc}
             />
           </>

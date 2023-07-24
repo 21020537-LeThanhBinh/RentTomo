@@ -65,12 +65,12 @@ export default function FeeView({
             </div>
 
             <div className="">
-              <span ref={spanRef} className="invisible absolute opacity-0">{counterValue}</span>
+              <span ref={spanRef} className="invisible absolute opacity-0">{Number(counterValue)}</span>
               <input
                 type="number"
                 style={{ width: Math.max(width, 10) }}
                 onChange={(e) => setCounterValue(Number(e.target.value))}
-                value={counterValue}
+                value={Number(counterValue)}
               />
             </div>
 
