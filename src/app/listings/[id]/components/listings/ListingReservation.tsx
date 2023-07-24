@@ -1,12 +1,13 @@
 'use client';
 
 import Button from "@/components/Button";
-import ExplanationFloating from "@/components/ExplanationFloating";
 import NoticeModal from "@/components/modal/NoticeModal";
 import formatBigNumber from "@/utils/formatBigNumber";
 import handleCloseDialog from "@/utils/handleCloseDialog";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AiTwotoneSetting } from "react-icons/ai";
 import { ListingContext } from "../../ListingContext";
+import FeeView from "./FeeView";
 
 interface ListingReservationProps {
   price: number;
@@ -31,8 +32,22 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const isJoined = members?.some((item) => item.id === userId) || host?.id === userId
-  const memberNumb = (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1
   const otherFees = Object.keys(fees).filter((key) => key !== "deposit" && !!fees[key])
+
+  const [counter, setCounter] = useState<any>({
+    // memberNumb counts the viewer
+    memberNumb: (members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1,
+    price: 1,
+    deposit: 0,
+    ...otherFees.reduce((acc, key) =>
+    ({
+      ...acc, [key]:
+        (key.search("(/người)") != -1) ? ((members.length + (host ? 1 : 0) + (isJoined ? 0 : 1)) || 1)
+          : (key.search("(/phòng)") != -1) ? 1 : 0
+    }), {}
+    )
+  });
+  const [openCalc, setOpenCalc] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -97,35 +112,62 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
       <div className="flex flex-col gap-2 p-4 pt-0 text-neutral-600">
         <div className="w-full text-center">Tiền thuê, cọc</div>
-        <div className="w-full flex justify-between">
-          <span>Tiền thuê</span>
-          <span>đ {formatBigNumber(price)}</span>
-        </div>
-        <div className="w-full flex justify-between">
-          <span>Tiền cọc</span>
-          <span>đ {formatBigNumber(fees.deposit)}</span>
-        </div>
+        <FeeView
+          name="Tiền thuê"
+          value={price}
+          counterValue={counter.price}
+          setCounterValue={(value) => setCounter({ ...counter, price: value })}
+          openCalc={openCalc}
+        />
+        <FeeView
+          name="Tiền cọc"
+          value={fees.deposit}
+          counterValue={counter.deposit}
+          setCounterValue={(value) => setCounter({ ...counter, deposit: value })}
+          openCalc={openCalc}
+        />
 
         {(otherFees.length) ? (
-          <div className="w-full text-center">Các phí khác</div>
+          <div className="w-full text-center mt-2">Các phí khác</div>
         ) : null}
         {otherFees.map((key) => (
-          <div className="w-full flex justify-between" key={key}>
-            <span>{key}</span>
-            <span>đ {formatBigNumber(fees[key])}</span>
-          </div>
+          <FeeView
+            name={key}
+            value={fees[key]}
+            counterValue={counter[key] || 0}
+            setCounterValue={(value) => setCounter({ ...counter, [key]: value })}
+            openCalc={openCalc}
+          />
         ))}
+
+        {openCalc && (
+          <>
+            <div className="w-full text-center mt-2">Giả lập</div>
+            <FeeView
+              name={"Số thành viên"}
+              counterValue={counter.memberNumb}
+              setCounterValue={(value) => setCounter({ ...counter, memberNumb: value })}
+              openCalc={openCalc}
+            />
+          </>
+        )}
       </div>
       <hr />
 
-      {/* Todo: change this to total each month */}
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center justify-between flex-wrap">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-lg">Tổng cộng</span>
-          <ExplanationFloating content="Chưa tính tiền cọc, điện, nước hàng tháng" />
+          <span className="font-semibold text-lg whitespace-nowrap">Tổng cộng</span>
+          <button title="Mở công cụ tính tổng" onClick={() => setOpenCalc(!openCalc)} className="flex-shrink-0">
+            <AiTwotoneSetting size={16} />
+          </button>
         </div>
-        <div className="font-semibold text-lg">
-          đ {formatBigNumber((price) / memberNumb)} <span className="text-md font-normal text-neutral-600">/ tháng / người</span>
+        <div className="font-semibold text-lg whitespace-nowrap">
+          đ {formatBigNumber((
+            counter.price * price
+            + counter.deposit * fees.deposit
+            + otherFees.reduce((acc, key) => acc + counter[key] * fees[key], 0)
+          ) / counter.memberNumb)}
+          <span className="text-md font-normal text-neutral-600"> / tháng / người</span>
         </div>
       </div>
     </div>
