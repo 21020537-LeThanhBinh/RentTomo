@@ -37,14 +37,20 @@ async function getListings(searchParams: ISearchParams) {
 
   if (searchParams.minArea && searchParams.minArea != "0")
     query = query.gte('area', searchParams.minArea)
-  if (searchParams.maxArea && parseFloat(searchParams.maxArea) < 150)
+  if (searchParams.maxArea && parseFloat(searchParams.maxArea) < 60)
     query = query.lte('area', searchParams.maxArea)
 
   if (searchParams.utility)
     query = query.contains('utility', searchParams.utility.split(','))
 
-  if (searchParams.isMale && searchParams.isMale !== "undefined")
-    query = query.or(`members.cs.${JSON.stringify([{ is_male: (searchParams.isMale == 'true') }])}, members.cs.${JSON.stringify([{ is_male: null }])}`)
+  // if (searchParams.isMale && searchParams.isMale !== "undefined")
+  //   query = query.or(`members.cs.${JSON.stringify([{ is_male: (searchParams.isMale == 'true') }])}, members.cs.${JSON.stringify([{ is_male: null }])}`)
+  if (searchParams.sex === 'male')
+    query = query.contains('members', JSON.stringify([{ is_male: true }]))
+  else if (searchParams.sex === 'female')
+    query = query.contains('members', JSON.stringify([{ is_male: false }]))
+  else if (searchParams.sex === 'none')
+    query = query.contains('members', JSON.stringify([{ is_male: null }]))
 
   if (!searchParams.lat || !searchParams.lng) {
     query = query.order('created_at', { ascending: false })

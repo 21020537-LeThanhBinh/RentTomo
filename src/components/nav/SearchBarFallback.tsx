@@ -16,6 +16,7 @@ export default function SearchBarFallback() {
           value={{ label: 'Khu vực' }}
           isSearchable={false}
           onChange={() => { }}
+          instanceId="select-search-type"
           formatOptionLabel={(option: any) => (
             <div className="flex flex-row items-center gap-2 w-[77px]">
               {option?.icon && (
@@ -63,10 +64,11 @@ export default function SearchBarFallback() {
         <Select
           options={[]}
           value={null}
-          onChange={() => {}}
+          onChange={() => { }}
           isClearable
           placeholder={'Tìm kiếm theo phường, quận, ...'}
           aria-label='Nhập từ khóa tìm kiếm'
+          instanceId="select-search-keyword"
           theme={(theme) => ({
             ...theme,
             colors: {

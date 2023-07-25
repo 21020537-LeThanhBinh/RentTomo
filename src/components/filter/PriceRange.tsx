@@ -33,14 +33,14 @@ export default function PriceRange({
           id="minPrice"
           label="Tối thiểu"
           value={minPrice.toString()}
-          onChange={(value) => setMinPrice(value ? parseInt(value) : 0)}
+          onChange={(value) => setMinPrice(value ? parseFloat(value) : 0)}
         />
         <BsDashLg size={30} />
         <Input
           id="maxPrice"
           label="Tối đa"
           value={maxPrice.toString()}
-          onChange={(value) => setMaxPrice(value ? parseInt(value) : 0)}
+          onChange={(value) => setMaxPrice(value ? parseFloat(value) : 0)}
         />
       </div>
     </>

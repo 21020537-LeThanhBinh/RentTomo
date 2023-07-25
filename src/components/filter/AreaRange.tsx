@@ -13,8 +13,8 @@ export default function AreaRange({
     <>
       <ReactSlider
         min={0}
-        max={150}
-        defaultValue={[0, 150]}
+        max={60}
+        defaultValue={[0, 60]}
         ariaLabel={['Lower thumb', 'Upper thumb']}
         ariaValuetext={state => `Thumb value ${state.valueNow}`}
         pearling

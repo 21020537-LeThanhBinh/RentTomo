@@ -7,10 +7,24 @@ import Link from "next/link";
 import { BiFilterAlt } from "react-icons/bi";
 import { BsFillMapFill } from "react-icons/bs";
 import Pagination from "../../components/Pagination";
+import { Metadata, ResolvingMetadata } from "next";
 
 export const revalidate = 86400 // revalidate this page everyday
 
-export default async function SearchPage({ searchParams }: { searchParams: ISearchParams }) {
+type Props = {
+  params: { id: string }
+  searchParams: ISearchParams
+}
+
+export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  // Todo: add details to description
+  return {
+    title: `Tìm kiếm trang ${searchParams.page || 1} - RentTomo`,
+    description: `Ứng dụng tìm trọ, bạn cùng phòng lý tưởng cho sinh viên.`,
+  }
+}
+
+export default async function SearchPage({ params, searchParams }: Props) {
   const { data: listings, count } = await getListings(searchParams);
 
   return (

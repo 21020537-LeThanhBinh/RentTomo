@@ -19,7 +19,7 @@ export default function Pagination({ searchParams, itemsLength = 1, itemsPerPage
     //   `User requested page number ${event.selected}, which is offset ${newOffset}`
     // );
 
-    router.replace(pathname + '?' + createQueryString(searchParams, "page", event.selected + 1))
+    router.push(pathname + '?' + createQueryString(searchParams, "page", event.selected + 1))
   };
 
   return (

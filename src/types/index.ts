@@ -24,7 +24,7 @@ export interface ISearchParams {
   minArea?: string
   maxArea?: string
   utility?: string
-  isMale?: string
+  sex?: 'male' | 'female' | 'none' | 'all'
   popup?: string
   page?: string
 }
