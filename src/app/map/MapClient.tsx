@@ -46,9 +46,9 @@ const MapClient: React.FC<MapProps> = ({ listings = [], searchParams, zoom0 = 14
   }, []);
 
   useEffect(() => {
-    if (zoom0 >= 14) {
+    if (zoom >= 14) {
       setListingsFiltered(listings)
-    } else if (zoom0 < 14 && zoom0 > 12) {
+    } else if (zoom < 14 && zoom > 12) {
       setListingsFiltered(filterListingByWardId())
     } else {
       setListingsFiltered(filterListingByDistrictId())
