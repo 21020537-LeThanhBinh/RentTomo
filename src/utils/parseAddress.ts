@@ -6,11 +6,11 @@ export function parseAddressId({
   district_id,
   ward_id
 }: {
-  city_id: string,
-  district_id: string,
-  ward_id: string,
+  city_id?: string,
+  district_id?: string,
+  ward_id?: string,
 }) {
-  const city = cityList.find((city: any) => city.Id === city_id)
+  const city = cityList?.find((city: any) => city.Id === city_id)
   const district = city?.Districts.find((district: any) => district.Id === district_id)
   const ward = district?.Wards.find((ward: any) => ward.Id === ward_id) as any
 

@@ -35,7 +35,7 @@ export default function ListingMarker({
       >
         <span>{(parseInt(listing.price) / 1000000).toFixed(1) + 'tr'}</span>
         <div className="absolute -right-1 -top-1">
-          {hasFollowed && <HeartButtonViewOnly />}
+          <HeartButtonViewOnly hasFollowed={hasFollowed} />
         </div>
       </Tooltip>
       <Popup>
