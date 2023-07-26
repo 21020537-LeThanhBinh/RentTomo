@@ -29,7 +29,8 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
               fill
               src={listing.image_src[0]}
               alt="Listing"
-              className="object-cover h-full w-full group-hover:scale-110 transition"
+              className="object-cover h-full w-full transition-opacity opacity-0 duration-1000"
+              onLoadingComplete={(image: any) => image.classList.remove('opacity-0')}
             />
           </Link>
           <div className="absolute top-3 right-3">
