@@ -3,11 +3,11 @@
 import { ISearchParams } from "@/types"
 import handleCloseDialog from "@/utils/handleCloseDialog"
 import { createQueryString, deleteQueryString } from "@/utils/queryString"
+import dynamic from "next/dynamic"
 import { usePathname, useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import { AiFillQuestionCircle } from "react-icons/ai"
 import ReactSlider from 'react-slider'
-import ModalSingle from "../modal/ModalSingle"
 import { categoryOptions } from "../input/CategoryInput"
 import ItemSelect from "../input/ItemSelect"
 import MultiItemSelect from "../input/MultiItemSelect"
@@ -15,6 +15,9 @@ import { utilities } from "../input/UtilityInput"
 import AreaRange from "./AreaRange"
 import CategorySelect from "./CategorySelect"
 import PriceRange from "./PriceRange"
+const ModalSingle = dynamic(() => import("../modal/ModalSingle"), { ssr: false })
+
+const sexOptions = [{ label: 'Nam', value: 'male' }, { label: 'Nữ', value: 'female' }, { label: 'Không', value: 'none' }, { label: 'Tất cả', value: 'all' }]
 
 export default function FilterBarClient({ searchParams, className, children }: { searchParams: ISearchParams, className?: string, children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -26,10 +29,10 @@ export default function FilterBarClient({ searchParams, className, children }: {
   const [minPrice, setMinPrice] = useState<number>(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
   const [maxPrice, setMaxPrice] = useState<number>(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
   const [minArea, setMinArea] = useState<number>(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
-  const [maxArea, setMaxArea] = useState<number>(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
+  const [maxArea, setMaxArea] = useState<number>(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 60)
   const [utility, setUtility] = useState<string[]>(searchParams.utility ? searchParams.utility?.split(',') : [])
-  const [isMale, setIsMale] = useState<boolean | undefined>((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
   const [radius, setRadius] = useState<number>(searchParams.range ? parseFloat(searchParams.range) : 0)
+  const [sex, setSex] = useState<{ label: string, value: string }>({ label: "Tất cả", value: "all" })
 
   useEffect(() => {
     setIsLoading(false)
@@ -65,47 +68,49 @@ export default function FilterBarClient({ searchParams, className, children }: {
     setMinPrice(searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0)
     setMaxPrice(searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : 15)
     setMinArea(searchParams.minArea ? parseFloat(searchParams.minArea) : 0)
-    setMaxArea(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 150)
+    setMaxArea(searchParams.maxArea ? parseFloat(searchParams.maxArea) : 60)
     setUtility(searchParams.utility ? searchParams.utility?.split(',') : [])
-    setIsMale((searchParams.isMale && searchParams.isMale !== "undefined") ? searchParams.isMale === 'true' : undefined)
+    setSex(sexOptions.find((option) => option.value == searchParams.sex) || { label: "Tất cả", value: "all" })
     setRadius(searchParams.range ? parseFloat(searchParams.range) : 0)
   }, [searchParams])
 
   const onApply = async () => {
     const params = new URLSearchParams(searchParams as any)
-    if (category.length < 4)
-      params.set('category', category.toString())
-    else {
-      params.delete('category')
-    }
+    if (category.length < 4) params.set('category', category.toString())
+    else params.delete('category')
 
-    if (minPrice)
-      params.set('minPrice', minPrice.toString())
-    if (maxPrice < 15)
-      params.set('maxPrice', (maxPrice < 15) ? maxPrice.toString() : '')
+    if (minPrice) params.set('minPrice', minPrice.toString())
+    else params.delete('minPrice')
+    if (maxPrice < 15) params.set('maxPrice', (maxPrice < 15) ? maxPrice.toString() : '')
+    else params.delete('maxPrice')
 
-    if (minArea)
-      params.set('minArea', minArea.toString())
-    if (maxArea < 150)
-      params.set('maxArea', maxArea.toString())
+    if (minArea) params.set('minArea', minArea.toString())
+    else params.delete('minArea')
+    if (maxArea < 60) params.set('maxArea', maxArea.toString())
+    else params.delete('maxArea')
 
-    if (utility.length)
-      params.set('utility', utility.toString())
-    if (isMale !== undefined)
-      params.set('isMale', isMale?.toString())
-    if (radius)
-      params.set('range', radius.toString())
+    if (utility.length) params.set('utility', utility.toString())
+    else params.delete('utility')
+    if (radius) params.set('range', radius.toString())
+    params.set("sex", sex.value)
 
     params.delete('popup')
+    params.sort()
     router.push(pathname + '?' + params.toString())
   }
 
   const onReset = () => {
-    if (searchParams.author_id)
-      return router.push(pathname + `?author_id=${searchParams.author_id}`)
-    if (searchParams.follower_id)
-      return router.push(pathname + `?follower_id=${searchParams.follower_id}`)
-    router.push(pathname)
+    const params = new URLSearchParams(searchParams as any)
+    params.delete('category')
+    params.delete('minPrice')
+    params.delete('maxPrice')
+    params.delete('minArea')
+    params.delete('maxArea')
+    params.delete('utility')
+    params.delete('range')
+    params.delete("sex")
+    params.delete('popup')
+    router.push(pathname + '?' + params.toString())
   }
 
   return (
@@ -188,14 +193,12 @@ export default function FilterBarClient({ searchParams, className, children }: {
         />
 
         <div className="text-lg text-neutral-600">
-          Giới tính:
+          Thành viên:
         </div>
         <ItemSelect
-          onChange={(value) => {
-            setIsMale(value === null ? undefined : (value.label === 'Nam'))
-          }}
-          value={(isMale === undefined) ? {} : (isMale ? { label: 'Nam' } : { label: 'Nữ' })}
-          options={[{ label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
+          onChange={(value) => setSex({ value: value?.value || 'all', label: value?.label || 'Tất cả' })}
+          value={sex}
+          options={sexOptions}
           placeholder="Giới tính"
         />
 

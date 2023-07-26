@@ -26,7 +26,7 @@ export default function FilterBarPlaceholder() {
         <div className="text-lg text-neutral-600 flex gap-2">
           <span className="whitespace-nowrap flex-1">- Diện tích:</span>
           <span className="flex-1">
-            0 - 150m²
+            0 - 60m²
           </span>
         </div>
 
@@ -43,9 +43,9 @@ export default function FilterBarPlaceholder() {
         </div>
 
         <div className="text-lg text-neutral-600 flex gap-2">
-          <span className="whitespace-nowrap flex-1">- Giới tính:</span>
+          <span className="whitespace-nowrap flex-1">- Thành viên:</span>
           <span className="flex-1">
-            Không
+            Tất cả
           </span>
         </div>
       </div>

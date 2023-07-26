@@ -50,7 +50,7 @@ export default function SearchBar() {
       params.set('lng', lng.toString())
       params.set('lat', lat.toString())
       params.set('range', Math.max(schools.find(school => school.lat == lat && school.lng == lng)?.range || 0, 2000).toString())
-    
+
       event({
         action: 'search_nearby',
         params: {
@@ -61,7 +61,7 @@ export default function SearchBar() {
     }
 
     if (pathname == '/map') router.push('/map?' + params.toString())
-    else router.push('/search?' + params.toString())
+    else router.push('/search?page=1' + params.toString())
   }
 
   const onChangeSearchType = (newType: string) => {
@@ -94,6 +94,7 @@ export default function SearchBar() {
           value={{ label: searchType }}
           isSearchable={false}
           onChange={(value: any) => onChangeSearchType(value?.label)}
+          instanceId="select-search-type"
           formatOptionLabel={(option: any) => (
             <div className="flex flex-row items-center gap-2 w-[77px]">
               {option?.icon && (
@@ -167,6 +168,7 @@ export default function SearchBar() {
               : 'Tìm kiếm theo trường đại học/ cao đẳng/ ...'
           }
           aria-label='Nhập từ khóa tìm kiếm'
+          instanceId="select-search-location"
           components={{ MenuList }}
           theme={(theme) => ({
             ...theme,

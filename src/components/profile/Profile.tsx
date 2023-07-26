@@ -87,7 +87,7 @@ const Profile: React.FC<ProfileProps> = ({
           <div className="flex flex-col gap-2 text-neutral-600 max-w-[216px]">
             <div>
               <span className="text-lg font-semibold whitespace-nowrap">{new_full_name} {' '}</span>
-              <span>({profile?.year_of_birth}) {' '}</span>
+              <span>{profile?.year_of_birth ? `(${profile?.year_of_birth}) ` : ' '}</span>
               <span>({profile?.is_male === undefined ? "" : profile?.is_male ? "Nam" : "Nữ"})</span>
             </div>
 

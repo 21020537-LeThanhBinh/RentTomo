@@ -70,7 +70,7 @@ export default function FeeView({
                 type="number"
                 style={{ width: Math.max(width, 10) }}
                 onChange={(e) => setCounterValue(Number(e.target.value))}
-                value={counterValue}
+                value={counterValue.toString()}
               />
             </div>
 

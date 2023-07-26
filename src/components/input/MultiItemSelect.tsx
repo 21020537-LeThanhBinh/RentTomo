@@ -30,6 +30,7 @@ const MultiItemSelect: React.FC<MultiSelectProps> = ({
         options={options}
         value={value?.length && value}
         onChange={(value) => onChange(value as MultiSelectValue)}
+        instanceId="multi-select"
         formatOptionLabel={(option: any) => (
           <div className="flex flex-row items-center gap-3">
             {option?.icon && option?.icon()}

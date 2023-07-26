@@ -2,6 +2,8 @@ import { ISearchParams } from "@/types";
 import FilterBarClient from "./FilterBarClient";
 import { BiFilterAlt } from "react-icons/bi";
 
+const sexOptions = [{ label: 'Nam', value: 'male' }, { label: 'Nữ', value: 'female' }, { label: 'Không', value: 'none' }, { label: 'Tất cả', value: 'all' }]
+
 export default function FilterBar({ searchParams }: { searchParams: ISearchParams }) {
   return (
     <FilterBarClient
@@ -40,7 +42,7 @@ export default function FilterBar({ searchParams }: { searchParams: ISearchParam
         <div className="text-lg text-neutral-600 flex gap-2">
           <span className="whitespace-nowrap flex-1">- Diện tích:</span>
           <span className="flex-1">
-            {(searchParams.minArea || 0) + `${(searchParams.minArea && (searchParams.minArea != '0')) ? 'm²' : ''} - ` + (searchParams.maxArea || 150) + "m²"}
+            {(searchParams.minArea || 0) + `${(searchParams.minArea && (searchParams.minArea != '0')) ? 'm²' : ''} - ` + (searchParams.maxArea || 60) + "m²"}
           </span>
         </div>
 
@@ -63,15 +65,11 @@ export default function FilterBar({ searchParams }: { searchParams: ISearchParam
         </div>
 
         <div className="text-lg text-neutral-600 flex gap-2">
-          <span className="whitespace-nowrap flex-1">- Giới tính:</span>
+          <span className="whitespace-nowrap flex-1">- Thành viên:</span>
           <span className="flex-1">
-            {(!searchParams.isMale || searchParams.isMale == 'undefined') ? (
-              'Không'
-            ) : searchParams.isMale == 'true' ? (
-              'Nam'
-            ) : (
-              'Nữ'
-            )}
+            {searchParams.sex ? (
+              sexOptions.find((option) => option.value == searchParams.sex)?.label || 'Tất cả'
+            ) : 'Tất cả'}
           </span>
         </div>
       </div>

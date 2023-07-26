@@ -31,8 +31,10 @@ export default function RangeMarker({
     },
     zoomend: () => {
       setZoom(mapEvents.getZoom());
-      setZooming(false)
       setHide(mapEvents.getZoom() < 11)
+      setTimeout(() => {
+        setZooming(false)
+      }, 100);
     },
   });
 

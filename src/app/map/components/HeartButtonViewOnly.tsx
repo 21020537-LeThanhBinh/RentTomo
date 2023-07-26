@@ -3,13 +3,14 @@
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
 interface HeartButtonViewOnlyProps {
+  hasFollowed?: boolean
 }
 
-const HeartButtonViewOnly: React.FC<HeartButtonViewOnlyProps> = ({}) => {
+const HeartButtonViewOnly: React.FC<HeartButtonViewOnlyProps> = ({ hasFollowed }) => {
   return (
     <div className="relative">
-      <BsBookmark size={20} className="fill-white absolute -top-[2px] -right-[2px]" />
-      <BsBookmarkFill size={16} className={true ? 'fill-sky-500' : 'fill-neutral-500/70'} />
+      <BsBookmark size={18} className={`absolute -top-[1px] -right-[1px] ${hasFollowed ? 'fill-white' : 'opacity-0'}`} />
+      <BsBookmarkFill size={16} className={hasFollowed ? 'fill-sky-500' : 'opacity-0'} />
     </div>
   );
 }

@@ -41,6 +41,7 @@ const ItemSelect: React.FC<SelectProps> = ({
         onChange={onChange}
         menuIsOpen={alwaysClosed ? false : undefined}
         isDisabled={alwaysClosed}
+        instanceId="select"
         formatOptionLabel={(option: any) => (
           <div className="flex flex-row items-center gap-3">
             {option?.icon && option?.icon()}

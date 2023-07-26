@@ -1,15 +1,19 @@
 import { getListings } from "@/actions/getListings";
 import FilterBar from "@/components/filter/FilterBar";
 import { ISearchParams } from "@/types";
-import dynamic from "next/dynamic";
 import Link from "next/link";
+import MapClient from "./MapClient";
 import { FaListUl } from "react-icons/fa";
-const MapClient = dynamic(() => import('./MapClient'), { ssr: false });
 
 export const revalidate = 86400 // revalidate this page everyday
 
 export default async function MapPage({ searchParams }: { searchParams: ISearchParams }) {
   const { data: listings, count } = await getListings(searchParams)
+  const zoom0 = (searchParams.lng && searchParams.lat) ? 14
+  : searchParams.level === '2' ? 16
+    : searchParams.level === '1' ? 14
+      : searchParams.level === '0' ? 12
+        : 6
 
   return (
     <>
@@ -21,6 +25,7 @@ export default async function MapPage({ searchParams }: { searchParams: ISearchP
         <MapClient
           listings={listings}
           searchParams={searchParams}
+          zoom0={zoom0}
         />
       </div>
 
