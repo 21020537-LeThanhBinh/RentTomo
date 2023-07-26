@@ -39,6 +39,13 @@ const MapClient: React.FC<MapProps> = ({ listings = [], searchParams, zoom0 = 14
   }
 
   useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session)
+      setSessionEvent(event)
+    })
+  }, []);
+
+  useEffect(() => {
     if (zoom0 >= 14) {
       setListingsFiltered(listings)
     } else if (zoom0 < 14 && zoom0 > 12) {
@@ -46,12 +53,7 @@ const MapClient: React.FC<MapProps> = ({ listings = [], searchParams, zoom0 = 14
     } else {
       setListingsFiltered(filterListingByDistrictId())
     }
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session)
-      setSessionEvent(event)
-    })
-  }, []);
+  }, [listings]);
 
   useEffect(() => {
     if (!session?.user?.id || sessionEvent === "SIGNED_OUT") return
