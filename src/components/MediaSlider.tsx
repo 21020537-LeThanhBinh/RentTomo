@@ -30,7 +30,7 @@ const MediaSlider = ({ images, index, fullView, onClose }: ImageSliderProps) => 
 		if (currentImageIndex === 0) {
 			setIndex(images.length - 1);
 		} else {
-			setIndex(currentImageIndex + 1);
+			setIndex(currentImageIndex - 1);
 		}
 	};
 
