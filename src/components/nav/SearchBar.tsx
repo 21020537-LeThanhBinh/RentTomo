@@ -61,7 +61,7 @@ export default function SearchBar() {
     }
 
     if (pathname == '/map') router.push('/map?' + params.toString())
-    else router.push('/search?page=1' + params.toString())
+    else router.push('/search?page=1&' + params.toString())
   }
 
   const onChangeSearchType = (newType: string) => {
