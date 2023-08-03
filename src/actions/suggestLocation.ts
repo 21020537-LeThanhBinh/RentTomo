@@ -1,7 +1,8 @@
 import { supabase } from "@/supabase/supabase-app";
-import map from '../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
 import { parseAddressId } from "@/utils/parseAddress";
 import { toTitleCase } from "@/utils/toTitleCase";
+import schools from '../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
+import map from '../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
 
 async function suggestLocation(query: string) {
   const { data, error } = await supabase
@@ -21,17 +22,17 @@ async function suggestLocation(query: string) {
 }
 
 function uniq(a: any[]) {
-    var seen = {} as any;
-    return a.filter(function(item: any) {
-        return seen.hasOwnProperty(item.value) ? false : (seen[item.value] = true);
-    });
+  var seen = {} as any;
+  return a.filter(function (item: any) {
+    return seen.hasOwnProperty(item.value) ? false : (seen[item.value] = true);
+  });
 }
 
-const _loadSuggestions = (query: any, callback: any) => {
+const _loadLocationSuggestions = (query: any, callback: any) => {
   const res = map.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()));
   if (res.length > 0) return callback(res);
 
-  console.log(query)
+  // console.log(query)
   suggestLocation(query)
     .then(resp => callback(uniq(resp
       .map(data => {
@@ -39,7 +40,7 @@ const _loadSuggestions = (query: any, callback: any) => {
         const options = [] as any[]
 
         for (let i = 0; i < address.length; i++) {
-          const thisAddress = toTitleCase([address[i], ...address.slice(i + 1)].join(', ')) 
+          const thisAddress = toTitleCase([address[i], ...address.slice(i + 1)].join(', '))
           options.push({
             label: thisAddress + ', ' + parseAddressId(data.address_id).replace(/Thành phố/g, ''),
             value: thisAddress + ', ' + parseAddressId(data.address_id).replace(/Thành phố/g, ''),
@@ -54,4 +55,15 @@ const _loadSuggestions = (query: any, callback: any) => {
     )))
 };
 
-export { _loadSuggestions }
+const _loadSchoolSuggestions = (query: any, callback: any) => {
+  const res = schools
+    .map((school) => {
+      return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
+    })
+    .filter((i) => i.label.toLowerCase().includes(query.toLowerCase()));
+
+  return callback(res);
+};
+
+export { _loadLocationSuggestions, _loadSchoolSuggestions };
+

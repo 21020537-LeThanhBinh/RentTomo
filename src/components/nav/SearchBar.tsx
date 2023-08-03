@@ -1,6 +1,6 @@
 'use client';
 
-import { _loadSuggestions } from '@/actions/suggestLocation';
+import { _loadLocationSuggestions, _loadSchoolSuggestions } from '@/actions/suggestLocation';
 import { event } from "@/lib/ga";
 import { parseAddressIdSingle } from '@/utils/parseAddress';
 import debounce from 'lodash.debounce';
@@ -12,9 +12,9 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import schools from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
-import MenuList from '../../utils/MenuList';
 
-const loadSuggestions = debounce(_loadSuggestions, 1000);
+const loadLocationSuggestions = debounce(_loadLocationSuggestions, 1000);
+const loadSchoolSuggestions = debounce(_loadSchoolSuggestions, 1000);
 
 export default function SearchBar() {
   const router = useRouter();
@@ -158,7 +158,7 @@ export default function SearchBar() {
               return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
             })
           }
-          loadOptions={loadSuggestions}
+          loadOptions={searchType === "Khu vực" ? loadLocationSuggestions : loadSchoolSuggestions}
           value={
             locationId ?
               { label: parseAddressIdSingle(locationId) }
