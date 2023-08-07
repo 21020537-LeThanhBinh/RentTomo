@@ -58,14 +58,18 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
       return
     }
 
-    const newAddress = []
+    const newAddress = [] as any[]
     if (value?.number) newAddress.push(value.number)
     if (value?.street) newAddress.push(value.street)
     if (ward) newAddress.push(ward.Name)
     if (district) newAddress.push(district.Name)
     if (city) newAddress.push(city.Name)
 
-    setAddressLabel(newAddress.join(", "))
+    const delayDebounceFn = setTimeout(() => {
+      setAddressLabel(newAddress.join(", "))
+    }, 1000)
+    
+    return () => clearTimeout(delayDebounceFn)
   }, [value?.number, value?.street, ward, district, city])
 
   return (

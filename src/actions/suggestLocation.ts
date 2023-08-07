@@ -28,11 +28,10 @@ function uniq(a: any[]) {
   });
 }
 
-const _loadLocationSuggestions = (query: any, callback: any) => {
-  const res = map.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()));
+const _loadLocationSuggestions = (query: string, callback: any) => {
+  const res = map.filter((i) => i.label.toLowerCase().includes(query.toLowerCase())) as any;
   if (res.length > 0) return callback(res);
 
-  // console.log(query)
   suggestLocation(query)
     .then(resp => callback(uniq(resp
       .map(data => {
@@ -55,14 +54,26 @@ const _loadLocationSuggestions = (query: any, callback: any) => {
     )))
 };
 
-const _loadSchoolSuggestions = (query: any, callback: any) => {
+const _loadSchoolSuggestions = (query: string, callback: any) => {
   const res = schools
     .map((school) => {
       return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
     })
     .filter((i) => i.label.toLowerCase().includes(query.toLowerCase()));
 
-  return callback(res);
+  if (res.length > 0) return callback(res);
+
+  import('leaflet-geosearch')
+    .then(({ OpenStreetMapProvider }) => new OpenStreetMapProvider())
+    .then((provider) => provider.search({ query: query }))
+    .then((results: any) => {
+      if (results.length > 0) {
+        callback(results.map((result: any) => {
+          return { label: result.label, value: result.label, lng: result.x, lat: result.y, range: 2000 }
+        }
+        ))
+      }
+    })
 };
 
 export { _loadLocationSuggestions, _loadSchoolSuggestions };

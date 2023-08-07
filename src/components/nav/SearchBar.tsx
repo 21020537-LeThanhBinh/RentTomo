@@ -11,7 +11,10 @@ import { MdOutlineLocationSearching } from 'react-icons/md';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import schools from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
-import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
+import mapOptions from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
+const schoolsOptions = schools.map((school) => {
+  return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
+})
 
 const loadLocationSuggestions = debounce(_loadLocationSuggestions, 1000);
 const loadSchoolSuggestions = debounce(_loadSchoolSuggestions, 1000);
@@ -27,6 +30,8 @@ export default function SearchBar() {
 
   const [lng, setLng] = useState<number>(parseFloat(searchParams?.get('lng') || '0'));
   const [lat, setLat] = useState<number>(parseFloat(searchParams?.get('lat') || '0'));
+
+  const [inputValue, setInputValue] = useState(searchParams.get('q') || "");
 
   const onSearch = () => {
     const params = new URLSearchParams(searchParams as any)
@@ -63,6 +68,12 @@ export default function SearchBar() {
           lat: lat.toString()
         }
       })
+    }
+
+    if (!inputValue) {
+      params.delete("q")
+    } else {
+      params.set('q', inputValue)
     }
 
     if (pathname == '/map') {
@@ -154,19 +165,21 @@ export default function SearchBar() {
         <AsyncSelect
           cacheOptions
           defaultOptions={
-            searchType === "Khu vực" ? map : schools.map((school) => {
-              return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
-            })
+            searchType === "Khu vực" ? mapOptions : schoolsOptions
           }
           loadOptions={searchType === "Khu vực" ? loadLocationSuggestions : loadSchoolSuggestions}
           value={
-            locationId ?
-              { label: parseAddressIdSingle(locationId) }
-              : (lng && lat) ?
-                { label: schools.find(school => school.lat == lat && school.lng == lng)?.Name }
-                : null
+            inputValue ?
+              { label: inputValue }
+              // : locationId ?
+              //   { label: parseAddressIdSingle(locationId) }
+              //   : (lng && lat) ?
+              //     { label: schools.find(school => school.lat == lat && school.lng == lng)?.Name }
+              : null
           }
           onChange={(value: any) => {
+            setInputValue(value?.label || "")
+
             if (searchType === 'Khu vực') {
               setLocationId(value?.id);
               setLevel(value?.level)
