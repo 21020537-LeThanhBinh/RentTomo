@@ -37,7 +37,7 @@ export default function OtherFeesInput({
               onChange={(value) => setFieldValue(`fees.${key}`, parseInt(value.replace(/\D/g, "")))}
               value={formatBigNumber(values.fees[key])}
               id={key}
-              label={key}
+              label={key.length > 21 ? key.slice(0, 15) + "..." : key}
               formatPrice
               type="string"
               disabled={isLoading}

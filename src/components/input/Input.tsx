@@ -17,6 +17,7 @@ interface InputProps {
   onBlur?: FocusEventHandler<any>;
   multiline?: boolean;
   autoFocus?: boolean;
+  maxLength?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -31,7 +32,8 @@ const Input: React.FC<InputProps> = ({
   onClick,
   onBlur,
   multiline,
-  autoFocus
+  autoFocus,
+  maxLength
 }) => {
   const className = `
     peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition 
@@ -53,7 +55,7 @@ const Input: React.FC<InputProps> = ({
           hover:cursor-text
         `}
       >
-        {label.length > 21 ? label.slice(0, 15) + "..." : label}
+        {label}
       </label>
     )
   }
@@ -76,6 +78,7 @@ const Input: React.FC<InputProps> = ({
           className={className}
           minRows={3}
           autoFocus={autoFocus}
+          maxLength={maxLength}
         />
       ) : (
         <input
@@ -90,6 +93,7 @@ const Input: React.FC<InputProps> = ({
           onBlur={onBlur}
           autoFocus={autoFocus}
           className={className}
+          maxLength={maxLength}
         />
       )}
       <Label />

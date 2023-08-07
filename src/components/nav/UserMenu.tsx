@@ -11,7 +11,6 @@ import MenuItem from '../MenuItem';
 import Avatar from '../profile/Avatar';
 import AuthPopup from './AuthPopup';
 import EditProfilePopup from '../profile/EditProfilePopup';
-import { toast } from 'react-hot-toast';
 const NotificationPopup = dynamic(() => import('../notification/NotificationPopup'), { ssr: false })
 
 export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
@@ -144,7 +143,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
 
   // Todo: Add help page
   const handleHelp = () => {
-    toast('Chức năng đang được phát triển', { icon: '🚧' })
+    window.open ('https://www.m.me/renttomo', '_ blank')
   }
 
   return (

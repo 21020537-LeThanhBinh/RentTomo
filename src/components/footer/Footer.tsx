@@ -12,21 +12,21 @@ const Footer = () => {
 
         <div className="md:flex-1 flex flex-col gap-2">
           <p className="text-white text-lg font-semibold">About</p>
-          <Link href="#" className="text-neutral-500 text-sm">About Us</Link>
-          <Link href="#" className="text-neutral-500 text-sm">Blog</Link>
-          <Link href="#" className="text-neutral-500 text-sm">Contact</Link>
+          <Link href="/" className="text-neutral-500 text-sm">About Us</Link>
+          <Link href="/" className="text-neutral-500 text-sm">Blog</Link>
+          <Link href="/terms-and-conditions#contact" className="text-neutral-500 text-sm">Contact</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
           <p className="text-white text-lg font-semibold">Legal</p>
-          <Link href="#" className="text-neutral-500 text-sm">Terms & Conditions</Link>
+          <Link href="/terms-and-conditions" className="text-neutral-500 text-sm">Terms & Conditions</Link>
           <Link href="/privacy-policy" className="text-neutral-500 text-sm">Privacy Policy</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
           <p className="text-white text-lg font-semibold">Help</p>
           <Link href="/#faq" className="text-neutral-500 text-sm">FAQ</Link>
-          <Link href="#" className="text-neutral-500 text-sm">Support</Link>
+          <Link href="https://www.m.me/renttomo" target="_blank" className="text-neutral-500 text-sm">Support</Link>
         </div>
 
         <div className="md:flex-1 flex flex-col gap-2">
