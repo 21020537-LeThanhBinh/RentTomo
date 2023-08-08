@@ -16,7 +16,7 @@ interface ListingHeadProps {
 }
 
 const ListingHead: React.FC<ListingHeadProps> = ({
-  imageSrc = [],
+  imageSrc = ["/images/renttomo_logo_full_with_bg.png"],
   id,
   title = '',
   created_at = 0
