@@ -1,7 +1,6 @@
 'use client';
 
 import Image from "next/image";
-
 import FollowButton from "@/components/FollowButton";
 import MediaSlider from "@/components/MediaSlider";
 import ShareButton from "@/components/ShareButton";
@@ -10,17 +9,17 @@ import handleCloseDialog from "@/utils/handleCloseDialog";
 import { useEffect, useRef, useState } from "react";
 
 interface ListingHeadProps {
-  imageSrc: string[];
-  id: string;
-  title: string;
-  created_at: string;
+  imageSrc?: string[];
+  id?: string;
+  title?: string;
+  created_at?: string;
 }
 
 const ListingHead: React.FC<ListingHeadProps> = ({
-  imageSrc,
+  imageSrc = [],
   id,
-  title,
-  created_at
+  title = '',
+  created_at = 0
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
@@ -58,19 +57,21 @@ const ListingHead: React.FC<ListingHeadProps> = ({
             {`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
           </div>
 
-          <div className="flex gap-4">
-            <ShareButton
-              listingId={id}
-              title={title}
-              userId={userId}
-            />
+          {id && (
+            <div className="flex gap-4">
+              <ShareButton
+                listingId={id}
+                title={title}
+                userId={userId}
+              />
 
-            <FollowButton
-              listingId={id}
-              userId={userId}
-              full
-            />
-          </div>
+              <FollowButton
+                listingId={id}
+                userId={userId}
+                full
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -106,7 +107,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
               className="object-cover"
             />
           </div>
-          
+
           <div
             onClick={() => {
               !dialogRef.current?.open && dialogRef.current?.showModal()

@@ -16,6 +16,16 @@ async function getMyListings(searchParams: ISearchParams) {
     query = query.contains('followers', [searchParams.follower_id])
   }
 
+  if (searchParams.location_id && searchParams.level) {
+    if (searchParams.level === '0') {
+      query = query.eq('address_id->>city_id', searchParams.location_id)
+    } else if (searchParams.level === '1') {
+      query = query.eq('address_id->>district_id', searchParams.location_id)
+    } else if (searchParams.level === '2') {
+      query = query.eq('address_id->>ward_id', searchParams.location_id)
+    }
+  }
+
   if (searchParams.category)
     query = query.in('category', searchParams.category.split(','))
 

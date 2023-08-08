@@ -16,4 +16,6 @@ export interface IListingData {
   fees: any;
   image_src: string[];
   members: any;
+  room_rules: string;
+  location_text: string;
 }

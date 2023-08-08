@@ -1,9 +1,9 @@
 import FilterBarPlaceholder from "@/components/filter/FilterBarPlaceholder";
+import ListingCardPlaceholder from "@/components/listing/ListingCardPlaceholder";
 import Link from "next/link";
 import { BiFilterAlt } from "react-icons/bi";
 import { BsFillMapFill } from "react-icons/bs";
 
-// Todo: add listing cards' loading animation
 export default function loading() {
   return (
     <>
@@ -25,14 +25,11 @@ export default function loading() {
           </div>
 
           <div className="w-full lg:w-[calc(100%-344px)] flex flex-col gap-6 min-h-[65vh] relative">
-            {/* {listings?.length ? listings.map((listing: any) => (
-              <ListingCard
-                key={listing.id}
-                data={listing}
-              />
-            )) : (
-              <EmptyState />
-            )} */}
+            <ListingCardPlaceholder />
+            <ListingCardPlaceholder />
+            <ListingCardPlaceholder />
+            <ListingCardPlaceholder />
+            <ListingCardPlaceholder />
           </div>
         </div>
       </div>
