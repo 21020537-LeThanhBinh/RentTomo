@@ -1,4 +1,3 @@
-import FacebookMsg from "@/components/FacebookMsg";
 import Footer from "@/components/footer/Footer";
 import Questions from "@/components/landing/FAQs";
 import Features from "@/components/landing/Features";
@@ -12,7 +11,6 @@ import { Suspense } from "react";
 export default function Home() {
   return (
     <>
-      <FacebookMsg />
       <div className="fixed w-full bg-white z-10 h-[85px]"></div>
 
       <main className="min-h-screen relative z-10">

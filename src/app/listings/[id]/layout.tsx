@@ -1,4 +1,3 @@
-import FacebookMsg from "@/components/FacebookMsg"
 import Footer from "@/components/footer/Footer"
 
 export default function ListingLayout({
@@ -8,7 +7,6 @@ export default function ListingLayout({
 }) {
   return (
     <>
-      <FacebookMsg />
       <main className="pt-20">
         {children}
       </main>

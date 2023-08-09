@@ -146,7 +146,7 @@ const FullMap: React.FC<FullMapProps> = ({ listings = [], searchParams, zoom0 = 
         </button>
       </Control>
 
-      <LayersControl position="bottomright">
+      <LayersControl position="bottomleft">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
             url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
