@@ -1,3 +1,4 @@
+import FacebookMsg from "@/components/FacebookMsg"
 import Footer from "@/components/footer/Footer"
 
 export const metadata = {
@@ -12,6 +13,7 @@ export default function SearchLayout({
 }) {
   return (
     <>
+      <FacebookMsg />
       <main className="pt-20">
         {children}
       </main>

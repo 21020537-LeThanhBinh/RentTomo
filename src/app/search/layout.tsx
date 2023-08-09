@@ -1,3 +1,4 @@
+import FacebookMsg from "@/components/FacebookMsg"
 import Footer from "@/components/footer/Footer"
 
 export default function SearchLayout({
@@ -7,6 +8,7 @@ export default function SearchLayout({
 }) {
   return (
     <>
+      <FacebookMsg />
       <main className="pt-20 relative">
         {children}
       </main>
