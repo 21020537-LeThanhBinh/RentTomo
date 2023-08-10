@@ -1,8 +1,5 @@
 'use client';
 
-import FollowButton from "./FollowButton";
-import ShareButton from "./ShareButton";
-
 interface HeadingProps {
   title: string;
   subtitle?: string;

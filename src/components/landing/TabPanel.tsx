@@ -19,6 +19,7 @@ const TabPanel = ({ title, description, index, selectedTab, image, url }: any) =
           width={760}
           height={400}
           className="mx-auto lg:mx-0"
+          priority
         />
       </div>
       <div className="text-center flex flex-col gap-2 md:gap-[1.5625rem] md:text-left lg:pt-[3.25rem] lg:pl-[4.5rem]">

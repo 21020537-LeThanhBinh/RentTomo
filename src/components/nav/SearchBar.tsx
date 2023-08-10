@@ -106,6 +106,10 @@ export default function SearchBar() {
     onSearch()
   }, [locationId, lng, lat]);
 
+  useEffect(() => {
+    setInputValue(searchParams.get('q') || "")
+  }, [searchParams.get('q')]);
+
   return (
     <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[500px] relative py-1 rounded-full bg-white flex items-center">
       <div className="w-full flex items-center justify-between">
