@@ -1,5 +1,5 @@
 export default function formatPhoneNumber(phone: string) {
-  if (!phone) return phone
+  if (!phone) return ""
   
   if (phone.startsWith('+84')) return phone
   else if (phone.startsWith('84')) return '+' + phone

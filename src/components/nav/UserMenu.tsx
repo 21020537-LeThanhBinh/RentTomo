@@ -74,7 +74,7 @@ export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {
       return;
     }
 
-    if ((sessionEvent == 'SIGNED_IN' || sessionEvent == 'INITIAL_SESSION') && (!session.user?.user_metadata?.new_full_name)) {
+    if (!searchParams.has('popup') && (sessionEvent == 'SIGNED_IN' || sessionEvent == 'INITIAL_SESSION') && (!session.user?.user_metadata?.new_full_name)) {
       router.push(pathname + '?' + createQueryString(searchParams, 'popup', 'edit-profile-1'))
     }
 

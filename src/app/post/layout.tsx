@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer"
+import NavBar from "@/components/nav/NavBar"
 
 export const metadata = {
   title: 'Đăng bài - RentTomo',
@@ -12,6 +13,7 @@ export default function SearchLayout({
 }) {
   return (
     <>
+      <NavBar />
       <main className="pt-20">
         {children}
       </main>

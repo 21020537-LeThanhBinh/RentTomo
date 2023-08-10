@@ -1,12 +1,11 @@
+import FacebookMsg from '@/components/FacebookMsg'
 import ToasterProvider from '@/providers/ToasterProvider'
-import { Inter } from 'next/font/google'
-import './globals.scss'
-import NavBar from '@/components/nav/NavBar'
+import { NavigationEvents } from '@/utils/navigationEvents'
 import { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import { Suspense } from 'react'
-import { NavigationEvents } from '@/utils/navigationEvents'
-import FacebookMsg from '@/components/FacebookMsg'
+import './globals.scss'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,7 +33,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <ToasterProvider />
         <FacebookMsg />
-        <NavBar />
         {children}
 
         <Script

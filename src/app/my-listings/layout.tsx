@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer"
+import NavBar from "@/components/nav/NavBar"
 
 export const metadata = {
   title: 'Phòng của bạn - RentTomo',
@@ -12,6 +13,7 @@ export default function MyListingsLayout({
 }) {
   return (
     <>
+      <NavBar />
       <main className="pt-20 relative">
         {children}
       </main>

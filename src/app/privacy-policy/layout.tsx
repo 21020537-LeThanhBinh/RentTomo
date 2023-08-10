@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer"
+import NavBar from "@/components/nav/NavBar"
 
 export const metadata = {
   title: 'Chính sách bảo mật - RentTomo',
@@ -12,6 +13,7 @@ export default function PrivacyLayout({
 }) {
   return (
     <>
+      <NavBar />
       <main className="pt-20">
         {children}
       </main>

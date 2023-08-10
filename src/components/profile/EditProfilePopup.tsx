@@ -143,7 +143,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
       email: "",
       new_full_name: "",
       year_of_birth: "",
-      is_male: undefined,
+      is_male: null,
     },
     validationSchema: Yup.object({
       phone: Yup.string()
@@ -170,7 +170,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     email: string;
     new_full_name: string;
     year_of_birth: string;
-    is_male?: boolean;
+    is_male: boolean | null;
   }>
   );
 
@@ -193,16 +193,16 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
     if (!session || isUpdated) return
 
     // First page
-    formik.setFieldValue("email", session.user.email || session.user.user_metadata?.email);
+    formik.setFieldValue("email", session.user.email || session.user.user_metadata?.email || "");
     formik.setFieldValue("phone", formatPhoneNumber(session.user.phone || session.user.user_metadata?.phone));
-    formik.setFieldValue("new_full_name", session.user.user_metadata?.new_full_name);
-    formik.setFieldValue("year_of_birth", session.user.user_metadata?.year_of_birth);
-    formik.setFieldValue("is_male", session.user.user_metadata?.is_male);
+    formik.setFieldValue("new_full_name", session.user.user_metadata?.new_full_name || "");
+    formik.setFieldValue("year_of_birth", session.user.user_metadata?.year_of_birth || "");
+    formik.setFieldValue("is_male", session.user.user_metadata?.is_male || null);
 
     // Second page
-    formik2.setFieldValue("new_avatar_url", session.user.user_metadata?.new_avatar_url || session.user.user_metadata?.avatar_url);
-    formik2.setFieldValue("contact", session.user.user_metadata?.contact);
-    formik2.setFieldValue("description", session.user.user_metadata?.description);
+    formik2.setFieldValue("new_avatar_url", session.user.user_metadata?.new_avatar_url || session.user.user_metadata?.avatar_url || "");
+    formik2.setFieldValue("contact", session.user.user_metadata?.contact || "");
+    formik2.setFieldValue("description", session.user.user_metadata?.description || "");
   }, [session, isUpdated])
 
   // On file change
@@ -275,7 +275,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                   formik.setFieldValue("is_male", (value.label === 'Nam'))
                   setIsUpdated(true)
                 }}
-                value={(formik.values.is_male === undefined) ? {} : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
+                value={(formik.values.is_male === null) ? {} : (formik.values.is_male ? { label: 'Nam' } : { label: 'Nữ' })}
                 options={[{ label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }]}
                 placeholder="Giới tính"
                 isClearable={false}
@@ -358,7 +358,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 multiline
                 maxLength={101}
               />
-              <span className="text-right text-sm text-neutral-600 font-light">{101 - formik2.values.description.length} ký tự còn lại</span>
+              <span className="text-right text-sm text-neutral-600 font-light">{101 - formik2.values.description?.length} ký tự còn lại</span>
             </div>
 
             <div className="flex justify-end gap-2">
