@@ -1,15 +1,23 @@
 'use client';
 
+import { _loadLocationSuggestions, _loadSchoolSuggestions } from '@/actions/suggestLocation';
+import { event } from "@/lib/ga";
 import { parseAddressIdSingle } from '@/utils/parseAddress';
+import debounce from 'lodash.debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiCurrentLocation, BiSearch } from 'react-icons/bi';
 import { MdOutlineLocationSearching } from 'react-icons/md';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import schools from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
-import map from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
-import MenuList from '../../utils/MenuList';
-import { event } from "@/lib/ga"
+import mapOptions from '../../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
+const schoolsOptions = schools.map((school) => {
+  return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
+})
+
+const loadLocationSuggestions = debounce(_loadLocationSuggestions, 1000);
+const loadSchoolSuggestions = debounce(_loadSchoolSuggestions, 1000);
 
 export default function SearchBar() {
   const router = useRouter();
@@ -22,6 +30,8 @@ export default function SearchBar() {
 
   const [lng, setLng] = useState<number>(parseFloat(searchParams?.get('lng') || '0'));
   const [lat, setLat] = useState<number>(parseFloat(searchParams?.get('lat') || '0'));
+
+  const [inputValue, setInputValue] = useState(searchParams.get('q') || "");
 
   const onSearch = () => {
     const params = new URLSearchParams(searchParams as any)
@@ -60,8 +70,21 @@ export default function SearchBar() {
       })
     }
 
-    if (pathname == '/map') router.push('/map?' + params.toString())
-    else router.push('/search?page=1' + params.toString())
+    if (!inputValue) {
+      params.delete("q")
+    } else {
+      params.set('q', inputValue)
+    }
+
+    if (pathname == '/map') {
+      router.push('/map?' + params.toString())
+    } else if (pathname == '/my-listings') {
+      params.set('page', '1')
+      router.push('/my-listings?' + params.toString())
+    } else {
+      params.set('page', '1')
+      router.push('/search?' + params.toString())
+    }
   }
 
   const onChangeSearchType = (newType: string) => {
@@ -82,6 +105,10 @@ export default function SearchBar() {
 
     onSearch()
   }, [locationId, lng, lat]);
+
+  useEffect(() => {
+    setInputValue(searchParams.get('q') || "")
+  }, [searchParams.get('q')]);
 
   return (
     <div className="flex-1 border-[1px] w-[248px] sm:w-[306px] md:w-[254px] lg:w-[500px] relative py-1 rounded-full bg-white flex items-center">
@@ -139,20 +166,24 @@ export default function SearchBar() {
           className='flex-shrink-0 pl-4 text-sm font-semibold border-r-[1px]'
         />
 
-        <Select
-          options={
-            searchType === "Khu vực" ? map : schools.map((school) => {
-              return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
-            })
+        <AsyncSelect
+          cacheOptions
+          defaultOptions={
+            searchType === "Khu vực" ? mapOptions : schoolsOptions
           }
+          loadOptions={searchType === "Khu vực" ? loadLocationSuggestions : loadSchoolSuggestions}
           value={
-            locationId ?
-              { label: parseAddressIdSingle(locationId) }
-              : (lng && lat) ?
-                { label: schools.find(school => school.lat == lat && school.lng == lng)?.Name }
-                : null
+            inputValue ?
+              { label: inputValue }
+              // : locationId ?
+              //   { label: parseAddressIdSingle(locationId) }
+              //   : (lng && lat) ?
+              //     { label: schools.find(school => school.lat == lat && school.lng == lng)?.Name }
+              : null
           }
           onChange={(value: any) => {
+            setInputValue(value?.label || "")
+
             if (searchType === 'Khu vực') {
               setLocationId(value?.id);
               setLevel(value?.level)
@@ -169,7 +200,7 @@ export default function SearchBar() {
           }
           aria-label='Nhập từ khóa tìm kiếm'
           instanceId="select-search-location"
-          components={{ MenuList }}
+          // components={{ MenuList }}
           theme={(theme) => ({
             ...theme,
             colors: {

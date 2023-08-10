@@ -75,7 +75,15 @@ const FullMap: React.FC<FullMapProps> = ({ listings = [], searchParams, zoom0 = 
   useEffect(() => {
     if (!searchParams.lng || !searchParams.lat) return setSelectedSchool(null)
 
-    const selectingSchool = schoolsFull?.find((school) => school.lng == searchParams.lng && school.lat == searchParams.lat) || null
+    let selectingSchool = schoolsFull?.find((school) => school.lng == searchParams.lng && school.lat == searchParams.lat) || null
+    if (!selectingSchool) selectingSchool = {
+      Id: searchParams.q,
+      Name: searchParams.q ? searchParams.q.split(',')[0] + " ..." : "Vị trí đã chọn",
+      lat: searchParams.lat,
+      lng: searchParams.lng,
+      range: 2000
+    }
+    
     setSelectedSchool(selectingSchool)
 
     setTimeout(() => {
@@ -138,7 +146,7 @@ const FullMap: React.FC<FullMapProps> = ({ listings = [], searchParams, zoom0 = 
         </button>
       </Control>
 
-      <LayersControl position="bottomright">
+      <LayersControl position="bottomleft">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
             url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}

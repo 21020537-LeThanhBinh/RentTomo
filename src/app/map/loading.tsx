@@ -2,7 +2,6 @@ import FilterBarPlaceholder from "@/components/filter/FilterBarPlaceholder";
 import Link from "next/link";
 import { FaListUl } from "react-icons/fa";
 
-// Todo: add map's loading animation
 export default function loading() {
   return (
     <>

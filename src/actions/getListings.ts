@@ -8,7 +8,7 @@ async function getListings(searchParams: ISearchParams) {
 
   if (searchParams.lat && searchParams.lng) {
     query = supabase
-      .rpc('near_school_x_meters', { lat: parseFloat(searchParams.lat), long: parseFloat(searchParams.lng), x: 5000 })
+      .rpc('near_school_x_meters', { lat: parseFloat(searchParams.lat), long: parseFloat(searchParams.lng), x: 4000 })
   } else {
     query = supabase
       .from('posts_members')

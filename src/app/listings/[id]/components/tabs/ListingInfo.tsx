@@ -6,18 +6,18 @@ import { convertPointToArrayCoordinates } from "@/utils/convertPointToCoordinate
 const MiniMap = dynamic(() => import('@/components/map/MiniMap'), { ssr: false });
 
 interface ListingInfoProps {
-  description: string;
-  category: string | undefined;
-  utility: string[];
-  area: number;
-  address: string;
-  price: number;
-  address_id: {
+  description?: string;
+  category?: string;
+  utility?: string[];
+  area?: number;
+  address?: string;
+  price?: number;
+  address_id?: {
     city_id: string,
     district_id: string,
     ward_id: string,
   };
-  location_text: string;
+  location_text?: string;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -30,6 +30,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   address_id,
   location_text
 }) => {
+  const addressLabel = address_id ? (address + ', ' + parseAddressId(address_id)) : '';
   const coordinates = convertPointToArrayCoordinates(location_text);
 
   return (
@@ -39,7 +40,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       </div>
       <div className="flex flex-col gap-2 text-neutral-600">
         <span>Loại phòng: {category}</span>
-        <span>Địa chỉ: {address + ', ' + parseAddressId(address_id)}</span>
+        <span>Địa chỉ: {addressLabel}</span>
         <span>Diện tích: {area} m²</span>
         <span>Giá thuê: {formatBigNumber(price)} đ / tháng</span>
       </div>
@@ -49,7 +50,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         Tiện ích
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-[50vh] overflow-y-auto">
-        {utility.map((item) => (
+        {utility?.map((item) => (
           <div key={item} className="col-span-1">
             <UtilityBox
               label={item}

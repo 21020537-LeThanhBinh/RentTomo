@@ -6,6 +6,7 @@ import { Metadata } from 'next'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import { NavigationEvents } from '@/utils/navigationEvents'
+import FacebookMsg from '@/components/FacebookMsg'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       <head />
       <body className={inter.className}>
         <ToasterProvider />
+        <FacebookMsg />
         <NavBar />
         {children}
 

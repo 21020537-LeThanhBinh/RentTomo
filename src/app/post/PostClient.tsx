@@ -59,7 +59,7 @@ export default function PostClient({ listing }: { listing?: any }) {
     }) || [])
     // Upload new images
     const multiUpload = await Promise.all(files.map((file) => uploadImage(file)));
-    const imageSrcNew = multiUpload.map((item) => item.secure_url)
+    const imageSrcNew = multiUpload.map((item) => item?.secure_url || '/images/renttomo_logo_full_with_bg.png')
 
     const image_src = [...imageSrcOld, ...imageSrcNew]
 

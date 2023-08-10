@@ -20,6 +20,7 @@ import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import FollowButton from "../FollowButton";
 import dynamic from "next/dynamic";
+import { toTitleCase } from "@/utils/toTitleCase";
 const ListingOptions = dynamic(() => import('./ListingOptions'))
 const WarningModal = dynamic(() => import('../modal/WarningModal'))
 
@@ -121,7 +122,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ data, hasOptions }) => {
           <div className="flex items-center gap-1 w-full">
             <ImLocation className="flex-shrink-0" />
             <span className="whitespace-nowrap truncate block">
-              {(data.address + ', ' + parseAddressId(data.address_id)).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
+              {toTitleCase(data.address) + ', ' + parseAddressId(data.address_id).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
             </span>
           </div>
         </div>

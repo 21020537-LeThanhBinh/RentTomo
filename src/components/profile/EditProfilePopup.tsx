@@ -329,7 +329,7 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
           </div>
 
           <form onSubmit={formik2.handleSubmit} className="h-full flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
               <Input
                 onChange={(value) => {
                   formik2.setFieldValue("contact", value)
@@ -337,11 +337,14 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 }}
                 value={formik2.values.contact}
                 id="contact"
-                label="Liên hệ"
+                label="Liên hệ (Facebook, Zalo, ...)"
                 disabled={isLoading}
                 onBlur={formik2.handleBlur}
                 multiline
+                maxLength={101}
               />
+              <div className="mb-4"/>
+
               <Input
                 onChange={(value) => {
                   formik2.setFieldValue("description", value)
@@ -353,7 +356,9 @@ export default function SetUserInfoPopup({ modalRef, modalActive, activeTab, onB
                 disabled={isLoading}
                 onBlur={formik2.handleBlur}
                 multiline
+                maxLength={101}
               />
+              <span className="text-right text-sm text-neutral-600 font-light">{101 - formik2.values.description.length} ký tự còn lại</span>
             </div>
 
             <div className="flex justify-end gap-2">

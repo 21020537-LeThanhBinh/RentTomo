@@ -46,7 +46,7 @@ export default function AuthPopup({ modalRef1, modalRef2, modalActive, activeTab
           in={activeTab === 'verify'}
           unmountOnExit
           timeout={500}
-          classNames={modalActive ? "menu-login" : ""}
+          classNames={(modalActive && (activeTab != 'verify')) ? "menu-login" : ""}
         >
           <div className='w-full absolute left-0'>
             <VerifyPage />

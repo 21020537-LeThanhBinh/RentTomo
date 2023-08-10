@@ -3,15 +3,15 @@
 import { supabase } from '@/supabase/supabase-app';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FormikConfig, FormikValues, useFormik } from 'formik';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import FormAction from '../FormAction';
 import Input from '../Input';
 import { signupFields } from '../formFields';
-import SignInWithFacebook from '../providers/SignInWithFacebook';
-import SignInWithGoogle from '../providers/SignInWithGoogle';
 import SignInWithGithub from '../providers/SignInWithGithub';
+import SignInWithGoogle from '../providers/SignInWithGoogle';
 
 const fields = signupFields;
 let fieldsState: any = {};
@@ -33,7 +33,7 @@ export default function Signup() {
     setLoading(false)
     if (!res.error) {
       console.log(res)
-      router.push(`/${pathname}?popup=verify&account=${values.phone}`)
+      router.push(`${pathname}/?popup=verify&account=${values.phone}`)
     } else {
       setMessage(res.error.message)
     }
@@ -42,16 +42,21 @@ export default function Signup() {
   const formik = useFormik({
     initialValues: {
       phone: "",
+      agreement: false,
     },
     validationSchema: Yup.object({
       phone: Yup.string()
         // .matches(/^[0-9]*$/, 'Phone number must not contain special characters')
-        .min(10, "Mininum 10 characters")
+        .min(10, "Số điện thoại quá ngắn")
+        .required("Hãy nhập đủ thông tin"),
+      agreement: Yup.boolean()
+        .oneOf([true], 'Vui lòng đồng ý với các điều khoản điều kiện!')
         .required("Hãy nhập đủ thông tin"),
     }),
     onSubmit: handleSubmit,
   } as FormikConfig<{
     phone: string;
+    agreement: boolean;
   }>
   );
 
@@ -84,6 +89,25 @@ export default function Signup() {
       </div>
 
       <div>
+        <div className="flex items-center">
+          <input
+            id="agreement"
+            name="agreement"
+            type="checkbox"
+            className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+            onChange={formik.handleChange}
+          />
+          <label htmlFor="agreement" className="ml-2 block text-sm text-gray-900">
+            Tôi đồng ý với <Link href="/terms-and-conditions" className='font-medium text-rose-600 hover:text-rose-500 italic'>điều khoản và điều kiện</Link>
+          </label>
+        </div>
+
+        {formik.errors.agreement && formik.touched.agreement && (
+          <p className="text-red-500 text-sm">{formik.errors.agreement}</p>
+        )}
+      </div>
+
+      <div>
         {loading ? (
           <FormAction>
             <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-gray-400 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +127,6 @@ export default function Signup() {
         <SignInWithGoogle />
         <SignInWithGithub />
         {/* <SignInWithFacebook /> */}
-        
       </div>
     </form>
   )

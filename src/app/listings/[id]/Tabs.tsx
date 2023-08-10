@@ -3,9 +3,10 @@ import ListingInfo from "./components/tabs/ListingInfo";
 import RoomRules from "./components/tabs/RoomRules";
 import RoomChat from "./components/tabs/RoomChat";
 import ExplanationFloating from "@/components/ExplanationFloating";
+import { IListingData } from "@/types/listingData";
 
-export default function Tabs({ listing, tab }: { listing: any, tab: string }) {
-  const activeTab = tab || (listing.room_rules ? 'rules' : 'info');
+export default function Tabs({ listing, tab }: { listing?: IListingData, tab?: string }) {
+  const activeTab = tab || (listing?.room_rules ? 'rules' : 'info');
 
   return (
     <div className="flex flex-col gap-8">
@@ -25,27 +26,31 @@ export default function Tabs({ listing, tab }: { listing: any, tab: string }) {
 
       {activeTab === 'info' && (
         <ListingInfo
-          category={listing.category}
-          description={listing.description}
-          utility={listing.utility}
-          area={listing.area}
-          address={listing.address}
-          price={listing.price}
-          address_id={listing.address_id}
-          location_text={listing.location_text}
+          category={listing?.category}
+          description={listing?.description}
+          utility={listing?.utility}
+          area={listing?.area}
+          address={listing?.address}
+          price={listing?.price}
+          address_id={listing?.address_id}
+          location_text={listing?.location_text}
         />
       )}
 
-      <RoomRules
-        id={listing.id}
-        isActive={activeTab === 'rules'}
-        roomRules={listing.room_rules}
-      />
+      {!!listing && (
+        <RoomRules
+          id={listing.id}
+          isActive={activeTab === 'rules'}
+          roomRules={listing.room_rules}
+        />
+      )}
 
-      <RoomChat
-        id={listing.id}
-        isActive={activeTab === 'room_chat'}
-      />
+      {!!listing && (
+        <RoomChat
+          id={listing.id}
+          isActive={activeTab === 'room_chat'}
+        />
+      )}
     </div>
   );
 }

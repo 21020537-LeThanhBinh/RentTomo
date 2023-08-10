@@ -38,7 +38,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <div onClick={toggleFollow} className="flex items-center gap-2 cursor-pointer group">
       <Button />
-      <span className="text-neutral-600 underline">Lưu</span>
+      <span className="text-neutral-600 underline whitespace-nowrap">Theo dõi</span>
     </div>
   );
 }
