@@ -6,10 +6,13 @@ import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";
 import Image from "next/image";
 import Link from "next/link";
+import { AiFillCloseCircle } from "react-icons/ai";
 import { BsFillPersonFill, BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
+import { IoCloseCircleOutline } from "react-icons/io5";
 import { TbCurrencyDong } from "react-icons/tb";
+import { useMap } from "react-leaflet";
 
 interface ListingCardProps {
   listing: any;
@@ -18,12 +21,13 @@ interface ListingCardProps {
 };
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollowed }) => {
+  const map = useMap();
   const addressLabel = (listing.address + ', ' + parseAddressId(listing.address_id)).replace(/Phường |Quận |Tỉnh |Thành phố /g, '')
 
   return (
     <div className="group h-full">
-      <div className="flex flex-col gap-4 h-full">
-        <div className="aspect-[4/3] w-full relative overflow-hidden rounded-xl flex-shrink-0">
+      <div className="flex flex-col gap-4 h-full w-[300px]">
+        <div className="aspect-[4/3] w-full absolute top-0 left-0 overflow-hidden rounded-t-xl">
           <Link href={`/listings/${listing.id}`} target="_blank">
             <Image
               fill
@@ -33,7 +37,15 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
               onLoadingComplete={(image: any) => image.classList.remove('opacity-0')}
             />
           </Link>
+
           <div className="absolute top-3 right-3">
+            <button onClick={() => map.closePopup()} title="Đóng" className="hover:opacity-80 transition">
+              <IoCloseCircleOutline size={24} className="text-white absolute -top-[2px] -right-[2px]" />
+              <AiFillCloseCircle size={20} className='fill-neutral-500/70' />
+            </button>
+          </div>
+
+          <div className="absolute top-10 right-3">
             <FollowButton
               listingId={listing.id}
               userId={userId}
@@ -42,7 +54,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, userId, setHasFollow
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col gap-2 relative">
+        <div className="flex-1 flex flex-col gap-2 relative mt-[256px]">
           <Link href={`/listings/${listing.id}`} className="font-semibold text-base whitespace-nowrap truncate" title={listing.title} target="_blank">
             {listing.title}
           </Link>

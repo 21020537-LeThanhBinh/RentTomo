@@ -23,6 +23,7 @@ import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json'
 import schoolsFull from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import ListenToZoom from "./components/ListenToZoom";
 import ListingMarker from "./components/ListingMarker";
+import NavigateYourLocation from "@/components/map/NavigateYourLocation";
 
 const provider = new OpenStreetMapProvider();
 
@@ -83,7 +84,7 @@ const FullMap: React.FC<FullMapProps> = ({ listings = [], searchParams, zoom0 = 
       lng: searchParams.lng,
       range: 2000
     }
-    
+
     setSelectedSchool(selectingSchool)
 
     setTimeout(() => {
@@ -114,21 +115,7 @@ const FullMap: React.FC<FullMapProps> = ({ listings = [], searchParams, zoom0 = 
     >
       <ZoomControl position='topright' />
       <Control position='topright'>
-        <button className='leaflet-bar'>
-          <a
-            href="#"
-            title="Định vị"
-            onClick={(e) => {
-              e.preventDefault()
-              mapRef.current?.locate().on("locationfound", function (e: any) {
-                mapRef.current.flyTo(e.latlng, 16);
-                setYourPosition(e.latlng)
-              });
-            }}
-          >
-            <BiNavigation size={20} className='absolute top-[7px] left-[6px]' />
-          </a>
-        </button>
+        <NavigateYourLocation setYourPosition={setYourPosition} />
       </Control>
 
       <Control position='topleft'>

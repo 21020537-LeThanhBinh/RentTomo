@@ -15,6 +15,7 @@ import Control from 'react-leaflet-custom-control';
 import SearchField from './SearchField';
 import SetViewOnClick from './SetViewOnClick';
 import SetPointOnDrag from './SetPointOnDrag';
+import NavigateYourLocation from './NavigateYourLocation';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -60,21 +61,7 @@ const MiniMap: React.FC<MapProps> = ({ zoom, selectedPoint, setSelectedPoint }) 
       <SearchField />
       <ZoomControl position='topright' />
       <Control position='topright'>
-        <button className='leaflet-bar'>
-          <a
-            href=""
-            title="Định vị"
-            onClick={(e) => {
-              e.preventDefault()
-              mapRef.current?.locate().on("locationfound", function (e: any) {
-                mapRef.current.flyTo(e.latlng, 16);
-                setSelectedPoint?.(e.latlng)
-              });
-            }}
-          >
-            <BiNavigation size={20} className='absolute top-[6px] left-[6px]' />
-          </a>
-        </button>
+        <NavigateYourLocation setYourPosition={setSelectedPoint} />
       </Control>
 
       <TileLayer

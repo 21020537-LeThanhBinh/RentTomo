@@ -38,7 +38,7 @@ export default function ListingMarker({
           <HeartButtonViewOnly hasFollowed={hasFollowed} />
         </div>
       </Tooltip>
-      <Popup>
+      <Popup closeButton={false}>
         <ListingCard
           listing={listing}
           userId={userId}
