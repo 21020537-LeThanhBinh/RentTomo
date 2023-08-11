@@ -8,7 +8,7 @@ export default function loading() {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
       <div className="flex gap-6 flex-col lg:flex-row mt-6">
         <div>
-          <div className="invisible lg:visible w-0 h-0 lg:w-[320px] lg:min-h-[65vh]">
+          <div className="invisible lg:visible w-0 h-0 lg:w-[320px] lg:h-full">
             <FilterBarPlaceholder />
           </div>
 
