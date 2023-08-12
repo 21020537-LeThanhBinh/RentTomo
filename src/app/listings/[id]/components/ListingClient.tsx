@@ -2,15 +2,14 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
 import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
 import { toast } from "react-hot-toast";
 import ContextProvider from "./ListingContext";
-import ListingRequests from "./components/listings/ListingRequests";
-import ListingReservation from "./components/listings/ListingReservation";
-import MembersInfo from "./components/members/MembersInfo";
-import MembersMenu from "./components/members/MembersMenu";
+import ListingRequests from "./listings/ListingRequests";
+import ListingReservation from "./listings/ListingReservation";
+import MembersInfo from "./members/MembersInfo";
+import MembersMenu from "./members/MembersMenu";
 import revalidateListings from "@/actions/revalidateListings";
 
 interface ListingClientProps {

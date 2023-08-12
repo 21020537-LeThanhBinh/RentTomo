@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsThreeDots } from "react-icons/bs";
-import { ListingContext } from "../../ListingContext";
+import { ListingContext } from "../ListingContext";
 import MembersMenuItem from "./MembersMenuItem";
 import revalidateListings from "@/actions/revalidateListings";
 import { deleteListingById } from "@/actions/deleteListingById";

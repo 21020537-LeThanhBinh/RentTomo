@@ -1,4 +1,4 @@
-import FacebookMsg from '@/components/FacebookMsg'
+import FacebookMsg from '@/providers/FacebookMsg'
 import ToasterProvider from '@/providers/ToasterProvider'
 import { NavigationEvents } from '@/utils/navigationEvents'
 import { Metadata } from 'next'

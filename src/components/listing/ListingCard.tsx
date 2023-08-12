@@ -18,7 +18,7 @@ import { toast } from "react-hot-toast";
 import { BsHouseFill } from "react-icons/bs";
 import { FaRuler } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import FollowButton from "../FollowButton";
+import FollowButton from "../buttons/FollowButton";
 import dynamic from "next/dynamic";
 import { toTitleCase } from "@/utils/toTitleCase";
 const ListingOptions = dynamic(() => import('./ListingOptions'))

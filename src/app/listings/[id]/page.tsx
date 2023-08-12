@@ -2,10 +2,10 @@ import { getListingById } from "@/actions/getListingById";
 import { getListingMetaDataById } from "@/actions/getListingMetaDataById";
 import EmptyState from "@/components/EmptyState";
 import { Metadata, ResolvingMetadata } from 'next';
-import ListingClient from "./ListingClient";
-import ListingHead from "./ListingHead";
-import OwnerInfo from "./OwnerInfo";
-import Tabs from "./Tabs";
+import ListingClient from "./components/ListingClient";
+import ListingHead from "./components/ListingHead";
+import OwnerInfo from "./components/OwnerInfo";
+import Tabs from "./components/Tabs";
 
 type Props = {
   params: { id: string }

@@ -1,6 +1,6 @@
 'use client';
 
-import Button from "@/components/Button";
+import Button from "@/components/buttons/Button";
 import NoticeModal from "@/components/modal/NoticeModal";
 import Profile from "@/components/profile/Profile";
 import { User } from "@/types";

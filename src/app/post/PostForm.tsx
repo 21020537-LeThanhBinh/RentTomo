@@ -1,6 +1,6 @@
 'use client'
 
-import Button from "@/components/Button"
+import Button from "@/components/buttons/Button"
 import AddressInputPopup from "@/components/input/AddressInputPopup"
 import CategoryInput from "@/components/input/CategoryInput"
 import ImageUpload from "@/components/input/ImageUpload"

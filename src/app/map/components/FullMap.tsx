@@ -19,10 +19,10 @@ import { useEffect, useRef, useState } from 'react';
 import { BiFilterAlt, BiNavigation } from "react-icons/bi";
 import { LayerGroup, LayersControl, MapContainer, Marker, TileLayer, Tooltip, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
-import schools from '../../../public/DaiHocCaoDangVN.json' assert { type: 'json' };
-import schoolsFull from '../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
-import ListenToZoom from "./components/ListenToZoom";
-import ListingMarker from "./components/ListingMarker";
+import schools from '../../../../public/DaiHocCaoDangVN.json' assert { type: 'json' };
+import schoolsFull from '../../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
+import ListenToZoom from "./ListenToZoom";
+import ListingMarker from "./ListingMarker";
 import NavigateYourLocation from "@/components/map/NavigateYourLocation";
 
 const provider = new OpenStreetMapProvider();

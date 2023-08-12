@@ -1,11 +1,11 @@
 'use client';
 
-import Image from "next/image";
-import FollowButton from "@/components/FollowButton";
 import MediaSlider from "@/components/MediaSlider";
-import ShareButton from "@/components/ShareButton";
+import FollowButton from "@/components/buttons/FollowButton";
+import ShareButton from "@/components/buttons/ShareButton";
 import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface ListingHeadProps {

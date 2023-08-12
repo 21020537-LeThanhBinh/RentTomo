@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CSSTransition } from "react-transition-group";
 import * as Yup from 'yup';
-import Button from "../Button";
+import Button from "../buttons/Button";
 import Input from "../input/Input";
 import ItemSelect from "../input/ItemSelect";
 import PopupInputContainer from "../input/PopupInputContainer";

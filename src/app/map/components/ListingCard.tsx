@@ -1,6 +1,6 @@
 'use client';
 
-import FollowButton from "@/components/FollowButton";
+import FollowButton from "@/components/buttons/FollowButton";
 import Profile from "@/components/profile/Profile";
 import formatBigNumber from "@/utils/formatBigNumber";
 import { parseAddressId } from "@/utils/parseAddress";

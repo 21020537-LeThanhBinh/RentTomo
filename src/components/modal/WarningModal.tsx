@@ -2,7 +2,7 @@
 
 import { Ref } from "react"
 import ModalSingle from "./ModalSingle";
-import Button from "../Button";
+import Button from "../buttons/Button";
 
 export default function WarningModal({
   modalRef, onAccept, onClose

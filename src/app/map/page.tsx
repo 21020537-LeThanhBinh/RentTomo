@@ -2,7 +2,7 @@ import { getListings } from "@/actions/getListings";
 import FilterBar from "@/components/filter/FilterBar";
 import { ISearchParams } from "@/types";
 import Link from "next/link";
-import MapClient from "./MapClient";
+import MapClient from "./components/MapClient";
 import { FaListUl } from "react-icons/fa";
 
 export const revalidate = 86400 // revalidate this page everyday

@@ -1,6 +1,6 @@
 'use client'
 
-import Button from "@/components/Button";
+import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { supabase } from "@/supabase/supabase-app";
 import { useEffect, useState } from "react";

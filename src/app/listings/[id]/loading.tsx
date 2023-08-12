@@ -1,5 +1,5 @@
-import ListingHead from "./ListingHead";
-import Tabs from "./Tabs";
+import ListingHead from "./components/ListingHead";
+import Tabs from "./components/Tabs";
 
 export default function loading() {
   return (

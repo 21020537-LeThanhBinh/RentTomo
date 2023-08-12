@@ -25,6 +25,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       action: 'share_btn_click',
       params: {
         listing_id: listingId,
+        userId: userId,
       }
     })
   }

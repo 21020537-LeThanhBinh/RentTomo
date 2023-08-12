@@ -1,7 +1,7 @@
 import Link from "next/link";
-import ListingInfo from "./components/tabs/ListingInfo";
-import RoomRules from "./components/tabs/RoomRules";
-import RoomChat from "./components/tabs/RoomChat";
+import ListingInfo from "./tabs/ListingInfo";
+import RoomRules from "./tabs/RoomRules";
+import RoomChat from "./tabs/RoomChat";
 import ExplanationFloating from "@/components/ExplanationFloating";
 import { IListingData } from "@/types/listingData";
 
