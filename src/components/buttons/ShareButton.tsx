@@ -32,16 +32,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
   return (
     <div onClick={onShare} className="flex items-center gap-2 cursor-pointer group">
-      <div
-        onClick={onShare}
-        className="
-          relative
-          hover:opacity-80
-          transition
-          cursor-pointer
-          group-hover:opacity-80
-        "
-      >
+      <div className="relative hover:opacity-80 transition cursor-pointer group-hover:opacity-80">
         <BsFillShareFill size={20} className='fill-neutral-500/70' />
       </div>
       <span className="text-neutral-600 underline whitespace-nowrap">Chia sẻ</span>

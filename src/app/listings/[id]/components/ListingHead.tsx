@@ -2,6 +2,7 @@
 
 import MediaSlider from "@/components/MediaSlider";
 import FollowButton from "@/components/buttons/FollowButton";
+import ReportButton from "@/components/buttons/ReportButton";
 import ShareButton from "@/components/buttons/ShareButton";
 import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
@@ -52,7 +53,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
           {title}
         </div>
 
-        <div className="mt-2 flex gap-2 justify-between items-center">
+        <div className="mt-2 flex flex-wrap gap-2 justify-between items-center">
           <div className="font-light text-neutral-500">
             {`Ngày đăng: ${((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()}`}
           </div>
@@ -69,6 +70,11 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                 listingId={id}
                 userId={userId}
                 full
+              />
+
+              <ReportButton
+                listingId={id}
+                userId={userId}
               />
             </div>
           )}
