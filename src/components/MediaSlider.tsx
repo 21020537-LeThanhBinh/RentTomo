@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { use, useEffect, useState } from "react";
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
 
 interface ImageSliderProps {
 	images: string[];

@@ -9,7 +9,7 @@ import { IListingData } from "@/types/listingData";
 import formatBigNumber from "@/utils/formatBigNumber";
 import handleCloseDialog from "@/utils/handleCloseDialog";
 import imageSrcToPublicId from "@/utils/imageSrcToPublicId";
-import { parseAddressId } from "@/utils/parseAddress";
+import { parseAddressId } from "@/utils/parseAddressId";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

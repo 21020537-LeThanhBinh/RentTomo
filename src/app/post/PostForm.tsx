@@ -1,7 +1,6 @@
 'use client'
 
 import Button from "@/components/buttons/Button"
-import AddressInputPopup from "@/components/input/AddressInputPopup"
 import CategoryInput from "@/components/input/CategoryInput"
 import ImageUpload from "@/components/input/ImageUpload"
 import Input from "@/components/input/Input"
@@ -14,7 +13,12 @@ import formatBigNumber from "@/utils/formatBigNumber"
 import handleCloseDialog from "@/utils/handleCloseDialog"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+const AddressInputPopup = dynamic(() => import('@/components/input/AddressInputPopup'))
+const MiniMap = dynamic(() => import("@/components/map/MiniMap"), {
+  loading: () => <p>Đang tải bản đồ ...</p>,
+  ssr: false
+})
 
 export default function PostForm({
   isLoading,
@@ -48,10 +52,6 @@ export default function PostForm({
   const router = useRouter()
   const addressRef = useRef<HTMLDialogElement>(null)
   const [zoom, setZoom] = useState<number>(isEditPost ? 5 : 15)
-  const MiniMap = useMemo(() => dynamic(() => import("@/components/map/MiniMap"), {
-    loading: () => <p>Đang tải bản đồ ...</p>,
-    ssr: false
-  }), [])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

@@ -1,18 +1,19 @@
+import { deleteImage } from "@/actions/deleteImage";
+import { deleteListingById } from "@/actions/deleteListingById";
+import revalidateListings from "@/actions/revalidateListings";
 import MenuItem from "@/components/MenuItem";
-import ModalSingle from "@/components/modal/ModalSingle";
-import WarningModal from "@/components/modal/WarningModal";
 import Profile from "@/components/profile/Profile";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import imageSrcToPublicId from "@/utils/imageSrcToPublicId";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsThreeDots } from "react-icons/bs";
 import { ListingContext } from "../ListingContext";
 import MembersMenuItem from "./MembersMenuItem";
-import revalidateListings from "@/actions/revalidateListings";
-import { deleteListingById } from "@/actions/deleteListingById";
-import { deleteImage } from "@/actions/deleteImage";
-import imageSrcToPublicId from "@/utils/imageSrcToPublicId";
+const ModalSingle = dynamic(() => import('@/components/modal/ModalSingle'))
+const WarningModal = dynamic(() => import('@/components/modal/WarningModal'))
 
 export default function MembersMenu() {
   const { listingId, imageSrc, userId, members, host, onRemoveMember } = useContext(ListingContext);
@@ -70,7 +71,7 @@ export default function MembersMenu() {
 
     await revalidateListings()
     toast.success("Xoá tin thành công")
-    router.push('/')
+    router.push('/search')
   }
 
   return (

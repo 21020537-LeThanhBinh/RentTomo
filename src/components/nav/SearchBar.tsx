@@ -2,7 +2,6 @@
 
 import { _loadLocationSuggestions, _loadSchoolSuggestions } from '@/actions/suggestLocation';
 import { event } from "@/lib/ga";
-import { parseAddressIdSingle } from '@/utils/parseAddress';
 import debounce from 'lodash.debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -16,8 +15,8 @@ const schoolsOptions = schools.map((school) => {
   return { label: school.Name, value: school.Name, id: school.Id, lng: school.lng, lat: school.lat }
 })
 
-const loadLocationSuggestions = debounce(_loadLocationSuggestions, 1000);
-const loadSchoolSuggestions = debounce(_loadSchoolSuggestions, 1000);
+const loadLocationSuggestions = debounce(_loadLocationSuggestions, 500);
+const loadSchoolSuggestions = debounce(_loadSchoolSuggestions, 500);
 
 export default function SearchBar() {
   const router = useRouter();
@@ -172,15 +171,7 @@ export default function SearchBar() {
             searchType === "Khu vực" ? mapOptions : schoolsOptions
           }
           loadOptions={searchType === "Khu vực" ? loadLocationSuggestions : loadSchoolSuggestions}
-          value={
-            inputValue ?
-              { label: inputValue }
-              // : locationId ?
-              //   { label: parseAddressIdSingle(locationId) }
-              //   : (lng && lat) ?
-              //     { label: schools.find(school => school.lat == lat && school.lng == lng)?.Name }
-              : null
-          }
+          value={inputValue ? { label: inputValue } : null}
           onChange={(value: any) => {
             setInputValue(value?.label || "")
 

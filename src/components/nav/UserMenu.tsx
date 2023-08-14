@@ -9,8 +9,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import MenuItem from '../MenuItem';
 import Avatar from '../profile/Avatar';
-import AuthPopup from './AuthPopup';
-import EditProfilePopup from '../profile/EditProfilePopup';
+const AuthPopup = dynamic(() => import('./AuthPopup'))
+const EditProfilePopup = dynamic(() => import('../profile/EditProfilePopup'))
 const NotificationPopup = dynamic(() => import('../notification/NotificationPopup'), { ssr: false })
 
 export default function UserMenu({ isWhite = false }: { isWhite?: boolean }) {

@@ -26,10 +26,7 @@ const ListingCardPlaceholder = () => {
         </div>
         <div className="flex flex-1 items-end w-2/3">
           <div className="gap-1 w-full h-6 bg-gray-300">
-            {/* <ImLocation className="flex-shrink-0" />
-            <span className="whitespace-nowrap truncate block h-6 bg-gray-300">
-              {toTitleCase(data.address) + ', ' + parseAddressId(data.address_id).replace(/Phường|Quận|Tỉnh|Thành phố/g, '')}
-            </span> */}
+            {/* Address */}
           </div>
         </div>
 

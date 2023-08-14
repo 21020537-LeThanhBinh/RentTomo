@@ -1,14 +1,15 @@
 'use client';
 
 import Button from "@/components/buttons/Button";
-import NoticeModal from "@/components/modal/NoticeModal";
 import { event } from "@/lib/ga";
 import formatBigNumber from "@/utils/formatBigNumber";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import dynamic from "next/dynamic";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { ListingContext } from "../ListingContext";
 import FeeView from "./FeeView";
+const NoticeModal = dynamic(() => import('@/components/modal/NoticeModal'))
 
 interface ListingReservationProps {
   price: number;

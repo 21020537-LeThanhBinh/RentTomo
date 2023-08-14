@@ -3,7 +3,7 @@
 import FollowButton from "@/components/buttons/FollowButton";
 import Profile from "@/components/profile/Profile";
 import formatBigNumber from "@/utils/formatBigNumber";
-import { parseAddressId } from "@/utils/parseAddress";
+import { parseAddressId } from "@/utils/parseAddressId";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillCloseCircle } from "react-icons/ai";

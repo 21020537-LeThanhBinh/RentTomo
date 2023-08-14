@@ -1,5 +1,5 @@
 import formatBigNumber from "@/utils/formatBigNumber";
-import { parseAddressId } from "@/utils/parseAddress";
+import { parseAddressId } from "@/utils/parseAddressId";
 import dynamic from "next/dynamic";
 import UtilityBox from "../../../../../components/UtilityBox";
 import { convertPointToArrayCoordinates } from "@/utils/convertPointToCoordinates";

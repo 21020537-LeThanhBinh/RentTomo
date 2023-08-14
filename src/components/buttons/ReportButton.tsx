@@ -3,14 +3,15 @@
 import { event } from "@/lib/ga";
 import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsFlagFill } from "react-icons/bs";
 import ExplanationFloating from "../ExplanationFloating";
 import Input from "../input/Input";
-import ModalSingle from "../modal/ModalSingle";
 import Button from "./Button";
+const ModalSingle = dynamic(() => import('@/components/modal/ModalSingle'))
 
 interface ReportButtonProps {
   listingId: string

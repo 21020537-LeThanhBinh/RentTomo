@@ -6,7 +6,7 @@ import { supabase } from '@/supabase/supabase-app';
 import { IPostForm } from '@/types/postForm';
 import { convertPointToCoordinates } from '@/utils/convertPointToCoordinates';
 import imageSrcToPublicId from '@/utils/imageSrcToPublicId';
-import { parseAddressId } from '@/utils/parseAddress';
+import { parseAddressId } from '@/utils/parseAddressId';
 import { FormikValues, useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -154,7 +154,6 @@ export default function PostClient({ listing }: { listing?: any }) {
     await Promise.all(imageSrcNew.map((src: string) => {
       deleteImage(imageSrcToPublicId(src))
     }))
-    console.log("Don't worry, images are deleted!")
   }
 
   const onSubmitSuccess = async (postId: string, userId: string) => {

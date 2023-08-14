@@ -1,5 +1,5 @@
 import { supabase } from "@/supabase/supabase-app";
-import { parseAddressId } from "@/utils/parseAddress";
+import { parseAddressId } from "@/utils/parseAddressId";
 import { toTitleCase } from "@/utils/toTitleCase";
 import schools from '../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import map from '../../public/DiaGioiHanhChinhHN&HCM.json' assert { type: 'json' };
@@ -39,10 +39,10 @@ const _loadLocationSuggestions = (query: string, callback: any) => {
         const options = [] as any[]
 
         for (let i = 0; i < address.length; i++) {
-          const thisAddress = toTitleCase([address[i], ...address.slice(i + 1)].join(', '))
+          const thisAddress = toTitleCase([address[i], ...address.slice(i + 1)].join(', ')) + ', ' + parseAddressId(data.address_id).replace(/Thành phố/g, '')
           options.push({
-            label: thisAddress + ', ' + parseAddressId(data.address_id).replace(/Thành phố/g, ''),
-            value: thisAddress + ', ' + parseAddressId(data.address_id).replace(/Thành phố/g, ''),
+            label: thisAddress,
+            value: thisAddress,
             id: data.address_id.ward_id,
             level: 2,
           })

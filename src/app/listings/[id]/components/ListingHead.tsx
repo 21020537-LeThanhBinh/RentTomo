@@ -1,13 +1,14 @@
 'use client';
 
-import MediaSlider from "@/components/MediaSlider";
 import FollowButton from "@/components/buttons/FollowButton";
 import ReportButton from "@/components/buttons/ReportButton";
 import ShareButton from "@/components/buttons/ShareButton";
 import { supabase } from "@/supabase/supabase-app";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+const MediaSlider = dynamic(() => import('@/components/MediaSlider'))
 
 interface ListingHeadProps {
   imageSrc?: string[];
@@ -114,43 +115,47 @@ const ListingHead: React.FC<ListingHeadProps> = ({
             />
           </div>
 
-          <div
-            onClick={() => {
-              !dialogRef.current?.open && dialogRef.current?.showModal()
-            }}
-            onMouseEnter={() => setImageIndex(1)}
-            className={`
+          {imageSrc?.[1] && (
+            <div
+              onClick={() => {
+                !dialogRef.current?.open && dialogRef.current?.showModal()
+              }}
+              onMouseEnter={() => setImageIndex(1)}
+              className={`
             relative cursor-pointer
             ${imageSrc.length === 2 ? 'row-span-2' : 'row-span-1'}
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-          >
-            <Image
-              src={imageSrc?.[1]}
-              fill
-              alt="Image"
-              className="object-cover"
-            />
-          </div>
+            >
+              <Image
+                src={imageSrc?.[1]}
+                fill
+                alt="Image"
+                className="object-cover"
+              />
+            </div>
+          )}
 
-          <div
-            onClick={() => {
-              !dialogRef.current?.open && dialogRef.current?.showModal()
-            }}
-            onMouseEnter={() => setImageIndex(2)}
-            className={`
+          {imageSrc?.[2] && (
+            <div
+              onClick={() => {
+                !dialogRef.current?.open && dialogRef.current?.showModal()
+              }}
+              onMouseEnter={() => setImageIndex(2)}
+              className={`
             relative cursor-pointer
             row-span-1
             ${imageSrc.length <= 4 ? 'col-span-2' : 'col-span-1'}
           `}
-          >
-            <Image
-              src={imageSrc?.[2]}
-              fill
-              alt="Image"
-              className="object-cover"
-            />
-          </div>
+            >
+              <Image
+                src={imageSrc?.[2]}
+                fill
+                alt="Image"
+                className="object-cover"
+              />
+            </div>
+          )}
 
           {imageSrc?.[3] && (
             <div

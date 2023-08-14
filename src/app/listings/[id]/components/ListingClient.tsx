@@ -1,16 +1,17 @@
 'use client';
 
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import revalidateListings from "@/actions/revalidateListings";
 import { supabase } from "@/supabase/supabase-app";
 import { User } from "@/types";
+import dynamic from "next/dynamic";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import ContextProvider from "./ListingContext";
-import ListingRequests from "./listings/ListingRequests";
 import ListingReservation from "./listings/ListingReservation";
 import MembersInfo from "./members/MembersInfo";
-import MembersMenu from "./members/MembersMenu";
-import revalidateListings from "@/actions/revalidateListings";
+const ListingRequests = dynamic(() => import('./listings/ListingRequests'))
+const MembersMenu = dynamic(() => import('./members/MembersMenu'))
 
 interface ListingClientProps {
   listingId: string;
@@ -120,7 +121,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       .rpc('accept_member', { post_id: listingId, user_id: userId })
 
     if (data === 'host') revalidateListings()
-    
+
     return { data, error }
   }
 

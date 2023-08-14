@@ -1,9 +1,9 @@
 'use client'
 
+import NavigateYourLocation from "@/components/map/NavigateYourLocation";
 import RangeMarker from "@/components/map/RangeMarker";
 import { School } from "@/types";
 import { convertPointToArrayCoordinates } from "@/utils/convertPointToCoordinates";
-import { parseAddressIdSingle } from "@/utils/parseAddress";
 import { createQueryString } from "@/utils/queryString";
 import L from 'leaflet';
 import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
@@ -16,14 +16,14 @@ import 'leaflet/dist/leaflet.css';
 import { useRouter } from "next/navigation";
 import 'node_modules/leaflet-geosearch/dist/geosearch.css';
 import { useEffect, useRef, useState } from 'react';
-import { BiFilterAlt, BiNavigation } from "react-icons/bi";
+import { BiFilterAlt } from "react-icons/bi";
 import { LayerGroup, LayersControl, MapContainer, Marker, TileLayer, Tooltip, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import schools from '../../../../public/DaiHocCaoDangVN.json' assert { type: 'json' };
 import schoolsFull from '../../../../public/DaiHocCaoDangVNFull.json' assert { type: 'json' };
 import ListenToZoom from "./ListenToZoom";
 import ListingMarker from "./ListingMarker";
-import NavigateYourLocation from "@/components/map/NavigateYourLocation";
+import { parseAddressIdSingle } from "@/utils/parseAddressId";
 
 const provider = new OpenStreetMapProvider();
 

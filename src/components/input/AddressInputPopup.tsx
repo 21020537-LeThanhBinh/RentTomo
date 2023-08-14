@@ -1,10 +1,11 @@
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { BiChevronDown } from "react-icons/bi";
 import cityList from '../../../public/DiaGioiHanhChinhVN.json' assert { type: 'json' };
 import Button from "../buttons/Button";
-import ModalSingle from "../modal/ModalSingle";
 import Input from "./Input";
 import ItemSelect from "./ItemSelect";
-import { BiChevronDown } from "react-icons/bi";
+const ModalSingle = dynamic(() => import('@/components/modal/ModalSingle'))
 
 export type AddressValue = {
   city_id: string;
@@ -68,7 +69,7 @@ export default function AddressInputPopup({ value, setFieldValue, isLoading, add
     const delayDebounceFn = setTimeout(() => {
       setAddressLabel(newAddress.join(", "))
     }, 1000)
-    
+
     return () => clearTimeout(delayDebounceFn)
   }, [value?.number, value?.street, ward, district, city])
 

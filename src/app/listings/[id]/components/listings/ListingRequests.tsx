@@ -1,11 +1,12 @@
 'use client';
 
 import Button from "@/components/buttons/Button";
-import NoticeModal from "@/components/modal/NoticeModal";
 import Profile from "@/components/profile/Profile";
 import { User } from "@/types";
 import handleCloseDialog from "@/utils/handleCloseDialog";
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
+const NoticeModal = dynamic(() => import('@/components/modal/NoticeModal'))
 
 interface ListingRequestsProps {
   onSubmit: (userId: string, action: string) => void;

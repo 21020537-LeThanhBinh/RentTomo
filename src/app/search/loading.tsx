@@ -34,6 +34,10 @@ export default function loading() {
         </div>
       </div>
 
+      <div className="my-8 flex justify-center">
+        {/* <Pagination searchParams={searchParams} itemsLength={count || 0} /> */}
+      </div>
+
       <div className="fixed bottom-12 left-[calc(50vw-73px)]">
         <Link href='#' className="flex items-center gap-2 py-3 px-5 bg-neutral-800 rounded-full text-white whitespace-nowrap transition font-semibold hover:scale-110 hover:shadow-md border-[1px] border-white">
           <span>Mở bản đồ</span>

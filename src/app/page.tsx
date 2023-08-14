@@ -1,4 +1,3 @@
-import Footer from "@/components/footer/Footer";
 import Questions from "@/components/landing/FAQs";
 import Features from "@/components/landing/Features";
 import Hero from "@/components/landing/Hero";
@@ -6,7 +5,9 @@ import LastCTA from "@/components/landing/LastCTA";
 import Logo from "@/components/nav/Logo";
 import UserMenu from "@/components/nav/UserMenu";
 import UserMenuFallback from "@/components/nav/UserMenuFallback";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
+const Footer = dynamic(() => import("@/components/footer/Footer"));
 
 export default function Home() {
   return (
