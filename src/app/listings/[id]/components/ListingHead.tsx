@@ -60,16 +60,16 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 
           {id && (
             <div className="flex gap-4">
-              <ShareButton
-                listingId={id}
-                title={title}
-                userId={userId}
-              />
-
               <FollowButton
                 listingId={id}
                 userId={userId}
                 full
+              />
+
+              <ShareButton
+                listingId={id}
+                title={title}
+                userId={userId}
               />
 
               <ReportButton

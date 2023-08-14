@@ -14,6 +14,7 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
   const [memberIds, setMemberIds] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [chat, setChat] = useState<string | null>('');
+  const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -23,7 +24,7 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
   }, []);
 
   useEffect(() => {
-    if (!id || !isActive || (isActive && chat)) return;
+    if (!id || !isActive || isFetched) return;
 
     const fetchRoomInfo = async () => {
       const { data, error } = await supabase
@@ -39,7 +40,8 @@ export default function RoomChat({ id, isActive }: { id: string, isActive: boole
       } else {
         setHostId(data?.rooms.find((room: any) => room.type === 'host')?.profiles?.id);
         setMemberIds(data?.rooms.map((room: any) => room.profiles.id));
-        setChat(data?.room_chat?.chat_url);
+        setChat(data?.room_chat?.chat_url || "Chưa có link group chat.");
+        setIsFetched(true);
       }
     }
 

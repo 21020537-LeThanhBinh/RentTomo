@@ -36,7 +36,7 @@ const ExplanationFloating: React.FC<ExplanationProps> = ({
         {...getReferenceProps()}
         className="flex-shrink-0"
       >
-        <AiFillQuestionCircle size={16} />
+        <AiFillQuestionCircle size={16} className='text-neutral-800'/>
       </button>
 
       {isOpen && (

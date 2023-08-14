@@ -26,18 +26,18 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     setHasFollowed?.(hasFollowed);
   }, [hasFollowed]);
 
-  const Button = () => (
-    <div onClick={toggleFollow} title="Theo dõi" className={`relative hover:opacity-80 transition cursor-pointer ${full && 'group-hover:opacity-80'}`}>
+  if (!full) return (
+    <div onClick={toggleFollow} title="Theo dõi" className={`relative hover:opacity-80 transition cursor-pointer`}>
       <BsBookmark size={24} className="fill-white absolute -top-[2px] -right-[2px]" />
       <BsBookmarkFill size={20} className={hasFollowed ? 'fill-sky-500' : 'fill-neutral-500/70'} />
     </div>
-  );
-
-  if (!full) return <Button />
+  )
 
   return (
     <div onClick={toggleFollow} className="flex items-center gap-2 cursor-pointer group">
-      <Button />
+      <div onClick={toggleFollow} title="Theo dõi" className={`relative hover:opacity-80 transition cursor-pointer group-hover:opacity-80`}>
+        <BsBookmarkFill size={20} className={hasFollowed ? 'fill-sky-500' : 'fill-neutral-500/70'} />
+      </div>
       <span className="text-neutral-600 underline whitespace-nowrap">Theo dõi</span>
     </div>
   );

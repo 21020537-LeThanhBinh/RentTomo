@@ -12,6 +12,7 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
   const [hostId, setHostId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [rules, setRules] = useState<string>(roomRules || '');
+  const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -21,12 +22,12 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
   }, []);
 
   useEffect(() => {
-    if (!id || !isActive || (isActive && rules)) return;
+    if (!id || !isActive || isFetched) return;
 
     const fetchRoomInfo = async () => {
       const { data, error } = await supabase
         .from('posts')
-        .select('rooms(type, profiles (id)), room_rules(general_rules)')
+        .select(`rooms(type, profiles (id)), room_rules(general_rules)`)
         .eq('id', id)
         .eq('rooms.type', 'host')
         .maybeSingle() as any
@@ -37,6 +38,7 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
       } else {
         setHostId(data?.rooms[0]?.profiles?.id);
         setRules(data?.room_rules?.general_rules);
+        setIsFetched(true);
       }
     }
 
