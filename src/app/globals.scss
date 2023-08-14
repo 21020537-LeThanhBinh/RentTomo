@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.ql-toolbar {
+  border-color: #e5e5e5 !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.ql-container {
+  border-color: #e5e5e5 !important;
+  border-radius: 0 0 12px 12px !important;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

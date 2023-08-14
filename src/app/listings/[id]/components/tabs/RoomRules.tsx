@@ -1,11 +1,14 @@
 'use client'
 
 import Button from "@/components/buttons/Button";
-import Input from "@/components/input/Input";
 import { supabase } from "@/supabase/supabase-app";
+import DOMPurify from 'dompurify';
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillEdit } from "react-icons/ai";
+import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function RoomRules({ id, isActive, roomRules }: { id: string, isActive: boolean, roomRules: string }) {
   const [userId, setUserId] = useState<string | null>(null);
@@ -64,18 +67,31 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
     }
   }
 
+  const sanitizedData = (data: string) => ({
+    __html: DOMPurify.sanitize(data)
+  })
+
   if (!isActive) return null;
 
   return (
     <>
       {isEditing ? (
         <form onSubmit={putRules}>
-          <Input
-            id="room-rules"
-            label=""
-            value={rules || ''}
+          <ReactQuill
+            theme='snow'
+            value={rules}
+            style={{
+              height: '30vh',
+              marginBottom: '80px',
+            }}
             onChange={setRules}
-            multiline
+            placeholder={`
+              Hãy nêu một số yêu cầu, quy định khi sống chung của bạn. Ví dụ:
+              - Giờ giấc sinh hoạt hàng ngày
+              - Phân công dọn vệ sinh, nấu nướng
+              - Có được rủ bạn bè tới chơi hay nuôi thú cưng không
+              - ...
+            `}
           />
 
           <div className="flex justify-end gap-2 w-full">
@@ -96,7 +112,11 @@ export default function RoomRules({ id, isActive, roomRules }: { id: string, isA
         </form>
       ) : (
         <div className="text-neutral-600 whitespace-pre-line flex justify-between items-center gap-2">
-          <span>{rules || "Chưa có quy định nhóm."}</span>
+          {rules ? (
+            <span dangerouslySetInnerHTML={sanitizedData(rules)} />
+          ) : (
+            <span>Chưa có quy định nhóm.</span>
+          )}
 
           {userId && userId === hostId && (
             <AiFillEdit size={24} onClick={() => setIsEditing(!isEditing)} className="cursor-pointer" />
