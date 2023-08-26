@@ -144,6 +144,7 @@ export default function PostForm({
           onChange={(utility: any) => {
             setFieldValue("utility", utility.map((item: any) => item.value))
           }}
+          hasSelectAll
         />
 
         <Input
@@ -161,6 +162,7 @@ export default function PostForm({
 
         <Input
           onChange={(value) => setFieldValue("price", parseInt(value.replace(/\D/g, "")))}
+          onBlur={(e) => e.target.value && setFieldValue("fees.deposit", parseInt(e.target.value.replace(/\D/g, "")))}
           value={formatBigNumber(values.price)}
           id="price"
           label="Giá thuê"

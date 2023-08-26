@@ -9,6 +9,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { ListingContext } from "../ListingContext";
 import FeeView from "./FeeView";
+import DOMPurify from "dompurify";
 const NoticeModal = dynamic(() => import('@/components/modal/NoticeModal'))
 
 interface ListingReservationProps {
@@ -95,6 +96,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     setCounter({ ...newCounter, memberNumb: value })
   }
 
+  const sanitizedData = (data: string) => ({
+    __html: DOMPurify.sanitize(data)
+  })
+
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
@@ -128,7 +133,11 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
                 <p>Ví dụ: chủ phòng có thể yêu cầu đặt cọc, viết hợp đồng, cam kết ...</p>
                 <p>Hãy xem xét kỹ lưỡng các yêu cầu này để đảm bảo quyền lợi của bản thân.</p>
               </>
-            ) : (roomRules || "Chưa có quy định nhóm.")}
+            ) : roomRules ? (
+              <span dangerouslySetInnerHTML={sanitizedData(roomRules)} />
+            ) : (
+              <span>Chưa có quy định nhóm.</span>
+            )}
           </div>
         </NoticeModal>
       </div>

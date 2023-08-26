@@ -30,7 +30,7 @@ export default function NotificationPopup({
     supabase
       .rpc('latest_notification', { user_id: userId })
       .then(({ data, error }) => {
-        if (error) throw error
+        if (error) return console.log(error)
 
         const newNoti = data
           ?.map((noti: any) => {
